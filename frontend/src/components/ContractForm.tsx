@@ -1,9 +1,10 @@
 
 import React, { useState, useRef } from 'react';
+import type { LucideIcon } from 'lucide-react';
 import { ContractData, DocumentItem, DocumentStatus } from '../types';
 import { Input, TextArea } from './ui/Input';
-import { Sparkles, Plus, Trash2, Bot, Eraser, ChevronDown, ChevronUp, Briefcase, User, Wallet, Scale, PenTool, Image as ImageIcon, Globe, Smartphone, Wrench, Zap, MonitorPlay, Infinity } from 'lucide-react';
-import { refineServiceDescription, generateLegalClause } from '../services/geminiService';
+import { Sparkles, Plus, Trash2, Bot, Eraser, ChevronDown, ChevronUp, Briefcase, User, Wallet, Scale, PenTool, Image as ImageIcon, Globe, Smartphone, Wrench, Zap, Infinity } from 'lucide-react';
+import { refineServiceDescription, generateLegalClause } from '../services/api';
 
 interface ContractFormProps {
   data: ContractData;
@@ -12,6 +13,29 @@ interface ContractFormProps {
 }
 
 type SectionKey = 'parties' | 'details' | 'financial' | 'legal' | 'signature';
+
+const sectionHeaderClasses: Record<SectionKey, { active: string; idle: string }> = {
+  parties: {
+    active: 'bg-slate-800/90 border-indigo-500/70 shadow-lg shadow-indigo-500/10',
+    idle: 'bg-slate-900/50 border-slate-700 hover:border-indigo-500/40 hover:bg-slate-800/40',
+  },
+  details: {
+    active: 'bg-slate-800/90 border-emerald-500/70 shadow-lg shadow-emerald-500/10',
+    idle: 'bg-slate-900/50 border-slate-700 hover:border-emerald-500/40 hover:bg-slate-800/40',
+  },
+  financial: {
+    active: 'bg-slate-800/90 border-amber-500/70 shadow-lg shadow-amber-500/10',
+    idle: 'bg-slate-900/50 border-slate-700 hover:border-amber-500/40 hover:bg-slate-800/40',
+  },
+  legal: {
+    active: 'bg-slate-800/90 border-rose-500/70 shadow-lg shadow-rose-500/10',
+    idle: 'bg-slate-900/50 border-slate-700 hover:border-rose-500/40 hover:bg-slate-800/40',
+  },
+  signature: {
+    active: 'bg-slate-800/90 border-sky-500/70 shadow-lg shadow-sky-500/10',
+    idle: 'bg-slate-900/50 border-slate-700 hover:border-sky-500/40 hover:bg-slate-800/40',
+  },
+};
 
 const SERVICE_TEMPLATES = [
   {
@@ -116,10 +140,6 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
     onChange({ ...data, [field]: value });
   };
 
-  const toggleSection = (section: SectionKey) => {
-      setActiveSection(activeSection === section ? section : section);
-  };
-
   // --- LOGIC HANDLERS ---
   const handleServiceAdd = () => {
     if (newService.trim()) {
@@ -145,19 +165,31 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
       const refined = await refineServiceDescription(newService);
       onChange({ ...data, services: [...data.services, ...refined] });
       setNewService('');
-    } catch (e) { console.error(e); } finally { setIsAiLoading(false); }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsAiLoading(false);
+    }
   };
 
   const handleGenerateClause = async () => {
     if (!clausePrompt.trim()) return;
     setIsClauseLoading(true);
     try {
-        const clause = await generateLegalClause(clausePrompt);
-        const currentClauses = data.extraClauses ? data.extraClauses + "\n\n" : "";
-        onChange({ ...data, extraClauses: currentClauses + clause });
-        setClausePrompt('');
-    } catch(e) { console.error(e); } finally { setIsClauseLoading(false); }
-  }
+      const clause = await generateLegalClause(clausePrompt);
+      if (clause.startsWith('Erro:') || clause.startsWith('Erro ao')) {
+        console.error(clause);
+        return;
+      }
+      const currentClauses = data.extraClauses ? data.extraClauses + "\n\n" : "";
+      onChange({ ...data, extraClauses: currentClauses + clause });
+      setClausePrompt('');
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsClauseLoading(false);
+    }
+  };
 
   const handleQuoteAdd = () => {
     if (newItemDesc.trim() && newItemPrice) {
@@ -224,94 +256,107 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
   }
 
   // --- RENDER HELPERS ---
-  const SectionHeader = ({ id, title, icon: Icon, colorClass }: { id: SectionKey, title: string, icon: any, colorClass: string }) => (
-      <button 
-        onClick={() => toggleSection(id)}
-        className={`w-full flex items-center justify-between p-4 rounded-xl border transition-all duration-300 ${
-            activeSection === id 
-            ? `bg-slate-800/80 border-${colorClass} shadow-lg shadow-${colorClass}/10` 
-            : 'bg-slate-900/50 border-slate-800 hover:bg-slate-800'
+  const SectionHeader = ({ id, title, icon: Icon }: { id: SectionKey; title: string; icon: LucideIcon }) => {
+    const active = activeSection === id;
+    const skin = sectionHeaderClasses[id];
+    return (
+      <button
+        type="button"
+        onClick={() => setActiveSection(id)}
+        className={`w-full flex items-center justify-between p-4 rounded-xl border text-left transition-all duration-200 ${
+          active ? skin.active : skin.idle
         }`}
       >
-          <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${activeSection === id ? `bg-${colorClass}/20` : 'bg-slate-800'} text-${colorClass}`}>
-                <Icon size={20} />
-              </div>
-              <span className={`font-bold text-lg ${activeSection === id ? 'text-white' : 'text-slate-400'}`}>{title}</span>
-          </div>
-          {activeSection === id ? <ChevronUp size={20} className="text-slate-400"/> : <ChevronDown size={20} className="text-slate-600"/>}
+        <div className="flex items-center gap-3 min-w-0">
+          <Icon size={22} className={active ? 'text-white shrink-0' : 'text-slate-500 shrink-0'} strokeWidth={2} />
+          <span className={`font-bold truncate ${active ? 'text-white' : 'text-slate-300'}`}>{title}</span>
+        </div>
+        {active ? (
+          <ChevronUp size={20} className="text-slate-400 shrink-0" aria-hidden />
+        ) : (
+          <ChevronDown size={20} className="text-slate-600 shrink-0" aria-hidden />
+        )}
       </button>
-  );
+    );
+  };
 
   return (
     <div className="p-6 pb-32 space-y-4 max-w-4xl mx-auto">
-      
       {/* STATUS BAR */}
-      <div className="flex items-center justify-between mb-6 bg-slate-900/50 p-2 rounded-lg border border-slate-800">
-          <div className="flex gap-1 overflow-x-auto">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-2 rounded-xl border border-slate-800 bg-slate-900/80 p-3">
+          <div className="flex gap-1 overflow-x-auto pb-1 sm:pb-0 -mx-1 px-1">
               {(['draft', 'pending', 'final', 'paid'] as DocumentStatus[]).map(s => (
                   <button
+                    type="button"
                     key={s}
                     onClick={() => handleChange('status', s)}
-                    className={`px-4 py-1.5 rounded text-xs font-bold uppercase tracking-wider transition-colors whitespace-nowrap ${
+                    className={`min-h-10 px-3.5 sm:px-4 py-2 rounded-lg text-[11px] sm:text-xs font-bold uppercase tracking-wider transition-colors whitespace-nowrap shrink-0 ${
                         data.status === s 
-                        ? s === 'final' ? 'bg-emerald-500 text-white' : s === 'pending' ? 'bg-amber-500 text-white' : s === 'paid' ? 'bg-teal-500 text-white' : 'bg-slate-600 text-white'
-                        : 'text-slate-500 hover:text-slate-300'
+                        ? s === 'final' ? 'bg-emerald-500 text-white shadow-md' : s === 'pending' ? 'bg-amber-500 text-white shadow-md' : s === 'paid' ? 'bg-teal-500 text-white shadow-md' : 'bg-slate-700 text-white ring-1 ring-neon-purple/40'
+                        : 'text-slate-400 hover:text-white hover:bg-slate-800'
                     }`}
                   >
                       {s === 'draft' ? 'Rascunho' : s === 'pending' ? 'Em Revisão' : s === 'paid' ? 'Pago' : 'Finalizado'}
                   </button>
               ))}
           </div>
-          <button onClick={onReset} className="text-red-400 hover:bg-red-500/10 px-3 py-1.5 rounded text-xs flex items-center gap-2 transition-colors">
-            <Eraser size={14} /> <span className="hidden sm:inline">Limpar</span>
+          <button type="button" onClick={onReset} className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-950/80 px-3 text-xs font-semibold text-rose-300 hover:bg-rose-500/10 hover:border-rose-500/50 transition-colors sm:self-center">
+            <Eraser size={16} aria-hidden /> <span>Limpar modelo</span>
           </button>
       </div>
 
-      {/* 1. IDENTIFICAÇÃO (Todos os Documentos) */}
+      {/* 1. IDENTIFICAÇÃO — mesmo acordeão em todas as telas (layout clássico) */}
       <div className="space-y-2">
-        <SectionHeader id="parties" title="Identificação & Branding" icon={User} colorClass="indigo-500" />
+        <SectionHeader id="parties" title="Identificação & Branding" icon={User} />
         {activeSection === 'parties' && (
-            <div className="p-5 bg-slate-900/30 border-l-2 border-indigo-500 rounded-r-xl space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
-                
-                {/* LOGO UPLOAD */}
-                <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 flex items-center gap-4">
-                    <div className={`w-16 h-16 rounded-lg border border-dashed border-slate-600 flex items-center justify-center bg-slate-900 overflow-hidden`}>
-                        {data.contractorLogo ? <img src={data.contractorLogo} className="w-full h-full object-contain" /> : <ImageIcon className="text-slate-600" />}
-                    </div>
-                    <div>
-                        <p className="text-sm font-bold text-slate-300 mb-1">Sua Logomarca</p>
-                        <p className="text-xs text-slate-500 mb-2">Exibida no topo dos documentos.</p>
-                        <button onClick={() => logoInputRef.current?.click()} className="text-xs bg-slate-800 px-3 py-1.5 rounded hover:bg-slate-700 text-white">Carregar Logo</button>
-                        <input type="file" ref={logoInputRef} onChange={(e) => handleImageUpload(e, 'contractorLogo')} className="hidden" accept="image/*" />
-                    </div>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
-                        <label className="text-xs text-indigo-400 font-bold uppercase mb-2 block">Emissor (Você)</label>
-                        <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
-                            <Input label="Nome Completo" value={data.contractorName} onChange={(e) => handleChange('contractorName', e.target.value)} />
-                            <Input label="Função / Cargo" value={data.contractorRole} onChange={(e) => handleChange('contractorRole', e.target.value)} />
-                            <Input label="CPF / CNPJ" value={data.contractorDoc} onChange={(e) => handleChange('contractorDoc', e.target.value)} />
-                            <Input label="Cidade - Estado" value={data.contractorLocation} onChange={(e) => handleChange('contractorLocation', e.target.value)} />
-                            <Input label="Contato" value={data.contractorContact} onChange={(e) => handleChange('contractorContact', e.target.value)} className="md:col-span-2" />
-                        </div>
-                    </div>
-                    
-                    {data.type !== 'cv' && (
-                        <div className="md:col-span-2 mt-4">
-                             <label className="text-xs text-emerald-400 font-bold uppercase mb-2 block">Destinatário (Cliente)</label>
-                             <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
-                                <Input label="Nome / Razão Social" value={data.clientName} onChange={(e) => handleChange('clientName', e.target.value)} />
-                                <Input label="CPF / CNPJ" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} />
-                                <Input label="Endereço Completo" value={data.clientAddress} onChange={(e) => handleChange('clientAddress', e.target.value)} className="md:col-span-2" />
-                                <Input label="CEP / Telefone" value={data.clientZipPhone} onChange={(e) => handleChange('clientZipPhone', e.target.value)} />
-                             </div>
-                        </div>
-                    )}
-                </div>
+          <div className="p-5 bg-slate-900/30 border-l-2 border-indigo-500 rounded-r-xl space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="w-16 h-16 rounded-lg border border-dashed border-slate-600 flex items-center justify-center bg-slate-900 overflow-hidden shrink-0">
+                {data.contractorLogo ? (
+                  <img src={data.contractorLogo} className="w-full h-full object-contain" alt="" />
+                ) : (
+                  <ImageIcon className="text-slate-600" />
+                )}
+              </div>
+              <div>
+                <p className="text-sm font-bold text-slate-300 mb-1">Sua Logomarca</p>
+                <p className="text-xs text-slate-500 mb-2">Exibida no topo dos documentos.</p>
+                <button
+                  type="button"
+                  onClick={() => logoInputRef.current?.click()}
+                  className="text-xs bg-slate-800 px-3 py-1.5 rounded hover:bg-slate-700 text-white"
+                >
+                  Carregar logo
+                </button>
+                <input type="file" ref={logoInputRef} onChange={(e) => handleImageUpload(e, 'contractorLogo')} className="hidden" accept="image/*" />
+              </div>
             </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="md:col-span-2">
+                <label className="text-xs text-indigo-400 font-bold uppercase mb-2 block">Emissor (você)</label>
+                <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
+                  <Input label="Nome Completo" value={data.contractorName} onChange={(e) => handleChange('contractorName', e.target.value)} />
+                  <Input label="Função / Cargo" value={data.contractorRole} onChange={(e) => handleChange('contractorRole', e.target.value)} />
+                  <Input label="CPF / CNPJ" value={data.contractorDoc} onChange={(e) => handleChange('contractorDoc', e.target.value)} />
+                  <Input label="Cidade — estado" value={data.contractorLocation} onChange={(e) => handleChange('contractorLocation', e.target.value)} />
+                  <Input label="Contato" value={data.contractorContact} onChange={(e) => handleChange('contractorContact', e.target.value)} className="md:col-span-2" />
+                </div>
+              </div>
+
+              {data.type !== 'cv' && (
+                <div className="md:col-span-2 mt-4">
+                  <label className="text-xs text-emerald-400 font-bold uppercase mb-2 block">Destinatário (cliente)</label>
+                  <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
+                    <Input label="Nome / razão social" value={data.clientName} onChange={(e) => handleChange('clientName', e.target.value)} />
+                    <Input label="CPF / CNPJ" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} />
+                    <Input label="Endereço completo" value={data.clientAddress} onChange={(e) => handleChange('clientAddress', e.target.value)} className="md:col-span-2" />
+                    <Input label="CEP / telefone" value={data.clientZipPhone} onChange={(e) => handleChange('clientZipPhone', e.target.value)} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
         )}
       </div>
 
@@ -321,7 +366,6 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
             id="details" 
             title={data.type === 'cv' ? 'Experiência & Skills' : (data.type === 'letter' || data.type === 'declaration' || data.type === 'coverLetter') ? 'Conteúdo do Texto' : 'Escopo & Itens'} 
             icon={Briefcase} 
-            colorClass="emerald-500" 
         />
         {activeSection === 'details' && (
              <div className="p-5 bg-slate-900/30 border-l-2 border-emerald-500 rounded-r-xl space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
@@ -480,7 +524,7 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
       {/* 3. FINANCEIRO & PRAZOS (Contrato/Orçamento/Recibo) */}
       {(data.type === 'contract' || data.type === 'quote' || data.type === 'invoice') && (
         <div className="space-y-2">
-            <SectionHeader id="financial" title="Financeiro & Datas" icon={Wallet} colorClass="amber-500" />
+            <SectionHeader id="financial" title="Financeiro & Datas" icon={Wallet} />
             {activeSection === 'financial' && (
                 <div className="p-5 bg-slate-900/30 border-l-2 border-amber-500 rounded-r-xl grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
                     {data.type === 'contract' && (
@@ -513,7 +557,7 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
       {/* 4. JURÍDICO & IA (Contrato/Orçamento/NDA) */}
       {(data.type === 'contract' || data.type === 'quote' || data.type === 'nda') && (
          <div className="space-y-2">
-            <SectionHeader id="legal" title="Cláusulas & IA Jurídica" icon={Scale} colorClass="rose-500" />
+            <SectionHeader id="legal" title="Cláusulas & IA Jurídica" icon={Scale} />
             {activeSection === 'legal' && (
                 <div className="p-5 bg-slate-900/30 border-l-2 border-rose-500 rounded-r-xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
                     <Input label="Foro (Cidade-UF)" value={data.forumCity} onChange={e => handleChange('forumCity', e.target.value)} />
@@ -538,7 +582,7 @@ export const ContractForm: React.FC<ContractFormProps> = ({ data, onChange, onRe
 
       {/* 5. ASSINATURA */}
       <div className="space-y-2">
-         <SectionHeader id="signature" title="Assinatura Digital" icon={PenTool} colorClass="sky-500" />
+         <SectionHeader id="signature" title="Assinatura Digital" icon={PenTool} />
          {activeSection === 'signature' && (
              <div className="p-5 bg-slate-900/30 border-l-2 border-sky-500 rounded-r-xl space-y-4 animate-in fade-in slide-in-from-top-4 duration-300">
                  <p className="text-xs text-slate-400 mb-2">Faça upload de uma imagem da sua assinatura (PNG transparente recomendado).</p>

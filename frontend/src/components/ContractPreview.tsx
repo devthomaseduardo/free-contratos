@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
-import { ContractData, DocumentItem } from '../types';
-import { Printer, Copy, CheckCircle2, Download, Loader2, FileCheck } from 'lucide-react';
+import { ContractData } from '../types';
+import { Printer, Copy, CheckCircle2, Download, Loader2 } from 'lucide-react';
 
 interface ContractPreviewProps {
   data: ContractData;
@@ -25,18 +24,18 @@ export const ContractPreview: React.FC<ContractPreviewProps> = ({ data }) => {
   const handlePrint = () => window.print();
 
   const handleCopy = () => {
-    const text = document.getElementById('printable-content')?.innerText || "";
-    navigator.clipboard.writeText(text).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const text = document.getElementById('printable-content')?.innerText || '';
+    void navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
     });
   };
 
   const handleDownloadPDF = async () => {
     const element = document.getElementById('printable-content');
     if (!element || !window.html2pdf) {
-        alert("Biblioteca de PDF não carregada. Recarregue a página.");
-        return;
+      alert('Biblioteca de PDF não carregada. Recarregue a página.');
+      return;
     }
 
     setIsDownloading(true);
@@ -57,7 +56,7 @@ export const ContractPreview: React.FC<ContractPreviewProps> = ({ data }) => {
     clone.style.padding = '0';
     clone.style.boxShadow = 'none';
     clone.style.height = 'auto';
-    clone.style.transform = 'none'; // Remove zoom effects if any
+    clone.style.transform = 'none';
     
     // Configura tipografia baseada no tipo para PDF
     if (data.type === 'contract' || data.type === 'letter' || data.type === 'declaration' || data.type === 'nda' || data.type === 'coverLetter') {
@@ -92,7 +91,7 @@ export const ContractPreview: React.FC<ContractPreviewProps> = ({ data }) => {
         await window.html2pdf().set(opt).from(clone).save();
     } catch (err) {
         console.error(err);
-        alert("Erro ao gerar PDF.");
+        alert('Erro ao gerar PDF.');
     } finally {
         document.body.removeChild(container);
         setIsDownloading(false);
@@ -486,7 +485,6 @@ export const ContractPreview: React.FC<ContractPreviewProps> = ({ data }) => {
 
   return (
     <div className="flex flex-col h-full bg-[#111827]">
-        {/* Actions Bar */}
         <div className="flex justify-between items-center px-6 py-4 bg-[#0B0F19] border-b border-slate-800 shrink-0 shadow-lg z-20">
             <div className="flex items-center gap-3">
                 <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : data.status === 'pending' ? 'bg-amber-500' : 'bg-slate-500'}`} />
@@ -496,29 +494,26 @@ export const ContractPreview: React.FC<ContractPreviewProps> = ({ data }) => {
             </div>
             
             <div className="flex gap-3">
-                <button onClick={handleCopy} className="group relative flex items-center justify-center p-2 text-slate-400 hover:text-white transition-colors">
+                <button type="button" onClick={handleCopy} className="group relative flex items-center justify-center p-2 text-slate-400 hover:text-white transition-colors">
                     {copied ? <CheckCircle2 size={18} className="text-emerald-500"/> : <Copy size={18}/>}
                     <span className="absolute bottom-full mb-2 bg-black text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Copiar Texto</span>
                 </button>
                 <div className="h-6 w-px bg-slate-800 mx-1"></div>
-                <button onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-all hover:shadow-lg">
+                <button type="button" onClick={handlePrint} className="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-300 bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition-all hover:shadow-lg">
                     <Printer size={16}/> IMPRIMIR
                 </button>
-                <button onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
+                <button type="button" onClick={handleDownloadPDF} disabled={isDownloading} className="flex items-center gap-2 px-5 py-2 text-xs font-bold text-white bg-indigo-600 hover:bg-indigo-500 rounded-lg shadow-lg shadow-indigo-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed">
                     {isDownloading ? <Loader2 size={16} className="animate-spin" /> : <Download size={16} />}
                     {isDownloading ? 'GERANDO...' : 'BAIXAR PDF'}
                 </button>
             </div>
         </div>
 
-        {/* Paper Container (Background) */}
         <div className="flex-1 overflow-y-auto p-8 md:p-12 bg-[#111827] scroll-smooth flex justify-center items-start relative perspective-1000">
-             {/* Decorative Background Elements */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+             <div className="absolute inset-0 overflow-hidden pointer-events-none">
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/5 rounded-full blur-[100px]"></div>
             </div>
 
-            {/* The Paper */}
             <div 
                 id="printable-content" 
                 className="bg-white text-black relative transition-transform duration-500 origin-top"

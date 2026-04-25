@@ -112,5 +112,5 @@ export const INITIAL_CONTRACT_DATA: ContractData = {
   letterSubject: "Apresentação Comercial",
   
   coverLetterObjective: "Demonstrar como minha experiência técnica pode resolver os gargalos de performance da sua plataforma atual.",
-  coverLetterCta: "Gostaria de agendar uma breve reunião de 15 minutos para apresentar alguns cases de sucesso."
+  coverLetterCta: "Gostaria de agendar uma breve reunião de 15 minutos para apresentar alguns cases de sucesso.",
 };
