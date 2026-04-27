@@ -4,24 +4,24 @@ import { refineServiceDescription, generateLegalClause, analyzeRisks, generateTi
 
 const sectionHeaderClasses = {
   parties: {
-    active: 'bg-slate-800/90 border-indigo-500/70 shadow-lg shadow-indigo-500/10',
-    idle: 'bg-slate-900/50 border-slate-700 hover:border-indigo-500/40 hover:bg-slate-800/40',
+    active: 'premium-glass border-azure/50 shadow-azure/10',
+    idle: 'bg-midnight-lighter/50 border-white/5 hover:border-azure/30 hover:bg-midnight-lighter/80',
   },
   details: {
-    active: 'bg-slate-800/90 border-emerald-500/70 shadow-lg shadow-emerald-500/10',
-    idle: 'bg-slate-900/50 border-slate-700 hover:border-emerald-500/40 hover:bg-slate-800/40',
+    active: 'premium-glass border-azure/50 shadow-azure/10',
+    idle: 'bg-midnight-lighter/50 border-white/5 hover:border-azure/30 hover:bg-midnight-lighter/80',
   },
   financial: {
-    active: 'bg-slate-800/90 border-amber-500/70 shadow-lg shadow-amber-500/10',
-    idle: 'bg-slate-900/50 border-slate-700 hover:border-amber-500/40 hover:bg-slate-800/40',
+    active: 'premium-glass border-azure/50 shadow-azure/10',
+    idle: 'bg-midnight-lighter/50 border-white/5 hover:border-azure/30 hover:bg-midnight-lighter/80',
   },
   legal: {
-    active: 'bg-slate-800/90 border-rose-500/70 shadow-lg shadow-rose-500/10',
-    idle: 'bg-slate-900/50 border-slate-700 hover:border-rose-500/40 hover:bg-slate-800/40',
+    active: 'premium-glass border-azure/50 shadow-azure/10',
+    idle: 'bg-midnight-lighter/50 border-white/5 hover:border-azure/30 hover:bg-midnight-lighter/80',
   },
   signature: {
-    active: 'bg-slate-800/90 border-sky-500/70 shadow-lg shadow-sky-500/10',
-    idle: 'bg-slate-900/50 border-slate-700 hover:border-sky-500/40 hover:bg-slate-800/40',
+    active: 'premium-glass border-azure/50 shadow-azure/10',
+    idle: 'bg-midnight-lighter/50 border-white/5 hover:border-azure/30 hover:bg-midnight-lighter/80',
   },
 };
 
@@ -109,13 +109,13 @@ Relatórios, diagramas e documentos produzidos durante a consultoria tornam-se p
 ];
 
 const Input = ({ label, value, onChange, placeholder, className = "", icon: Icon }) => (
-  <div className={`space-y-2 ${className}`}>
+  <div className={`space-y-2.5 ${className}`}>
     <div className="flex justify-between items-center px-1">
-        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">{label}</label>
+        <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">{label}</label>
     </div>
     <div className="relative group">
       {Icon && (
-        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
+        <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-azure transition-colors">
           <Icon size={16} />
         </div>
       )}
@@ -123,7 +123,7 @@ const Input = ({ label, value, onChange, placeholder, className = "", icon: Icon
         value={value || ''}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full bg-slate-900/30 border border-slate-800/60 text-slate-200 text-xs sm:text-sm ${Icon ? 'pl-10 sm:pl-11' : 'px-4'} py-2.5 sm:py-3 rounded-xl sm:rounded-2xl focus:outline-none focus:border-indigo-500/40 focus:bg-slate-900/60 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-300 placeholder:text-slate-700 font-medium`}
+        className={`w-full bg-midnight-lighter/30 border border-white/5 text-slate-200 text-xs sm:text-sm ${Icon ? 'pl-10 sm:pl-11' : 'px-4'} py-3 sm:py-3.5 rounded-xl sm:rounded-2xl focus:outline-none focus:border-azure/50 focus:bg-midnight-lighter/60 focus:ring-8 focus:ring-azure/5 transition-all duration-300 placeholder:text-slate-700 font-medium`}
       />
     </div>
   </div>
@@ -185,19 +185,16 @@ const DateInput = ({ label, value, onChange, className = '' }) => {
 
 const TextArea = ({ label, value, onChange, placeholder, className = "", maxLength = 4000 }) => {
   const count = (value || '').length;
-  const isOverLimit = count > 3000; // Average A4 limit for clean layout
+  const isOverLimit = count > 3000; 
   
   return (
-    <div className={`space-y-2 ${className}`}>
+    <div className={`space-y-2.5 ${className}`}>
       <div className="flex justify-between items-center px-1">
-          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">{label}</label>
+          <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">{label}</label>
           <div className="flex items-center gap-2">
              <span className={`text-[9px] font-mono ${isOverLimit ? 'text-amber-500 font-bold' : 'text-slate-600'}`}>
                 {count.toLocaleString()} / {maxLength.toLocaleString()}
              </span>
-             {isOverLimit && (
-                 <span className="text-[9px] bg-amber-500/10 text-amber-500 px-1.5 py-0.5 rounded border border-amber-500/20 animate-pulse">A4 Limit</span>
-             )}
           </div>
       </div>
       <div className="relative">
@@ -206,13 +203,8 @@ const TextArea = ({ label, value, onChange, placeholder, className = "", maxLeng
           onChange={onChange}
           placeholder={placeholder}
           maxLength={maxLength}
-          className={`w-full bg-slate-900/30 border ${isOverLimit ? 'border-amber-500/30' : 'border-slate-800/60'} text-slate-200 text-sm px-4 py-4 rounded-2xl focus:outline-none focus:border-indigo-500/40 focus:bg-slate-900/60 focus:ring-4 focus:ring-indigo-500/5 transition-all duration-300 placeholder:text-slate-700 min-h-[120px] resize-y font-medium leading-relaxed`}
+          className={`w-full bg-midnight-lighter/30 border ${isOverLimit ? 'border-amber-500/30' : 'border-white/5'} text-slate-200 text-sm px-4 py-4 rounded-2xl focus:outline-none focus:border-azure/50 focus:bg-midnight-lighter/60 focus:ring-8 focus:ring-azure/5 transition-all duration-300 placeholder:text-slate-700 min-h-[140px] resize-y font-medium leading-relaxed`}
         />
-        <div className="absolute bottom-3 right-3 flex gap-1">
-            <div className={`w-1 h-1 rounded-full ${count > 1000 ? 'bg-indigo-500' : 'bg-slate-800'}`} />
-            <div className={`w-1 h-1 rounded-full ${count > 2000 ? 'bg-indigo-500' : 'bg-slate-800'}`} />
-            <div className={`w-1 h-1 rounded-full ${count > 3000 ? 'bg-amber-500' : 'bg-slate-800'}`} />
-        </div>
       </div>
     </div>
   );
@@ -419,8 +411,8 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
   const getSkin = (id) => {
     if (id === 'style') {
       return {
-        active: 'bg-slate-800/90 border-purple-500/70 shadow-lg shadow-purple-500/10',
-        idle: 'bg-slate-900/50 border-slate-700 hover:border-purple-500/40 hover:bg-slate-800/40',
+        active: 'premium-glass border-gold/50 shadow-gold/10',
+        idle: 'bg-midnight-lighter/50 border-white/5 hover:border-gold/30 hover:bg-midnight-lighter/80',
       };
     }
     return sectionHeaderClasses[id];
@@ -430,30 +422,28 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
 
   const SectionHeader = ({ id, title, icon: Icon }) => {
     const active = activeSection === id;
+    const skin = getSkin(id);
     return (
       <button
         type="button"
         onClick={() => setActiveSection(active ? null : id)}
-        className={`w-full flex items-center justify-between p-3.5 sm:p-5 rounded-2xl sm:rounded-3xl border-2 text-left transition-all duration-700 hover:shadow-glow group relative overflow-hidden ${
+        className={`w-full flex items-center justify-between p-4 sm:p-6 rounded-[2rem] border transition-all duration-500 group relative overflow-hidden ${
           active 
-            ? 'bg-slate-900 border-indigo-500/50 shadow-2xl shadow-indigo-500/10 scale-[1.01]' 
-            : 'bg-slate-950/40 border-slate-800/40 hover:border-slate-700 hover:bg-slate-900/60'
+            ? `${skin.active} scale-[1.01]` 
+            : `${skin.idle}`
         }`}
       >
-        {active && (
-           <div className="absolute inset-0 bg-indigo-500/5 animate-pulse" />
-        )}
-        <div className="flex items-center gap-3 sm:gap-4 relative z-10">
-          <div className={`p-2.5 sm:p-3 rounded-xl sm:rounded-2xl transition-all duration-500 ${active ? 'bg-indigo-500 text-white shadow-lg shadow-indigo-500/40' : 'bg-slate-900 text-slate-500 group-hover:text-slate-300'}`}>
-            <Icon size={18} className="sm:w-5 sm:h-5" />
+        <div className="flex items-center gap-4 relative z-10">
+          <div className={`p-3 rounded-2xl transition-all duration-500 ${active ? 'bg-azure text-white shadow-lg shadow-azure/20' : 'bg-midnight text-slate-600 group-hover:text-slate-300'}`}>
+            <Icon size={20} />
           </div>
-          <div>
-            <h3 className={`font-black text-xs sm:text-sm uppercase tracking-[0.1em] sm:tracking-[0.2em] ${active ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'}`}>{title}</h3>
-            {active && <p className="text-[9px] sm:text-[10px] text-indigo-300/60 font-medium mt-0.5">Configurações desta seção</p>}
+          <div className="flex flex-col items-start">
+            <h3 className={`font-black text-xs sm:text-sm uppercase tracking-[0.2em] ${active ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>{title}</h3>
+            {active && <p className="text-[10px] text-azure/60 font-bold uppercase tracking-widest mt-1">Configuração Ativa</p>}
           </div>
         </div>
-        <div className={`p-1.5 sm:p-2 rounded-lg transition-all duration-500 ${active ? 'bg-indigo-500/10 text-indigo-400 rotate-180' : 'bg-slate-900 text-slate-700'}`}>
-          <ChevronDown size={14} className="sm:w-4 sm:h-4" />
+        <div className={`p-2 rounded-xl transition-all duration-500 ${active ? 'bg-azure/10 text-azure rotate-180' : 'bg-midnight text-slate-700'}`}>
+          <ChevronDown size={16} />
         </div>
       </button>
     );
@@ -462,37 +452,42 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
   return (
     <>
     <div className="p-4 sm:p-6 pb-32 space-y-4 max-w-4xl mx-auto">
-      <div className="flex flex-col gap-4 mb-2 rounded-2xl border border-slate-800 bg-slate-900/40 p-4 backdrop-blur-sm">
-          <div className="flex flex-col gap-1">
-             <h3 className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-500 ml-1">Fase do Documento</h3>
-             <div className="flex gap-2 overflow-x-auto pb-1 sm:pb-0 -mx-1 px-1">
+      <div className="flex flex-col gap-6 mb-8 premium-glass rounded-[2rem] p-6 sm:p-8">
+          <div className="flex flex-col gap-4">
+             <div className="flex items-center justify-between px-1">
+                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Document Phase</h3>
+                <div className="flex items-center gap-2">
+                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Live Preview</span>
+                </div>
+             </div>
+             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 {[
-                  { id: 'draft', label: 'Rascunho', color: 'bg-slate-700', desc: 'Marca d\'água de rascunho' },
-                  { id: 'pending', label: 'Em Revisão', color: 'bg-amber-500', desc: 'Carimbo de revisão técnica' },
-                  { id: 'final', label: 'Finalizado', color: 'bg-emerald-500', desc: 'Documento limpo e oficial' },
-                  { id: 'paid', label: 'Pago', color: 'bg-teal-500', desc: 'Carimbo de pagamento' }
+                  { id: 'draft', label: 'Rascunho', color: 'bg-slate-500' },
+                  { id: 'pending', label: 'Revisão', color: 'bg-amber-500' },
+                  { id: 'final', label: 'Finalizado', color: 'bg-azure' },
+                  { id: 'paid', label: 'Pago', color: 'bg-emerald-500' }
                 ].map(s => (
                     <button
                       type="button"
                       key={s.id}
                       onClick={() => handleChange('status', s.id)}
-                      className={`group relative flex flex-col items-center min-w-[100px] p-2 rounded-xl transition-all duration-300 border-2 ${
+                      className={`group relative flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 border ${
                           data.status === s.id 
-                          ? `bg-slate-800/80 border-indigo-500/50 shadow-lg shadow-indigo-500/10` 
-                          : 'border-transparent hover:bg-slate-800/30'
+                          ? `bg-white/5 border-white/10 shadow-2xl` 
+                          : 'border-transparent hover:bg-white/[0.02]'
                       }`}
                     >
-                        <div className={`w-2 h-2 rounded-full mb-1.5 ${data.status === s.id ? s.color : 'bg-slate-700'}`} />
-                        <span className={`text-[10px] font-bold uppercase tracking-wider ${data.status === s.id ? 'text-white' : 'text-slate-500'}`}>{s.label}</span>
-                        <span className="text-[8px] text-slate-600 font-medium group-hover:text-slate-400 transition-colors hidden sm:block">{s.desc}</span>
+                        <div className={`w-1.5 h-1.5 rounded-full mb-3 ${data.status === s.id ? s.color : 'bg-slate-800'}`} />
+                        <span className={`text-[10px] font-black uppercase tracking-[0.15em] ${data.status === s.id ? 'text-white' : 'text-slate-500'}`}>{s.label}</span>
                     </button>
                 ))}
              </div>
           </div>
-          <div className="h-px bg-slate-800/50 w-full" />
+          <div className="h-px bg-white/5 w-full" />
           <div className="flex items-center justify-between">
-              <p className="text-[10px] text-slate-500 font-medium italic">O status altera marcas d'água e carimbos no PDF final.</p>
-              <button type="button" onClick={onReset} className="inline-flex min-h-8 items-center justify-center gap-2 rounded-lg border border-rose-500/20 bg-rose-500/5 px-3 text-[10px] font-black uppercase tracking-widest text-rose-400 hover:bg-rose-500 hover:text-white transition-all active:scale-95">
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-60">PDF Watermarks updated automatically</p>
+              <button type="button" onClick={onReset} className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-4 text-[10px] font-black uppercase tracking-widest text-rose-400 hover:bg-rose-500 hover:text-white transition-all active:scale-95 border border-rose-500/20">
                 <Eraser size={14} aria-hidden /> <span>Resetar Tudo</span>
               </button>
           </div>
@@ -561,16 +556,16 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
               </div>
 
               {data.type !== 'cv' && (
-                <div className="md:col-span-2 mt-4">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
-                    <label className="text-[10px] font-black text-emerald-400 uppercase tracking-[0.2em]">Destinatário (Cliente)</label>
+                <div className="md:col-span-2 mt-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                    <label className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] px-1">Destinatário (Cliente)</label>
                     
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       {clientProfiles.length > 0 && (
-                        <div className="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
-                          <Users size={12} className="text-emerald-500" />
+                        <div className="flex items-center gap-3 bg-midnight px-4 py-2 rounded-xl border border-white/5 shadow-sm">
+                          <Users size={14} className="text-emerald-500" />
                           <select 
-                            className="bg-transparent border-none text-[10px] font-bold text-slate-300 outline-none cursor-pointer"
+                            className="bg-transparent border-none text-[10px] font-black text-slate-400 outline-none cursor-pointer uppercase tracking-widest"
                             onChange={(e) => {
                               const client = clientProfiles.find(c => c.clientDoc === e.target.value);
                               if (client) {
@@ -593,7 +588,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                       )}
                       <button 
                         onClick={() => {
-                          if (!data.clientName || !data.clientDoc) return notify('Preencha pelo menos Nome e Documento do cliente.', 'error');
+                          if (!data.clientName || !data.clientDoc) return notify('Preencha pelo menos Nome e Documento.', 'error');
                           onSaveClient({
                             clientName: data.clientName,
                             clientDoc: data.clientDoc,
@@ -601,23 +596,23 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                             clientZipPhone: data.clientZipPhone
                           });
                         }}
-                        className="text-[9px] font-black bg-emerald-500/10 text-emerald-400 px-3 py-1.5 rounded-xl border border-emerald-500/20 hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2"
+                        className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-xl border border-emerald-500/20 hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2 uppercase tracking-widest"
                       >
-                        <Save size={10} /> SALVAR NESTE BANCO
+                        <Save size={12} /> SALVAR PERFIL
                       </button>
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
+                  <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-white/10">
                     <Input label="Nome / razão social" value={data.clientName} onChange={(e) => handleChange('clientName', e.target.value)} placeholder="Nome do Cliente ou Empresa" />
-                    <Input label="CPF ou CNPJ do Cliente" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} placeholder="000.000.000-00" />
+                    <Input label="CPF ou CNPJ" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} placeholder="000.000.000-00" />
 
                     {/* CEP with lookup */}
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em] px-1 block">CEP</label>
+                    <div className="space-y-2.5">
+                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 block">CEP</label>
                       <div className="flex gap-2">
-                        <div className="relative flex-1">
-                          <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500" />
+                        <div className="relative flex-1 group">
+                          <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-azure transition-colors" />
                           <input
                             value={data.clientZip || ''}
                             onChange={(e) => {
@@ -628,23 +623,23 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                             onBlur={(e) => handleCepLookup(e.target.value)}
                             placeholder="00000-000"
                             maxLength={9}
-                            className="w-full bg-slate-900/30 border border-slate-800/60 text-slate-200 text-sm pl-11 pr-4 py-3 rounded-2xl focus:outline-none focus:border-indigo-500/40 focus:bg-slate-900/60 transition-all placeholder:text-slate-700 font-medium font-mono"
+                            className="w-full bg-midnight-lighter/30 border border-white/5 text-slate-200 text-sm pl-11 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-azure/50 focus:bg-midnight-lighter/60 transition-all placeholder:text-slate-700 font-medium font-mono"
                           />
                         </div>
                         <button
                           onClick={() => handleCepLookup(data.clientZip || '')}
                           disabled={isCepLoading}
-                          className="px-4 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white rounded-2xl text-xs font-bold transition-all active:scale-95 flex items-center gap-2 shrink-0"
+                          className="px-6 bg-azure hover:bg-azure/90 disabled:opacity-50 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2 shrink-0 shadow-lg shadow-azure/10"
                         >
                           {isCepLoading ? (
                             <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
                           ) : (
                             <Globe size={16} />
                           )}
-                          {isCepLoading ? 'Buscando...' : 'Buscar'}
+                          {isCepLoading ? '...' : 'BUSCAR'}
                         </button>
                       </div>
-                      {cepError && <p className="text-[10px] text-rose-400 px-1">{cepError}</p>}
+                      {cepError && <p className="text-[10px] text-rose-400 px-1 font-bold">{cepError}</p>}
                     </div>
 
                     <Input
@@ -656,21 +651,6 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                     />
 
                     <Input label="Endereço completo" value={data.clientAddress} onChange={(e) => handleChange('clientAddress', e.target.value)} className="md:col-span-2" placeholder="Preenchido automaticamente pelo CEP..." />
-                  </div>
-
-                  <div className="mt-4 flex justify-end">
-                    <button 
-                      onClick={() => onSaveClient({
-                        clientName: data.clientName,
-                        clientDoc: data.clientDoc,
-                        clientAddress: data.clientAddress,
-                        clientZipPhone: data.clientZipPhone
-                      })}
-                      disabled={!data.clientName || !data.clientDoc}
-                      className="text-[10px] font-bold uppercase text-emerald-400 flex items-center gap-2 hover:text-emerald-300 disabled:opacity-30 disabled:grayscale transition-all"
-                    >
-                      <UserPlus size={14} /> Salvar nos meus clientes
-                    </button>
                   </div>
                 </div>
               )}
@@ -687,7 +667,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
             icon={Briefcase} 
         />
         {activeSection === 'details' && (
-             <div className="p-5 bg-slate-900/30 border-l-2 border-emerald-500 rounded-r-xl space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
+              <div className="p-6 bg-midnight-lighter/20 border-l-2 border-azure rounded-r-[2rem] space-y-8 animate-in fade-in slide-in-from-top-4 duration-500">
                 
                 {/* TEMPLATES QUICK ACCESS */}
                 {data.type === 'contract' && (
@@ -696,14 +676,15 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                         <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                             {SERVICE_TEMPLATES.map(t => (
                                 <button
-                                    key={t.id}
-                                    onClick={() => handleApplyTemplate(t)}
-                                    className="flex flex-col items-center gap-2 p-3 bg-slate-900 border border-slate-800 hover:border-emerald-500 hover:bg-slate-800 rounded-xl transition-all group"
+                                    key={t.label}
+                                    type="button"
+                                    onClick={() => handleChange('services', t.items)}
+                                    className="flex flex-col items-center gap-3 p-4 rounded-2xl bg-midnight border border-white/5 hover:border-azure/50 hover:bg-midnight-lighter transition-all group shadow-sm active:scale-95"
                                 >
-                                    <div className="p-2 bg-slate-950 rounded-lg text-emerald-500 group-hover:scale-110 transition-transform">
-                                        <t.icon size={20} />
+                                    <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-slate-500 group-hover:text-azure transition-colors">
+                                        <FileText size={20} />
                                     </div>
-                                    <span className="text-xs font-medium text-slate-400 group-hover:text-white text-center">{t.label}</span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-white text-center leading-tight">{t.label}</span>
                                 </button>
                             ))}
                         </div>
@@ -718,14 +699,16 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                             <div className="space-y-4">
                                 <div className="flex gap-2 flex-col md:flex-row">
                                     <input 
-                                        className="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-4 py-3 text-white focus:border-emerald-500 outline-none transition-colors"
+                                        className="flex-1 bg-midnight border border-white/5 rounded-xl px-4 py-3.5 text-white focus:border-azure/50 outline-none transition-all placeholder:text-slate-700 font-medium"
                                         placeholder="Descreva o serviço a ser prestado..."
                                         value={newService}
                                         onChange={(e) => setNewService(e.target.value)}
                                         onKeyDown={(e) => e.key === 'Enter' && handleServiceAdd()}
                                     />
-                                    <button onClick={handleServiceAdd} className="bg-slate-800 hover:bg-slate-700 p-3 rounded-lg text-white transition-colors"><Plus /></button>
-                                    <button onClick={handleAiImprove} disabled={isAiLoading} className="bg-indigo-600 hover:bg-indigo-500 px-4 rounded-lg text-white flex gap-2 items-center font-medium transition-colors">
+                                    <button onClick={handleServiceAdd} className="bg-midnight-lighter hover:bg-white/5 p-3.5 rounded-xl text-slate-400 hover:text-white transition-all border border-white/5 shadow-lg active:scale-95">
+                                        <Plus size={20} />
+                                    </button>
+                                    <button onClick={handleAiImprove} disabled={isAiLoading} className="bg-azure hover:shadow-azure/20 px-6 py-3.5 rounded-xl text-white flex gap-2 items-center font-black uppercase text-[10px] tracking-[0.15em] transition-all shadow-lg active:scale-95 disabled:opacity-50">
                                         <Sparkles size={16} className={isAiLoading ? 'animate-spin' : ''}/> {isAiLoading ? 'Melhorando...' : 'IA Refine'}
                                     </button>
                                 </div>
@@ -745,7 +728,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                                                     handleChange('services', [...data.services, chip]);
                                                 }
                                             }}
-                                            className="text-[9px] font-bold text-slate-400 bg-slate-800/40 border border-slate-700 px-2 py-1 rounded-md hover:border-emerald-500 hover:text-white transition-all"
+                                            className="text-[9px] font-black uppercase tracking-widest text-slate-500 bg-white/[0.02] border border-white/5 px-3 py-1.5 rounded-lg hover:border-azure/50 hover:text-white transition-all active:scale-95"
                                         >
                                             + {chip}
                                         </button>
@@ -756,41 +739,45 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                         <div className="space-y-2">
                             {data.type === 'nda' && <p className="text-sm text-slate-400 italic mb-2">O NDA já possui cláusulas padrão de sigilo. Adicione serviços específicos se necessário para contextualizar.</p>}
                             {data.services.map((s, i) => (
-                                <div key={i} className="flex justify-between items-center bg-slate-950 p-3 rounded-lg border border-slate-800 group hover:border-slate-600 transition-colors">
-                                    <span className="text-sm text-slate-300">{s}</span>
+                                <div key={i} className="flex justify-between items-center bg-midnight-lighter/30 p-4 rounded-xl border border-white/5 group hover:border-azure/20 transition-all">
+                                    <span className="text-sm text-slate-300 font-medium">{s}</span>
                                     <button onClick={() => {
                                         const updated = data.services.filter((_, idx) => idx !== i);
                                         handleChange('services', updated);
-                                    }} className="text-slate-600 hover:text-red-500 transition-colors"><Trash2 size={16}/></button>
+                                    }} className="text-slate-600 hover:text-rose-500 transition-colors p-1"><Trash2 size={16}/></button>
                                 </div>
                             ))}
                         </div>
 
                         {data.services.length > 0 && (
-                            <div className="pt-4 border-t border-slate-800">
+                            <div className="pt-6 border-t border-white/5">
                                 <button 
                                     onClick={handleGenerateTimeline}
                                     disabled={isTimelineLoading}
-                                    className="w-full py-2.5 bg-slate-800 hover:bg-slate-700 text-indigo-400 font-bold text-[10px] uppercase tracking-widest rounded-lg border border-indigo-500/20 flex items-center justify-center gap-2 transition-all"
+                                    className="w-full py-4 bg-midnight-lighter/50 hover:bg-midnight-lighter text-azure font-black text-[10px] uppercase tracking-[0.2em] rounded-xl border border-azure/20 flex items-center justify-center gap-3 transition-all shadow-lg active:scale-[0.98]"
                                 >
-                                    {isTimelineLoading ? <div className="animate-spin rounded-full h-3 w-3 border-2 border-indigo-500 border-t-transparent" /> : <Bot size={14} />}
+                                    {isTimelineLoading ? <div className="animate-spin rounded-full h-4 w-4 border-2 border-azure border-t-transparent" /> : <Bot size={16} />}
                                     {isTimelineLoading ? 'GERANDO CRONOGRAMA...' : 'GERAR CRONOGRAMA TÉCNICO (IA)'}
                                 </button>
                                 
                                 {data.timeline && data.timeline.length > 0 && (
-                                    <div className="mt-4 space-y-2">
-                                        {data.timeline.map((p, i) => (
-                                            <div key={i} className="p-3 bg-slate-950 border border-slate-800 rounded-lg">
-                                                <div className="flex justify-between items-center mb-1">
-                                                    <span className="text-xs font-bold text-white uppercase tracking-tight">{p.phase}</span>
-                                                    <span className="text-[10px] font-mono text-indigo-400">{p.duration}</span>
-                                                </div>
-                                                <p className="text-[10px] text-slate-500 leading-tight">{p.deliverables}</p>
-                                            </div>
-                                        ))}
-                                        <button onClick={() => handleChange('timeline', [])} className="text-[10px] text-slate-600 hover:text-slate-400 uppercase font-bold">Limpar cronograma</button>
-                                    </div>
-                                )}
+                                     <div className="mt-6 space-y-3">
+                                         {data.timeline.map((p, i) => (
+                                             <div key={i} className="p-4 bg-midnight rounded-xl border border-white/5 shadow-sm">
+                                                 <div className="flex justify-between items-center mb-1.5">
+                                                     <span className="text-xs font-black text-white uppercase tracking-tight">{p.phase}</span>
+                                                     <span className="text-[10px] font-mono font-bold text-azure bg-azure/10 px-2 py-0.5 rounded-lg">{p.duration}</span>
+                                                 </div>
+                                                 <p className="text-[10px] text-slate-500 leading-relaxed font-medium">{p.deliverables}</p>
+                                             </div>
+                                         ))}
+                                         <div className="flex justify-center">
+                                             <button onClick={() => handleChange('timeline', [])} className="text-[9px] text-slate-600 hover:text-rose-400 uppercase font-black tracking-widest transition-colors py-2">
+                                                 Limpar cronograma
+                                             </button>
+                                         </div>
+                                     </div>
+                                 )}
                             </div>
                         )}
                     </div>
@@ -889,7 +876,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                         </div>
                         <Input label="Título / Assunto" value={data.letterSubject} onChange={e => handleChange('letterSubject', e.target.value)} />
                         <TextArea label="Corpo da Carta" value={data.letterBody} onChange={e => handleChange('letterBody', e.target.value)} className="min-h-[200px]" />
-                        <div className="p-4 bg-purple-900/10 border border-purple-500/30 rounded-lg space-y-4">
+                                    <div className="p-4 bg-purple-900/10 border border-purple-500/30 rounded-lg space-y-4">
                             <TextArea label="Objetivo Principal (Destaque)" value={data.coverLetterObjective} onChange={e => handleChange('coverLetterObjective', e.target.value)} className="min-h-[80px]" />
                             <Input label="Chamada para Ação (CTA)" value={data.coverLetterCta} onChange={e => handleChange('coverLetterCta', e.target.value)} placeholder="Ex: Gostaria de agendar uma reunião..." />
                         </div>
@@ -904,7 +891,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
         <div className="space-y-2">
             <SectionHeader id="financial" title="Financeiro & Datas" icon={Wallet} />
             {activeSection === 'financial' && (
-                <div className="p-5 bg-slate-900/30 border-l-2 border-amber-500 rounded-r-xl grid grid-cols-1 md:grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-4 duration-300">
+                <div className="p-6 bg-midnight-lighter/20 border-l-2 border-azure rounded-r-[2rem] grid grid-cols-1 md:grid-cols-2 gap-6 animate-in fade-in slide-in-from-top-4 duration-500">
                     {data.type === 'contract' && (
                         <>
                             <div className="space-y-4">
@@ -933,7 +920,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                                     />
                                     <Input label="Saldo" value={data.valueBalance} onChange={(e) => handleChange('valueBalance', e.target.value)} />
                                 </div>
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-2 gap-3">
                                     <button 
                                         onClick={() => {
                                             const t = parseFloat(data.valueTotal.replace(',', '.') || '0');
@@ -942,9 +929,9 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                                             handleChange('valueBalance', half);
                                             notify('Valores divididos 50/50!');
                                         }}
-                                        className="text-[10px] font-black bg-indigo-500/20 text-indigo-400 px-3 py-2.5 rounded-xl border border-indigo-500/30 hover:bg-indigo-500 hover:text-white transition-all active:scale-95"
+                                        className="text-[10px] font-black bg-azure/10 text-azure px-4 py-3 rounded-xl border border-azure/20 hover:bg-azure hover:text-white transition-all active:scale-95 uppercase tracking-widest"
                                     >
-                                        DIVIDIR 50/50
+                                        Dividir 50/50
                                     </button>
                                     <button 
                                         onClick={() => {
@@ -953,9 +940,9 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                                             handleChange('valueBalance', (t * 0.7).toFixed(2).replace('.', ','));
                                             notify('Sinal de 30% aplicado!');
                                         }}
-                                        className="text-[10px] font-black bg-slate-800 text-slate-400 px-3 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-700 hover:text-white transition-all active:scale-95"
+                                        className="text-[10px] font-black bg-white/5 text-slate-400 px-4 py-3 rounded-xl border border-white/10 hover:bg-white/10 hover:text-white transition-all active:scale-95 uppercase tracking-widest"
                                     >
-                                        30% SINAL
+                                        30% Sinal
                                     </button>
                                 </div>
                             </div>
@@ -980,10 +967,10 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                         </>
                     )}
                     {data.type !== 'invoice' && <DateInput label="Data do Documento" value={data.contractDate} onChange={(val) => handleChange('contractDate', val)} className="md:col-span-2" />}
-                    <div className="md:col-span-2 bg-slate-950 p-4 rounded-xl border border-amber-500/10 mt-2">
-                        <label className="text-[10px] uppercase text-amber-400 font-bold mb-2 block">Dados para Pagamento (Opcional)</label>
-                        <Input label="Sua Chave PIX" value={data.pixKey} onChange={e => handleChange('pixKey', e.target.value)} placeholder="E-mail, CPF, CNPJ ou Aleatória" />
-                        <p className="text-[10px] text-slate-500 mt-2">Isso gerará um QR Code (ou texto de instrução) no rodapé de orçamentos e notas fiscais.</p>
+                    <div className="md:col-span-2 bg-midnight p-6 rounded-2xl border border-white/5 shadow-sm mt-2">
+                        <label className="text-[10px] uppercase text-gold font-black tracking-widest mb-4 block">Pagamento via PIX</label>
+                        <Input label="Chave PIX" value={data.pixKey} onChange={e => handleChange('pixKey', e.target.value)} placeholder="E-mail, CPF, CNPJ ou Aleatória" />
+                        <p className="text-[9px] text-slate-600 mt-3 font-medium italic">Gera QR Code automático no rodapé do documento.</p>
                     </div>
 
                     <div className="md:col-span-2 bg-slate-950 p-5 rounded-xl border border-indigo-500/10 space-y-4">

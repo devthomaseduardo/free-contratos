@@ -563,67 +563,71 @@ export const ContractPreview = ({ data }) => {
   );
 
   return (
-    <div className="flex flex-col h-full bg-[#111827]">
+    <div className="flex flex-col h-full bg-midnight">
         {/* Toolbar */}
-        <div className="flex justify-between items-center px-6 py-4 bg-[#0B0F19] border-b border-slate-800 shrink-0 shadow-lg z-20">
-            <div className="flex items-center gap-3">
-                <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : data.status === 'pending' ? 'bg-amber-500' : 'bg-slate-500'}`} />
-                <span className="text-slate-300 text-xs font-bold uppercase tracking-wider">
-                    {data.type} &middot; {data.status}
-                </span>
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 px-6 sm:px-8 py-4 sm:py-5 bg-midnight-lighter/50 backdrop-blur-xl border-b border-white/5 shrink-0 z-20">
+            <div className="flex items-center gap-4 self-start md:self-center">
+                <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-azure shadow-[0_0_12px_rgba(59,130,246,0.6)]' : data.status === 'pending' ? 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]' : 'bg-slate-600'}`} />
+                <div className="flex flex-col">
+                    <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+                        {data.type}
+                    </span>
+                    <span className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mt-0.5">
+                        {data.status === 'final' ? 'Documento Pronto' : data.status === 'pending' ? 'Sob Revisão' : 'Rascunho Local'}
+                    </span>
+                </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center justify-between w-full md:w-auto gap-3 sm:gap-6">
                 {/* Visual Options */}
-                <div className="flex items-center gap-2 bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+                <div className="flex items-center gap-1 sm:gap-3 bg-white/[0.03] p-1 rounded-xl sm:rounded-2xl border border-white/5">
                     <button 
                         onClick={() => setIsPrintMode(!isPrintMode)}
-                        className={`flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold rounded-lg transition-all ${isPrintMode ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'text-slate-400 hover:text-slate-200'}`}
+                        className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg sm:rounded-xl transition-all ${isPrintMode ? 'bg-azure text-white shadow-xl shadow-azure/20' : 'text-slate-500 hover:text-white'}`}
                     >
                         {isPrintMode ? <EyeOff size={14} /> : <Eye size={14} />}
-                        {isPrintMode ? 'MODO FOCO' : 'VER PAPEL'}
+                        <span className="hidden xs:inline">{isPrintMode ? 'Sair' : 'Foco'}</span>
                     </button>
+                    <div className="w-px h-4 bg-white/10"></div>
                     <button 
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 py-1.5 text-[10px] font-bold rounded-lg text-slate-400 hover:text-slate-200 transition-all"
+                        className="flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg sm:rounded-xl text-slate-500 hover:text-white transition-all"
                     >
                         {copied ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                        {copied ? 'COPIADO' : 'COPIAR'}
+                        <span className="hidden xs:inline">{copied ? 'Ok' : 'Copiar'}</span>
                     </button>
                 </div>
 
-                <div className="h-6 w-px bg-slate-800 mx-1"></div>
-
                 {/* Export Actions */}
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={handlePrint}
-                        className="flex items-center gap-2 px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all border border-slate-700"
+                        className="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 text-slate-300 transition-all border border-white/10 active:scale-95"
                     >
-                        <Printer size={14} /> IMPRIMIR
+                        <Printer size={14} /> <span className="hidden sm:inline">Imprimir</span>
                     </button>
                     <button 
                         onClick={handleDownloadPDF} 
                         disabled={isDownloading} 
-                        className="flex items-center gap-2 px-5 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-900/20"
-                        style={{ backgroundColor: data.accentColor }}
+                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-azure/20 active:scale-95"
+                        style={{ backgroundColor: data.accentColor || '#3b82f6' }}
                     >
                         {isDownloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-                        {isDownloading ? 'GERANDO...' : 'BAIXAR PDF'}
+                        <span>{isDownloading ? '...' : 'PDF'}</span>
                     </button>
                 </div>
             </div>
         </div>
 
         {/* Workspace Area */}
-        <div className={`flex-1 overflow-y-auto p-4 md:p-16 transition-all duration-500 flex justify-center items-start custom-scrollbar relative ${isPrintMode ? 'bg-slate-200' : 'bg-[#020617]'}`}>
+        <div className={`flex-1 overflow-y-auto p-4 md:p-20 transition-all duration-500 flex justify-center items-start custom-scrollbar relative ${isPrintMode ? 'bg-slate-100' : 'bg-midnight-deep'}`}>
              {!isPrintMode && (
-                <div className="absolute inset-0 pointer-events-none opacity-50" style={{ backgroundImage: 'radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '32px 32px' }}></div>
+                <div className="absolute inset-0 pointer-events-none opacity-[0.03]" style={{ backgroundImage: 'radial-gradient(white 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
              )}
 
             <div 
                 id="printable-content" 
-                className={`bg-white text-black shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] origin-top transition-transform duration-500 relative ${isPrintMode ? 'scale-100' : 'scale-[0.85] sm:scale-100'}`}
+                className={`bg-white text-black shadow-premium origin-top transition-all duration-700 relative ${isPrintMode ? 'scale-100' : 'scale-[0.9] sm:scale-100 mt-8 mb-20'}`}
                 style={{
                     width: '210mm',
                     minHeight: '297mm',

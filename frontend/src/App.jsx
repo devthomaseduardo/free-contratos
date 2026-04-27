@@ -91,6 +91,10 @@ const App = () => {
     showToast('Documento salvo no histórico!');
   };
 
+  const saveClientProfile = async (client) => {
+    try {
+        await apiSaveClient(client);
+        setClientProfiles(prev => [...prev.filter(c => c.clientDoc !== client.clientDoc), client]);
         showToast('Perfil do cliente salvo no banco de dados!');
     } catch (e) {
         showToast('Erro ao salvar cliente: ' + e.message, 'error');
