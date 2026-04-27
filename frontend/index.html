@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ContractForge Pro | Thomas Eduardo</title>
+    <title>Papel Passado | by devthomas</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
@@ -11,26 +11,31 @@
         theme: {
           extend: {
             colors: {
-              neon: {
-                purple: '#a855f7',
-                green: '#10b981',
-                cyan: '#06b6d4',
-                dark: '#020617',
-              },
+              premium: { 950: '#020617', 900: '#0f172a', 800: '#1e293b', gold: '#d4af37' },
+              neon: { purple: '#a855f7', green: '#10b981', cyan: '#06b6d4' },
             },
             fontFamily: {
-              sans: ['Inter', 'sans-serif'],
+              sans: ['Outfit', 'Inter', 'sans-serif'],
               mono: ['Fira Code', 'monospace'],
-              serif: ['Times New Roman', 'serif'],
+              serif: ['Lora', 'Times New Roman', 'serif'],
+            },
+            boxShadow: {
+              'premium': '0 20px 50px -12px rgba(0, 0, 0, 0.5)',
+              'glow': '0 0 20px rgba(99, 102, 241, 0.2)',
             },
             animation: {
-              in: 'fadeIn .3s ease-out',
+              'in-scale': 'inScale .4s cubic-bezier(0.16, 1, 0.3, 1)',
+              'float': 'float 6s ease-in-out infinite',
             },
             keyframes: {
-              fadeIn: {
-                '0%': { opacity: '0' },
-                '100%': { opacity: '1' },
+              inScale: {
+                '0%': { opacity: '0', transform: 'scale(0.95)' },
+                '100%': { opacity: '1', transform: 'scale(1)' },
               },
+              float: {
+                '0%, 100%': { transform: 'translateY(0)' },
+                '50%': { transform: 'translateY(-10px)' },
+              }
             },
           },
         },
@@ -101,26 +106,19 @@
           top: 0;
           width: 210mm !important;
           min-height: 297mm !important;
-          margin: 0 !important;
-          padding: 2.5cm !important;
           box-shadow: none !important;
-          border: none !important;
+          margin: 0 !important;
+          padding: 0 !important;
           background-color: white !important;
-          print-color-adjust: exact;
           -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
         }
 
-        .bg-gray-50,
-        .shadow-2xl {
-          background-color: transparent !important;
-          box-shadow: none !important;
-          border: none !important;
-        }
       }
     </style>
   </head>
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

@@ -1,19 +1,24 @@
 {
-  "name": "free-contratos",
+  "name": "paper-contracts",
   "private": true,
   "version": "1.0.0",
   "description": "devthomas/contratos — emissor freelance (React) + API REST (Express) + IA Gemini no servidor.",
-  "workspaces": ["frontend", "backend"],
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
   "scripts": {
     "dev": "concurrently -n api,web -c blue,green \"npm run dev -w @free-contratos/backend\" \"npm run dev -w @free-contratos/frontend\"",
     "build": "npm run build -w @free-contratos/backend && npm run build -w @free-contratos/frontend",
-    "start": "npm run start -w @free-contratos/backend",
-    "typecheck": "npm run typecheck -w @free-contratos/backend && npm run typecheck -w @free-contratos/frontend"
+    "start": "npm run start -w @free-contratos/backend"
   },
   "devDependencies": {
     "concurrently": "^9.1.2"
   },
   "engines": {
     "node": ">=20"
+  },
+  "dependencies": {
+    "@google/genai": "^1.50.1"
   }
 }
