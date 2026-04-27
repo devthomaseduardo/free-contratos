@@ -1,5 +1,7 @@
 # paper‑contracts
 
+⚠️ **Este projeto é proprietário e não é open source.**
+
 **paper‑contracts** – A premium, open‑source contract generator built with React (Vite) and Express. It creates beautiful, multi‑page PDFs with automatic watermarks for draft, review, final, and paid phases, integrates ViaCEP address lookup, a native date picker, and AI‑assisted clause generation via Gemini.
 
 ---
@@ -40,8 +42,9 @@ The app will be available at:
 ## 🔧 Configuration
 
 Create a `.env` file inside the `backend` folder with your Gemini API key:
-```
-GEMINI_API_KEY=AIzaSyAweOosr__r23hFxxh99PC6ve18DSS4IWs
+
+```bash
+GEMINI_API_KEY=YOUR_API_KEY
 ```
 
 You can also change the default accent colour in the UI via the **Cores & Identidade** section.
@@ -50,7 +53,7 @@ You can also change the default accent colour in the UI via the **Cores & Identi
 
 ## 📂 Project Structure
 
-```
+```text
 paper-contracts/
 ├─ frontend/          # Vite + React UI
 │   └─ src/
@@ -76,4 +79,4 @@ The compiled frontend will be placed in `frontend/dist` and can be served static
 
 ## 📄 License
 
-MIT – Feel free to fork, modify, and publish your own version.
+All rights reserved. This software is provided for internal use only. Redistribution, modification, or public distribution is prohibited without express written permission.
