@@ -12,7 +12,7 @@ import { auth, logout } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 
 import { INITIAL_CONTRACT_DATA } from './types';
-import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle, Target } from 'lucide-react';
+import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle, Target, Fingerprint } from 'lucide-react';
 
 import { getClients, saveClient as apiSaveClient, deleteClient as apiDeleteClient, getDocuments as apiGetDocs, saveDocument as apiSaveDoc, deleteDocument as apiDeleteDoc } from './services/api';
 
@@ -20,9 +20,10 @@ const STORAGE_KEY = 'papercontracts_current_v1';
 const HISTORY_KEY = 'papercontracts_history_v1';
 
 const App = () => {
-  const [isDemoActive, setIsDemoActive] = useState(false);
+  const [isDemoActive, setIsDemoActive] = useState(() => localStorage.getItem('paper_demo_active') === 'true');
   const [currentView, setCurrentView] = useState('home'); // home, login, tech, sec, ent
   const [user, setUser] = useState(null);
+  const [authLoading, setAuthLoading] = useState(true);
 
 
   const [contractData, setContractData] = useState(INITIAL_CONTRACT_DATA);
@@ -34,14 +35,21 @@ const App = () => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
       if (currentUser) setIsDemoActive(true);
+      setAuthLoading(false);
     });
     return () => unsubscribe();
   }, []);
 
 
+   const handleAccessDemo = () => {
+     setIsDemoActive(true);
+     localStorage.setItem('paper_demo_active', 'true');
+   };
+
   const handleLogout = async () => {
     await logout();
     setIsDemoActive(false);
+    localStorage.removeItem('paper_demo_active');
   };
 
   const [history, setHistory] = useState([]);
@@ -273,6 +281,21 @@ const App = () => {
     return 'Currículo Vitae';
   };
 
+  if (authLoading) {
+    return (
+      <div className="h-screen bg-midnight flex flex-col items-center justify-center gap-6">
+        <div className="relative">
+          <div className="w-16 h-16 border-t-2 border-azure rounded-full animate-spin" />
+          <Fingerprint size={24} className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-azure/50" />
+        </div>
+        <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] font-black text-white uppercase tracking-[0.4em] animate-pulse">Autenticando</span>
+            <span className="text-[9px] text-slate-600 font-bold uppercase tracking-widest">Paper Contracts Engine v3.0</span>
+        </div>
+      </div>
+    );
+  }
+
   if (!isDemoActive && !user) {
     if (currentView === 'login') {
       return <LoginPage 
@@ -285,7 +308,7 @@ const App = () => {
     if (currentView === 'ent') return <EnterprisePage onBack={() => setCurrentView('home')} />;
     
     return <HomePage 
-      onAccessDemo={() => setIsDemoActive(true)} 
+      onAccessDemo={handleAccessDemo} 
       onNavigate={(view) => setCurrentView(view)}
     />;
   }

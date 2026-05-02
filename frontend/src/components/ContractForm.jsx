@@ -250,7 +250,7 @@ const TextArea = ({ label, value, onChange, placeholder, className = "", maxLeng
 
 
 
-export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onSaveClient, onDeleteClient, onNotify }) => {
+export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteClient, clientProfiles = [], onNotify }) => {
   const [activeSection, setActiveSection] = useState('parties');
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isClauseLoading, setIsClauseLoading] = useState(false);
@@ -595,28 +595,49 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                   
                   <div className="flex flex-wrap items-center gap-2">
                     {clientProfiles.length > 0 && (
-                      <div className="flex items-center gap-3 bg-midnight px-4 py-2 rounded-xl border border-white/5 shadow-sm">
-                        <Users size={14} className="text-emerald-500" />
-                        <select 
-                          className="bg-transparent border-none text-[10px] font-black text-slate-400 outline-none cursor-pointer uppercase tracking-widest"
-                          onChange={(e) => {
-                            const client = clientProfiles.find(c => c.clientDoc === e.target.value);
-                            if (client) {
-                              onChange({
-                                ...data,
-                                clientName: client.clientName,
-                                clientDoc: client.clientDoc,
-                                clientAddress: client.clientAddress,
-                                clientZipPhone: client.clientZipPhone
-                              });
+                      <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3 bg-midnight px-4 py-2 rounded-xl border border-white/5 shadow-sm">
+                          <Users size={14} className="text-emerald-500" />
+                          <select 
+                            id="client-db-select"
+                            className="bg-transparent border-none text-[10px] font-black text-slate-400 outline-none cursor-pointer uppercase tracking-widest"
+                            onChange={(e) => {
+                              const client = clientProfiles.find(c => c.clientDoc === e.target.value);
+                              if (client) {
+                                onChange({
+                                  ...data,
+                                  clientName: client.clientName,
+                                  clientDoc: client.clientDoc,
+                                  clientAddress: client.clientAddress,
+                                  clientZipPhone: client.clientZipPhone
+                                });
+                              }
+                            }}
+                          >
+                            <option value="">BANCO DE CLIENTES</option>
+                            {clientProfiles.map(c => (
+                              <option key={c.clientDoc} value={c.clientDoc}>{c.clientName}</option>
+                            ))}
+                          </select>
+                        </div>
+                        
+                        {/* Delete Current Selected Client Profile Button */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const select = document.getElementById('client-db-select');
+                            const val = select?.value;
+                            if (val) {
+                                onDeleteClient(val);
+                            } else {
+                                onNotify('Selecione um cliente no banco para excluir.', 'info');
                             }
                           }}
+                          className="p-2 text-slate-700 hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
+                          title="Excluir Perfil do Banco"
                         >
-                          <option value="">BANCO DE CLIENTES</option>
-                          {clientProfiles.map(c => (
-                            <option key={c.clientDoc} value={c.clientDoc}>{c.clientName}</option>
-                          ))}
-                        </select>
+                          <Trash2 size={14} />
+                        </button>
                       </div>
                     )}
                     <button 

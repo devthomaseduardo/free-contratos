@@ -1,7 +1,7 @@
 export const INITIAL_CONTRACT_DATA = {
-  type: 'contract',
+  type: 'cv',
   status: 'draft',
-  accentColor: '#6366f1',
+  accentColor: '#3b82f6',
   risks: [],
   letterheadStyle: 'classic',
   pixKey: '',
@@ -9,28 +9,40 @@ export const INITIAL_CONTRACT_DATA = {
   language: 'pt',
   clientProfiles: [],
 
+  showHeader: true,
+  showFooter: true,
+  showWatermark: true,
+  showStamps: false,
 
-  contractorName: "Seu Nome Completo",
-  contractorDoc: "00.000.000/0001-00",
-  contractorLocation: "Sua Cidade - UF",
-  contractorRole: "Seu Cargo / Profissão",
-  contractorEmail: "seuemail@exemplo.com",
-  contractorPhone: "(00) 00000-0000",
-  contractorLinkedin: "linkedin.com/in/seuperfil",
-  contractorGithub: "github.com/seuperfil",
-  contractorPortfolio: "seuportfolio.com.br",
+  contractorName: "THOMAS NASCIMENTO",
+  contractorDoc: "000.000.000-00",
+  contractorLocation: "São Paulo – SP",
+  contractorRole: "DESENVOLVEDOR DE SOFTWARE JÚNIOR - FULL STACK",
+  contractorEmail: "devthomaseduardo",
+  contractorPhone: "(11)97497-5062",
+  contractorLinkedin: "linkedin.com/in/devthomaseduardo",
+  contractorGithub: "github.com/devthomaseduardo",
+  contractorPortfolio: "www.thomaseduardo.online",
   contractorSignature: null,
   contractorLogo: null,
 
   timeline: [], 
   taxConfig: { iss: 5, irrf: 0, platformFee: 0 },
 
+  cvSummary: "Desenvolvedor Fullstack com experiência prática na criação de aplicações web utilizando React, Node.js e TypeScript, com foco em APIs, integrações e automação de processos. Tenho experiência no desenvolvimento de sistemas com integração de pagamentos, criação de APIs REST e deploy de aplicações. Atualmente, estou expandindo meus conhecimentos em backend com foco em Java, buscando compreender melhor arquitetura de sistemas, orientação a objetos e ambientes corporativos. Busco oportunidade como desenvolvedor júnior para atuar no ciclo completo de desenvolvimento, contribuindo com soluções práticas e evoluindo tecnicamente.",
   
-  cvSummary: "Desenvolvedor(a) de Software Júnior - Full Stack com sólida vivência no ecossistema Java e desenvolvimento Web. Focado(a) na implementação, deploy e manutenção de soluções backend e frontend integradas. Possuo postura proativa na investigação de logs em servidores Linux, forte capacidade analítica em ambientes de produção e interesse direto por inovações tecnológicas envolvendo integração de hardware (RFID e dispositivos físicos).",
-  cvExperience: "• Analista Desenvolvedor Júnior | TechSolutions (2022 - Atual)\n- Desenvolvimento e manutenção evolutiva em aplicações Java (Backend e APIs REST).\n- Criação de interfaces responsivas utilizando JSF, HTML, CSS e JavaScript.\n- Integração contínua e versionamento via Git, com deploys recorrentes em ambiente Linux.\n- Monitoramento de aplicações em produção: análise de logs, investigação de comportamentos anômalos e correção rápida de bugs críticos.\n- Forte atuação com banco de dados relacionais (SQL).\n\n• Estagiário em Desenvolvimento | InovaWeb (2021 - 2022)\n- Apoio à equipe sênior na estruturação de aplicações backend.\n- Contato prático com integrações de hardwares e leitura de especificações técnicas de IoT/RFID.\n- Criação e manutenção de componentes em aplicativos Android (Java).",
-  cvEducation: "• Bacharelado em Ciência da Computação\nUniversidade de São Paulo (USP) | 2018 - 2022",
-  cvSkills: ["Java", "JSF", "HTML / CSS / JavaScript", "APIs REST", "Linux (Linha de Comando & Logs)", "SQL / Bancos Relacionais", "Android (Java)", "EJB / WildFly / GlassFish", "Integração RFID / Hardware", "Git", "Análise de Sistemas em Produção"],
+  cvExperience: "• Desenvolvedor Full Stack (Freelancer) | 2023 - Atual\n- Desenvolvimento de aplicações web completas com React e Node.js\n- Criação de APIs REST para integração entre frontend e backend\n- Integração com serviços externos (Stripe, Mercado Pago, Webhooks)\n- Deploy de aplicações em ambientes de hospedagem (Vercel, cPanel, AWS)\n- Monitoramento básico de aplicações e correção de bugs\n\nResultados:\n- Automatização de processos de vendas\n- Aumento de conversão em projetos de landing page\n- Melhoria de performance e experiência do usuário",
   
+  cvEducation: "• Engenharia de Software (em andamento) - Anhanguera\n\nCertificações:\n- AWS Desenvolvimento em Nuvem\n- Ada Tech Desenvolvimento Web",
+  
+  cvProjects: "• Sistema de Vendas com Integração de Pagamento\n- Backend com Node.js para processamento de pagamentos\n- Integração com Stripe e Mercado Pago\n- Uso de APIs REST e Webhooks\n\n• E-commerce (Reis do Manto)\n- Desenvolvimento completo (frontend + backend)\n- Cálculo dinâmico de preços e frete\n- Integração com pagamentos e automação via WhatsApp\n\n• Landing Pages com Foco em Conversão\n- Otimização de performance (Core Web Vitals)\n- Integração com APIs e captação de leads",
+  
+  cvSkills: [
+    "React", "Next.js", "JavaScript", "TypeScript", "HTML", "CSS", 
+    "Node.js", "Express", "APIs REST", "PostgreSQL", "MongoDB", 
+    "Git", "Webhooks", "Deploy", "Java (Learning)", "POO", "SQL"
+  ],
+
   clientName: "",
   clientAddress: "",
   clientZipPhone: "",
@@ -60,18 +72,6 @@ export const INITIAL_CONTRACT_DATA = {
   quoteValidUntil: "15 dias",
   invoiceId: new Date().getFullYear() + "-001",
   invoiceIssueDate: new Date().toLocaleDateString('pt-BR'),
-
-  cvSummary: "Resumo profissional. Descreva aqui suas principais habilidades, anos de experiência, conquistas mais importantes e o que você busca na sua carreira.",
-  
-  cvExperience: "EXPERIÊNCIA PROFISSIONAL\n\nEmpresa Exemplo (Mês/Ano – Presente)\nCargo / Função\nDescreva suas principais atividades e resultados alcançados nesta posição.\n\nEmpresa Anterior (Mês/Ano – Mês/Ano)\nCargo / Função\nDescreva suas principais atividades e resultados alcançados nesta posição.",
-  
-  cvEducation: "Formação Acadêmica – Instituição (Ano de Conclusão)\n\nCertificações:\n- Certificação Exemplo 1\n- Certificação Exemplo 2",
-  
-  cvProjects: "PROJETOS EM DESTAQUE\n\nNome do Projeto 1 (Link) - Tecnologias Usadas\nBreve descrição do problema resolvido e do impacto gerado pelo projeto.\n\nNome do Projeto 2 (Link) - Tecnologias Usadas\nBreve descrição do problema resolvido e do impacto gerado pelo projeto.",
-  
-  cvSkills: [
-    "Habilidade 1", "Habilidade 2", "Habilidade 3", "Habilidade 4", "Habilidade 5"
-  ],
 
   letterBody: "Prezados,\n\nEscrevo para apresentar minha proposta de serviços...",
   letterSubject: "Apresentação Comercial",
