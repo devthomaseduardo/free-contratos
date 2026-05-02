@@ -4,6 +4,7 @@ import { ContractPreview } from './components/ContractPreview';
 import { Sidebar } from './components/Sidebar';
 import { ATSAnalyzer } from './components/ATSAnalyzer';
 import { HomePage } from './components/HomePage';
+import { LoginPage } from './components/LoginPage';
 import { auth, logout } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 
@@ -17,7 +18,9 @@ const HISTORY_KEY = 'papercontracts_history_v1';
 
 const App = () => {
   const [isDemoActive, setIsDemoActive] = useState(false);
+  const [showLoginPage, setShowLoginPage] = useState(false);
   const [user, setUser] = useState(null);
+
   const [contractData, setContractData] = useState(INITIAL_CONTRACT_DATA);
 
   useEffect(() => {
@@ -239,7 +242,13 @@ const App = () => {
   };
 
   if (!isDemoActive && !user) {
-    return <HomePage onAccessDemo={() => setIsDemoActive(true)} />;
+    if (showLoginPage) {
+      return <LoginPage 
+        onBack={() => setShowLoginPage(false)} 
+        onLoginSuccess={() => setIsDemoActive(true)} 
+      />;
+    }
+    return <HomePage onAccessDemo={() => setShowLoginPage(true)} />;
   }
 
 

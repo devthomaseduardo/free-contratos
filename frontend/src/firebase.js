@@ -1,5 +1,15 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "firebase/auth";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  GithubAuthProvider,
+  signInWithPopup, 
+  signInWithRedirect, 
+  signOut, 
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtOFqorKYtQ1--lzefOzvrKDeNfLHxbZE",
@@ -12,19 +22,14 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-// Adicionando um escopo básico
-provider.addScope('profile');
-provider.addScope('email');
+// Providers
+const googleProvider = new GoogleAuthProvider();
+const githubProvider = new GithubAuthProvider();
 
-export const signInWithGoogle = async () => {
-    try {
-        return await signInWithPopup(auth, provider);
-    } catch (error) {
-        console.error("Popup failed, trying redirect...", error);
-        return await signInWithRedirect(auth, provider);
-    }
-};
-
+// Auth Methods
+export const signInWithGoogle = () => signInWithPopup(auth, googleProvider);
+export const signInWithGithub = () => signInWithPopup(auth, githubProvider);
+export const loginEmail = (email, password) => signInWithEmailAndPassword(auth, email, password);
+export const registerEmail = (email, password) => createUserWithEmailAndPassword(auth, email, password);
 export const logout = () => signOut(auth);

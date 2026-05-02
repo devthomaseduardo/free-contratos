@@ -74,17 +74,6 @@ export const HomePage = ({ onAccessDemo }) => {
                 Começar Agora
                 <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
               </button>
-              
-              <div className="flex -space-x-3 items-center">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="w-10 h-10 rounded-full border-2 border-[#05070a] bg-slate-800 flex items-center justify-center overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?u=${i}`} alt="User" />
-                  </div>
-                ))}
-                <div className="pl-6 text-[11px] font-bold text-slate-500 uppercase tracking-widest">
-                  +12.4k profissionais usando
-                </div>
-              </div>
             </div>
           </div>
 
@@ -94,7 +83,7 @@ export const HomePage = ({ onAccessDemo }) => {
               <div className="absolute inset-0 bg-azure/20 blur-[100px] rounded-full opacity-30 group-hover:opacity-50 transition-opacity" />
               <div className="relative h-full w-full rounded-[3rem] overflow-hidden border border-white/10 shadow-2xl animate-float p-4 bg-white/5 backdrop-blur-3xl">
                 <img 
-                  src="/paper_contracts_hero_premium_1777752005104.png" 
+                  src="/hero-premium.png" 
                   alt="Premium Document Visualization" 
                   className="w-full h-full object-cover rounded-[2rem] border border-white/5"
                 />
