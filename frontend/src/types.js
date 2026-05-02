@@ -5,6 +5,7 @@ export const INITIAL_CONTRACT_DATA = {
   risks: [],
   letterheadStyle: 'classic',
   pixKey: '',
+  typographyStyle: 'modern',
   clientProfiles: [],
 
 
@@ -58,6 +59,8 @@ export const INITIAL_CONTRACT_DATA = {
   cvExperience: "EXPERIÊNCIA PROFISSIONAL\n\nEmpresa Exemplo (Mês/Ano – Presente)\nCargo / Função\nDescreva suas principais atividades e resultados alcançados nesta posição.\n\nEmpresa Anterior (Mês/Ano – Mês/Ano)\nCargo / Função\nDescreva suas principais atividades e resultados alcançados nesta posição.",
   
   cvEducation: "Formação Acadêmica – Instituição (Ano de Conclusão)\n\nCertificações:\n- Certificação Exemplo 1\n- Certificação Exemplo 2",
+  
+  cvProjects: "PROJETOS EM DESTAQUE\n\nNome do Projeto 1 (Link) - Tecnologias Usadas\nBreve descrição do problema resolvido e do impacto gerado pelo projeto.\n\nNome do Projeto 2 (Link) - Tecnologias Usadas\nBreve descrição do problema resolvido e do impacto gerado pelo projeto.",
   
   cvSkills: [
     "Habilidade 1", "Habilidade 2", "Habilidade 3", "Habilidade 4", "Habilidade 5"

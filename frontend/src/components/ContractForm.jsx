@@ -186,12 +186,48 @@ const DateInput = ({ label, value, onChange, className = '' }) => {
 const TextArea = ({ label, value, onChange, placeholder, className = "", maxLength = 4000 }) => {
   const count = (value || '').length;
   const isOverLimit = count > 3000; 
+  const textareaRef = useRef(null);
+
+  const insertSymbol = (symbol) => {
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+      
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const currentVal = value || '';
+      
+      // Ensure there's a space after the symbol for convenience
+      const textToInsert = symbol + ' ';
+      const newVal = currentVal.substring(0, start) + textToInsert + currentVal.substring(end);
+      
+      // Mimic an event object to pass to onChange
+      onChange({ target: { value: newVal } });
+      
+      // Set cursor position back after React re-renders
+      setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(start + textToInsert.length, start + textToInsert.length);
+      }, 0);
+  };
   
   return (
     <div className={`space-y-2.5 ${className}`}>
       <div className="flex justify-between items-center px-1">
           <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em]">{label}</label>
           <div className="flex items-center gap-2">
+             <div className="flex gap-1 mr-2 sm:mr-3 border-r border-white/5 pr-2 sm:pr-3">
+                 {['•', '→', '✓', '★', '—'].map(sym => (
+                     <button 
+                        key={sym} 
+                        type="button"
+                        onClick={() => insertSymbol(sym)}
+                        className="text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 w-5 h-5 sm:w-6 sm:h-6 rounded flex items-center justify-center text-xs transition-colors"
+                        title={`Inserir ${sym}`}
+                     >
+                         {sym}
+                     </button>
+                 ))}
+             </div>
              <span className={`text-[9px] font-mono ${isOverLimit ? 'text-amber-500 font-bold' : 'text-slate-600'}`}>
                 {count.toLocaleString()} / {maxLength.toLocaleString()}
              </span>
@@ -199,6 +235,7 @@ const TextArea = ({ label, value, onChange, placeholder, className = "", maxLeng
       </div>
       <div className="relative">
         <textarea
+          ref={textareaRef}
           value={value || ''}
           onChange={onChange}
           placeholder={placeholder}
@@ -400,10 +437,10 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
   const handleCoverLetterTemplate = () => {
       onChange({
           ...data,
-          letterSubject: "Apresentação: Desenvolvedor Fullstack Sênior",
-          letterBody: "Prezados,\n\nAcompanho o trabalho da sua empresa há algum tempo e vejo grande potencial de otimização em suas plataformas digitais.\n\nCom minha experiência em React, Next.js e performance web, tenho certeza que posso ajudar a reduzir o tempo de carregamento e aumentar a conversão de seus produtos.",
-          coverLetterObjective: "Aplicar técnicas de engenharia de software para escalar seus produtos digitais e melhorar a experiência do usuário.",
-          coverLetterCta: "Tenho disponibilidade para uma call rápida na próxima terça-feira às 14h. Aguardo seu retorno."
+          letterSubject: "Estrategista em Performance e Escala de Produtos Digitais",
+          letterBody: "Prezados,\n\nAo analisar os desafios atuais do mercado e a posição de destaque de sua empresa, identifiquei uma oportunidade clara de aplicar minha expertise técnica para potencializar seus resultados operacionais.\n\nCom mais de [X] anos atuando na vanguarda do desenvolvimento Fullstack, não entrego apenas código; entrego soluções que reduzem custos de infraestrutura e aumentam a retenção de usuários através de performance crítica. Meu foco é converter decisões técnicas em ROI mensurável para o negócio.\n\nEstou pronto para integrar sua equipe e elevar o padrão de engenharia de seus produtos.",
+          coverLetterObjective: "Maximizar a eficiência técnica e escalar plataformas de alto impacto através de arquiteturas resilientes e focadas em conversão.",
+          coverLetterCta: "Podemos agendar uma call estratégica de 15 minutos na próxima terça-feira? Gostaria de apresentar como meu workflow pode acelerar o roadmap atual da sua equipe."
       });
   }
 
@@ -452,209 +489,275 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
   return (
     <>
     <div className="p-4 sm:p-6 pb-32 space-y-4 max-w-4xl mx-auto">
-      <div className="flex flex-col gap-6 mb-8 premium-glass rounded-[2rem] p-6 sm:p-8">
-          <div className="flex flex-col gap-4">
-             <div className="flex items-center justify-between px-1">
-                <h3 className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-500">Document Phase</h3>
-                <div className="flex items-center gap-2">
-                   <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                   <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest">Live Preview</span>
+      {/* === TOP WORKFLOW & STATUS === */}
+      <div className="mb-10 bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 shadow-2xl backdrop-blur-xl">
+          <div className="flex flex-col gap-8">
+             <div className="flex items-center justify-between">
+                <div>
+                   <h3 className="text-[11px] font-black uppercase tracking-[0.4em] text-azure">Fluxo do Documento</h3>
+                   <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Controle de ciclo de vida do contrato</p>
+                </div>
+                <div className="flex items-center gap-3 bg-emerald-500/5 px-4 py-2 rounded-full border border-emerald-500/10">
+                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
+                   <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Visualização em Tempo Real</span>
                 </div>
              </div>
-             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                {[
-                  { id: 'draft', label: 'Rascunho', color: 'bg-slate-500' },
-                  { id: 'pending', label: 'Revisão', color: 'bg-amber-500' },
-                  { id: 'final', label: 'Finalizado', color: 'bg-azure' },
-                  { id: 'paid', label: 'Pago', color: 'bg-emerald-500' }
-                ].map(s => (
-                    <button
-                      type="button"
-                      key={s.id}
-                      onClick={() => handleChange('status', s.id)}
-                      className={`group relative flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-300 border ${
-                          data.status === s.id 
-                          ? `bg-white/5 border-white/10 shadow-2xl` 
-                          : 'border-transparent hover:bg-white/[0.02]'
-                      }`}
-                    >
-                        <div className={`w-1.5 h-1.5 rounded-full mb-3 ${data.status === s.id ? s.color : 'bg-slate-800'}`} />
-                        <span className={`text-[10px] font-black uppercase tracking-[0.15em] ${data.status === s.id ? 'text-white' : 'text-slate-500'}`}>{s.label}</span>
-                    </button>
-                ))}
+
+             <div className="relative pt-6 pb-2">
+                {/* Background Connecting Line */}
+                <div className="absolute top-1/2 left-0 w-full h-1 bg-white/5 rounded-full -translate-y-1/2" />
+                
+                {/* Active Progress Line */}
+                <div 
+                   className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-azure to-emerald-500 rounded-full -translate-y-1/2 transition-all duration-700 ease-out" 
+                   style={{ 
+                       width: data.status === 'draft' ? '0%' : 
+                              data.status === 'pending' ? '33.33%' : 
+                              data.status === 'final' ? '66.66%' : '100%' 
+                   }} 
+                />
+
+                <div className="relative flex justify-between">
+                   {[
+                     { id: 'draft', label: 'Rascunho', color: 'bg-slate-400', desc: 'Fase Inicial' },
+                     { id: 'pending', label: 'Revisão', color: 'bg-amber-500', desc: 'Aguardando' },
+                     { id: 'final', label: 'Finalizado', color: 'bg-azure', desc: 'Pronto p/ Envio' },
+                     { id: 'paid', label: 'Pago', color: 'bg-emerald-500', desc: 'Concluído' }
+                   ].map((s, idx) => {
+                     const statusOrder = ['draft', 'pending', 'final', 'paid'];
+                     const currentIndex = statusOrder.indexOf(data.status);
+                     const isPassed = idx <= currentIndex;
+                     const isActive = data.status === s.id;
+                     
+                     return (
+                       <button
+                         type="button"
+                         key={s.id}
+                         onClick={() => handleChange('status', s.id)}
+                         className="group relative flex flex-col items-center gap-3 w-1/4"
+                       >
+                           {/* Indicator Node */}
+                           <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 border-2 z-10 ${
+                               isActive ? `bg-[#05070a] border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-110` : 
+                               isPassed ? `bg-[#05070a] ${s.color.replace('bg-', 'border-')} shadow-[0_0_15px_currentColor]` : 
+                               'bg-[#05070a] border-white/10 group-hover:border-white/30'
+                           }`} style={{ color: isPassed && !isActive ? s.color.replace('bg-', '') : '' }}>
+                               <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
+                                   isActive ? s.color : 
+                                   isPassed ? s.color : 
+                                   'bg-white/10 group-hover:bg-white/30'
+                               }`} />
+                           </div>
+
+                           {/* Labels */}
+                           <div className="text-center absolute top-10 w-32 -ml-16 left-1/2">
+                               <span className={`block text-[10px] font-black uppercase tracking-widest transition-colors duration-500 ${isActive ? 'text-white' : isPassed ? 'text-slate-300' : 'text-slate-500'}`}>
+                                   {s.label}
+                               </span>
+                               <span className={`block text-[8px] font-bold uppercase tracking-widest mt-0.5 transition-colors duration-500 ${isActive ? s.color.replace('bg-', 'text-') : 'text-slate-600 opacity-0 group-hover:opacity-100'}`}>
+                                   {s.desc}
+                               </span>
+                           </div>
+                       </button>
+                     );
+                   })}
+                </div>
              </div>
           </div>
-          <div className="h-px bg-white/5 w-full" />
+
+          <div className="h-px bg-white/5 w-full my-8" />
+          
           <div className="flex items-center justify-between">
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-60">PDF Watermarks updated automatically</p>
-              <button type="button" onClick={onReset} className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-rose-500/10 px-4 text-[10px] font-black uppercase tracking-widest text-rose-400 hover:bg-rose-500 hover:text-white transition-all active:scale-95 border border-rose-500/20">
-                <Eraser size={14} aria-hidden /> <span>Resetar Tudo</span>
+              <div className="flex items-center gap-4">
+                 <div className="p-2 bg-azure/10 rounded-lg text-azure">
+                    <Info size={14} />
+                 </div>
+                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-widest opacity-60">Marcas d'água atualizadas automaticamente por fase</p>
+              </div>
+              <button 
+                type="button" 
+                onClick={onReset} 
+                className="group inline-flex h-11 items-center justify-center gap-3 rounded-2xl bg-rose-500/5 px-6 text-[10px] font-black uppercase tracking-[0.2em] text-rose-500/60 hover:bg-rose-500 hover:text-white transition-all duration-300 active:scale-95 border border-rose-500/10 hover:border-rose-500 hover:shadow-[0_10px_20px_rgba(244,63,94,0.2)]"
+              >
+                <Eraser size={14} className="group-hover:rotate-12 transition-transform" /> <span>Resetar Tudo</span>
               </button>
           </div>
       </div>
 
-      {/* 1. IDENTIFICAÇÃO — mesmo acordeão em todas as telas (layout clássico) */}
-      <div className="space-y-2">
+
+      {/* === 1. IDENTIFICAÇÃO & BRANDING === */}
+      <div className="space-y-3">
         <SectionHeader id="parties" title="Identificação & Branding" icon={User} />
         {activeSection === 'parties' && (
-          <div className="p-5 bg-slate-900/30 border-l-2 border-indigo-500 rounded-r-xl space-y-6 animate-in fade-in slide-in-from-top-4 duration-300">
-            <div className="bg-slate-950 p-4 rounded-lg border border-slate-800 flex flex-col sm:flex-row sm:items-center gap-4">
-              <div className="w-16 h-16 rounded-lg border border-dashed border-slate-600 flex items-center justify-center bg-slate-900 overflow-hidden shrink-0">
-                {data.contractorLogo ? (
-                  <img src={data.contractorLogo} className="w-full h-full object-contain" alt="" />
-                ) : (
-                  <ImageIcon className="text-slate-600" />
-                )}
-              </div>
-              <div>
-                <p className="text-sm font-bold text-slate-300 mb-1">Sua Logomarca</p>
-                <p className="text-xs text-slate-500 mb-2">Exibida no topo dos documentos.</p>
+          <div className="p-8 bg-slate-900/30 border border-white/5 rounded-[2.5rem] space-y-10 animate-in fade-in zoom-in-95 duration-500">
+            
+            {/* Branding Section */}
+            <div className="bg-slate-950/50 p-6 rounded-[2rem] border border-white/5 flex flex-col sm:flex-row items-center gap-8 group">
+              <div className="relative">
+                <div className="w-24 h-24 rounded-3xl border-2 border-dashed border-slate-800 flex items-center justify-center bg-slate-900 overflow-hidden shrink-0 group-hover:border-azure/30 transition-all duration-500">
+                  {data.contractorLogo ? (
+                    <img src={data.contractorLogo} className="w-full h-full object-contain p-2" alt="Logo" />
+                  ) : (
+                    <ImageIcon className="text-slate-700 w-8 h-8" />
+                  )}
+                </div>
                 <button
                   type="button"
                   onClick={() => logoInputRef.current?.click()}
-                  className="text-xs bg-slate-800 px-3 py-1.5 rounded hover:bg-slate-700 text-white"
+                  className="absolute -bottom-2 -right-2 p-2 bg-azure rounded-xl text-white shadow-xl shadow-azure/20 hover:scale-110 active:scale-90 transition-all"
                 >
-                  Carregar logo
+                  <Plus size={16} />
                 </button>
+              </div>
+              <div className="text-center sm:text-left">
+                <h4 className="text-sm font-black text-white uppercase tracking-widest mb-1">Identidade Visual</h4>
+                <p className="text-[11px] text-slate-500 font-medium mb-4 leading-relaxed">Sua logomarca será exibida no topo de todos os documentos gerados para transmitir credibilidade.</p>
                 <input type="file" ref={logoInputRef} onChange={(e) => handleImageUpload(e, 'contractorLogo')} className="hidden" accept="image/*" />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.15em]">Seus Dados (Contratado)</label>
-                  <button 
-                    onClick={() => {
-                      onChange({
-                        ...data,
-                        contractorName: "Thomas Eduardo",
-                        contractorDoc: "60.882.678/0001-77",
-                        contractorLocation: "São Paulo - SP",
-                        contractorRole: "Desenvolvedor Fullstack Sênior",
-                        contractorContact: "devthomaseduardo@gmail.com | (11) 97497-5062",
-                        contractorLinkedin: "linkedin.com/in/devthomaseduardo",
-                        contractorGithub: "github.com/devthomaseduardo",
-                        contractorPortfolio: "thomaseduardo.online"
-                      });
-                    }}
-                    className="text-[9px] font-bold text-indigo-400 bg-indigo-500/10 px-2 py-1 rounded hover:bg-indigo-500/20 transition-all flex items-center gap-1"
-                  >
-                    <Zap size={10} /> AUTO-PREENCHER MEUS DADOS
-                  </button>
+            {/* Contractor Data Section */}
+            <div className="space-y-6">
+              <div className="flex items-center justify-between px-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-1.5 h-6 bg-azure rounded-full" />
+                  <h3 className="text-[11px] font-black text-slate-400 uppercase tracking-[0.3em]">Seus Dados (Contratado)</h3>
                 </div>
-                <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-slate-700">
-                  <Input label="Nome Completo" value={data.contractorName} onChange={(e) => handleChange('contractorName', e.target.value)} />
-                  <Input label="Função / Cargo" value={data.contractorRole} onChange={(e) => handleChange('contractorRole', e.target.value)} />
-                  <Input label="CPF / CNPJ" value={data.contractorDoc} onChange={(e) => handleChange('contractorDoc', e.target.value)} />
-                  <Input label="Cidade — estado" value={data.contractorLocation} onChange={(e) => handleChange('contractorLocation', e.target.value)} />
-                  <Input label="Contato" value={data.contractorContact} onChange={(e) => handleChange('contractorContact', e.target.value)} />
-                  <Input label="LinkedIn" value={data.contractorLinkedin} onChange={(e) => handleChange('contractorLinkedin', e.target.value)} />
-                  <Input label="GitHub" value={data.contractorGithub} onChange={(e) => handleChange('contractorGithub', e.target.value)} />
-                  <Input label="Portfólio URL" value={data.contractorPortfolio} onChange={(e) => handleChange('contractorPortfolio', e.target.value)} className="md:col-span-2" />
-                </div>
+                <button 
+                  onClick={() => {
+                    onChange({
+                      ...data,
+                      contractorName: "Thomas Eduardo",
+                      contractorDoc: "60.882.678/0001-77",
+                      contractorLocation: "São Paulo - SP",
+                      contractorRole: "Desenvolvedor Fullstack Sênior",
+                      contractorContact: "devthomaseduardo@gmail.com | (11) 97497-5062",
+                      contractorLinkedin: "linkedin.com/in/devthomaseduardo",
+                      contractorGithub: "github.com/devthomaseduardo",
+                      contractorPortfolio: "thomaseduardo.online"
+                    });
+                  }}
+                  className="group text-[9px] font-black text-azure bg-azure/5 px-4 py-2 rounded-xl border border-azure/10 hover:bg-azure hover:text-white transition-all duration-300 flex items-center gap-2 uppercase tracking-widest active:scale-95"
+                >
+                  <Zap size={12} className="group-hover:animate-pulse" /> AUTO-PREENCHER MEUS DADOS
+                </button>
               </div>
 
-              {data.type !== 'cv' && (
-                <div className="md:col-span-2 mt-6">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
-                    <label className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] px-1">Destinatário (Cliente)</label>
-                    
-                    <div className="flex flex-wrap items-center gap-2">
-                      {clientProfiles.length > 0 && (
-                        <div className="flex items-center gap-3 bg-midnight px-4 py-2 rounded-xl border border-white/5 shadow-sm">
-                          <Users size={14} className="text-emerald-500" />
-                          <select 
-                            className="bg-transparent border-none text-[10px] font-black text-slate-400 outline-none cursor-pointer uppercase tracking-widest"
-                            onChange={(e) => {
-                              const client = clientProfiles.find(c => c.clientDoc === e.target.value);
-                              if (client) {
-                                onChange({
-                                  ...data,
-                                  clientName: client.clientName,
-                                  clientDoc: client.clientDoc,
-                                  clientAddress: client.clientAddress,
-                                  clientZipPhone: client.clientZipPhone
-                                });
-                              }
-                            }}
-                          >
-                            <option value="">BANCO DE CLIENTES</option>
-                            {clientProfiles.map(c => (
-                              <option key={c.clientDoc} value={c.clientDoc}>{c.clientName}</option>
-                            ))}
-                          </select>
-                        </div>
-                      )}
-                      <button 
-                        onClick={() => {
-                          if (!data.clientName || !data.clientDoc) return notify('Preencha pelo menos Nome e Documento.', 'error');
-                          onSaveClient({
-                            clientName: data.clientName,
-                            clientDoc: data.clientDoc,
-                            clientAddress: data.clientAddress,
-                            clientZipPhone: data.clientZipPhone
-                          });
-                        }}
-                        className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-xl border border-emerald-500/20 hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2 uppercase tracking-widest"
-                      >
-                        <Save size={12} /> SALVAR PERFIL
-                      </button>
-                    </div>
+              <div className="grid md:grid-cols-2 gap-x-6 gap-y-8 p-1">
+                <Input label="Nome Completo" value={data.contractorName} onChange={(e) => handleChange('contractorName', e.target.value)} placeholder="Seu Nome Completo" />
+                <Input label="Função / Cargo" value={data.contractorRole} onChange={(e) => handleChange('contractorRole', e.target.value)} placeholder="Ex: Desenvolvedor Fullstack Sênior" />
+                <Input label="CPF / CNPJ" value={data.contractorDoc} onChange={(e) => handleChange('contractorDoc', e.target.value)} placeholder="00.000.000/0001-00" />
+                <Input label="Cidade — estado" value={data.contractorLocation} onChange={(e) => handleChange('contractorLocation', e.target.value)} placeholder="São Paulo - SP" />
+                <Input label="Contato" value={data.contractorContact} onChange={(e) => handleChange('contractorContact', e.target.value)} placeholder="email@exemplo.com | (11) 99999-9999" />
+                <Input label="LinkedIn" value={data.contractorLinkedin} onChange={(e) => handleChange('contractorLinkedin', e.target.value)} placeholder="linkedin.com/in/perfil" />
+                <Input label="GitHub" value={data.contractorGithub} onChange={(e) => handleChange('contractorGithub', e.target.value)} placeholder="github.com/usuario" />
+                <Input label="Portfólio URL" value={data.contractorPortfolio} onChange={(e) => handleChange('contractorPortfolio', e.target.value)} placeholder="meuportfolio.com.br" />
+              </div>
+            </div>
+
+            {/* Client Section (if applicable) */}
+            {data.type !== 'cv' && (
+              <div className="pt-10 border-t border-white/5 space-y-8">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-1.5 h-6 bg-emerald-500 rounded-full" />
+                    <h3 className="text-[11px] font-black text-emerald-500 uppercase tracking-[0.3em]">Destinatário (Cliente)</h3>
                   </div>
-
-                  <div className="grid md:grid-cols-2 gap-4 pl-3 border-l border-white/10">
-                    <Input label="Nome / razão social" value={data.clientName} onChange={(e) => handleChange('clientName', e.target.value)} placeholder="Nome do Cliente ou Empresa" />
-                    <Input label="CPF ou CNPJ" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} placeholder="000.000.000-00" />
-
-                    {/* CEP with lookup */}
-                    <div className="space-y-2.5">
-                      <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 block">CEP</label>
-                      <div className="flex gap-2">
-                        <div className="relative flex-1 group">
-                          <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-azure transition-colors" />
-                          <input
-                            value={data.clientZip || ''}
-                            onChange={(e) => {
-                              const v = e.target.value.replace(/\D/g, '').slice(0, 8).replace(/(\d{5})(\d{1,3})/, '$1-$2');
-                              handleChange('clientZip', v);
-                              setCepError('');
-                            }}
-                            onBlur={(e) => handleCepLookup(e.target.value)}
-                            placeholder="00000-000"
-                            maxLength={9}
-                            className="w-full bg-midnight-lighter/30 border border-white/5 text-slate-200 text-sm pl-11 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-azure/50 focus:bg-midnight-lighter/60 transition-all placeholder:text-slate-700 font-medium font-mono"
-                          />
-                        </div>
-                        <button
-                          onClick={() => handleCepLookup(data.clientZip || '')}
-                          disabled={isCepLoading}
-                          className="px-6 bg-azure hover:bg-azure/90 disabled:opacity-50 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2 shrink-0 shadow-lg shadow-azure/10"
+                  
+                  <div className="flex flex-wrap items-center gap-2">
+                    {clientProfiles.length > 0 && (
+                      <div className="flex items-center gap-3 bg-midnight px-4 py-2 rounded-xl border border-white/5 shadow-sm">
+                        <Users size={14} className="text-emerald-500" />
+                        <select 
+                          className="bg-transparent border-none text-[10px] font-black text-slate-400 outline-none cursor-pointer uppercase tracking-widest"
+                          onChange={(e) => {
+                            const client = clientProfiles.find(c => c.clientDoc === e.target.value);
+                            if (client) {
+                              onChange({
+                                ...data,
+                                clientName: client.clientName,
+                                clientDoc: client.clientDoc,
+                                clientAddress: client.clientAddress,
+                                clientZipPhone: client.clientZipPhone
+                              });
+                            }
+                          }}
                         >
-                          {isCepLoading ? (
-                            <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Globe size={16} />
-                          )}
-                          {isCepLoading ? '...' : 'BUSCAR'}
-                        </button>
+                          <option value="">BANCO DE CLIENTES</option>
+                          {clientProfiles.map(c => (
+                            <option key={c.clientDoc} value={c.clientDoc}>{c.clientName}</option>
+                          ))}
+                        </select>
                       </div>
-                      {cepError && <p className="text-[10px] text-rose-400 px-1 font-bold">{cepError}</p>}
-                    </div>
-
-                    <Input
-                      label="Telefone do Cliente"
-                      icon={Phone}
-                      value={data.clientPhone || ''}
-                      onChange={(e) => handleChange('clientPhone', e.target.value)}
-                      placeholder="(11) 98888-8888"
-                    />
-
-                    <Input label="Endereço completo" value={data.clientAddress} onChange={(e) => handleChange('clientAddress', e.target.value)} className="md:col-span-2" placeholder="Preenchido automaticamente pelo CEP..." />
+                    )}
+                    <button 
+                      onClick={() => {
+                        if (!data.clientName || !data.clientDoc) return notify('Preencha pelo menos Nome e Documento.', 'error');
+                        onSaveClient({
+                          clientName: data.clientName,
+                          clientDoc: data.clientDoc,
+                          clientAddress: data.clientAddress,
+                          clientZipPhone: data.clientZipPhone
+                        });
+                      }}
+                      className="text-[9px] font-black bg-emerald-500/10 text-emerald-500 px-4 py-2 rounded-xl border border-emerald-500/20 hover:bg-emerald-500 hover:text-black transition-all flex items-center gap-2 uppercase tracking-widest"
+                    >
+                      <Save size={12} /> SALVAR PERFIL
+                    </button>
                   </div>
                 </div>
-              )}
-            </div>
+
+                <div className="grid md:grid-cols-2 gap-x-6 gap-y-8 p-1">
+                  <Input label="Nome / razão social" value={data.clientName} onChange={(e) => handleChange('clientName', e.target.value)} placeholder="Nome do Cliente ou Empresa" />
+                  <Input label="CPF ou CNPJ" value={data.clientDoc} onChange={(e) => handleChange('clientDoc', e.target.value)} placeholder="000.000.000-00" />
+
+                  {/* CEP with lookup */}
+                  <div className="space-y-2.5">
+                    <label className="text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] px-1 block">CEP</label>
+                    <div className="flex gap-2">
+                      <div className="relative flex-1 group">
+                        <MapPin size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 group-focus-within:text-azure transition-colors" />
+                        <input
+                          value={data.clientZip || ''}
+                          onChange={(e) => {
+                            const v = e.target.value.replace(/\D/g, '').slice(0, 8).replace(/(\d{5})(\d{1,3})/, '$1-$2');
+                            handleChange('clientZip', v);
+                            setCepError('');
+                          }}
+                          onBlur={(e) => handleCepLookup(e.target.value)}
+                          placeholder="00000-000"
+                          maxLength={9}
+                          className="w-full bg-midnight-lighter/30 border border-white/5 text-slate-200 text-sm pl-11 pr-4 py-3.5 rounded-2xl focus:outline-none focus:border-azure/50 focus:bg-midnight-lighter/60 transition-all placeholder:text-slate-700 font-medium font-mono"
+                        />
+                      </div>
+                      <button
+                        onClick={() => handleCepLookup(data.clientZip || '')}
+                        disabled={isCepLoading}
+                        className="px-6 bg-azure hover:bg-azure/90 disabled:opacity-50 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all active:scale-95 flex items-center gap-2 shrink-0 shadow-lg shadow-azure/10"
+                      >
+                        {isCepLoading ? (
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Globe size={16} />
+                        )}
+                        {isCepLoading ? '...' : 'BUSCAR'}
+                      </button>
+                    </div>
+                    {cepError && <p className="text-[10px] text-rose-400 px-1 font-bold">{cepError}</p>}
+                  </div>
+
+                  <Input
+                    label="Telefone do Cliente"
+                    icon={Phone}
+                    value={data.clientPhone || ''}
+                    onChange={(e) => handleChange('clientPhone', e.target.value)}
+                    placeholder="(11) 98888-8888"
+                  />
+
+                  <Input label="Endereço completo" value={data.clientAddress} onChange={(e) => handleChange('clientAddress', e.target.value)} className="md:col-span-2" placeholder="Preenchido automaticamente pelo CEP..." />
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -824,6 +927,7 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                         <TextArea label="Resumo Profissional" value={data.cvSummary} onChange={e => handleChange('cvSummary', e.target.value)} className="min-h-[100px]" />
                         <TextArea label="Experiência Profissional" value={data.cvExperience} onChange={e => handleChange('cvExperience', e.target.value)} className="min-h-[150px]" />
                         <TextArea label="Educação" value={data.cvEducation} onChange={e => handleChange('cvEducation', e.target.value)} className="min-h-[80px]" />
+                        <TextArea label="Projetos em Destaque / Informações Adicionais" value={data.cvProjects} onChange={e => handleChange('cvProjects', e.target.value)} className="min-h-[120px]" />
                         
                         <div>
                              <label className="text-xs uppercase tracking-wider text-slate-400 font-semibold ml-1 mb-2 block">Skills</label>

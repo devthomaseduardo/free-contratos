@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Printer, Copy, CheckCircle2, Download, Loader2, Eye, EyeOff, Trash2 } from 'lucide-react';
 
-export const ContractPreview = ({ data }) => {
+export const ContractPreview = ({ data, onChange }) => {
   const [copied, setCopied] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
   const [isPrintMode, setIsPrintMode] = useState(false);
@@ -252,72 +252,79 @@ export const ContractPreview = ({ data }) => {
     const total = data.quoteItems.reduce((acc, item) => acc + (item.quantity * item.unitPrice), 0);
 
     return (
-        <div className="font-sans">
-            <div className="flex justify-between items-start mb-12">
-                <div className="flex items-start gap-4">
-                    {data.contractorLogo && <img src={data.contractorLogo} alt="Logo" className="h-16 w-auto object-contain mt-1" />}
+        <div className="text-gray-900 bg-white">
+            {/* Corporate Header */}
+            <div className="flex justify-between items-start mb-12 border-b border-gray-900 pb-8">
+                <div className="flex items-start gap-6">
+                    {data.contractorLogo && <img src={data.contractorLogo} alt="Logo" className="h-16 w-auto object-contain" />}
                     <div>
-                        <h1 className="text-3xl font-extrabold text-gray-900 tracking-tight uppercase">{isInvoice ? 'Nota Fiscal / Recibo' : 'Orçamento'}</h1>
-                        <p className="text-gray-500 font-medium mt-1">Ref: {isInvoice ? `#${data.invoiceId}` : `${data.type.toUpperCase()}-001`}</p>
+                        <h1 className="text-3xl font-light tracking-tight uppercase text-gray-900">{isInvoice ? 'Fatura de Serviço' : 'Proposta Comercial'}</h1>
+                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 mt-2">Doc Ref: {isInvoice ? `#${data.invoiceId || '001'}` : `${data.type.toUpperCase()}-001`}</p>
                     </div>
                 </div>
                 <div className="text-right">
-                    <h2 className="font-bold text-gray-900 text-lg">{data.contractorName}</h2>
-                    <p className="text-sm text-gray-500">{data.contractorDoc}</p>
-                    <p className="text-sm text-gray-500">{data.contractorContact}</p>
+                    <h2 className="font-bold text-gray-900 text-sm uppercase tracking-widest">{data.contractorName}</h2>
+                    <p className="text-xs text-gray-500 mt-1">{data.contractorDoc}</p>
+                    <p className="text-xs text-gray-500">{data.contractorContact}</p>
                 </div>
             </div>
 
-            <div className="flex justify-between bg-gray-50 rounded-lg p-6 mb-10 border border-gray-100 break-inside-avoid">
-                <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Cliente / Tomador</p>
-                    <p className="font-bold text-lg text-gray-900">{data.clientName}</p>
-                    <p className="text-sm text-gray-600">{data.clientAddress}</p>
-                    <p className="text-sm text-gray-600">{data.clientDoc}</p>
+            {/* Corporate Parties Block */}
+            <div className="flex justify-between border-b border-gray-200 pb-10 mb-10 break-inside-avoid">
+                <div className="w-1/2 pr-8">
+                    <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest mb-3">Emitido Para (Cliente)</p>
+                    <p className="font-bold text-base text-gray-900 uppercase">{data.clientName}</p>
+                    <p className="text-xs text-gray-600 mt-1">{data.clientDoc}</p>
+                    <p className="text-xs text-gray-600 mt-1">{data.clientAddress}</p>
                 </div>
-                <div className="text-right">
-                    <div className="mb-4">
-                        <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Emissão</p>
-                        <p className="font-medium text-gray-900">{isInvoice ? data.invoiceIssueDate : data.contractDate}</p>
+                <div className="w-1/2 pl-8 border-l border-gray-200">
+                    <div className="flex justify-between mb-4">
+                        <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Data de Emissão</p>
+                        <p className="font-bold text-sm text-gray-900">{isInvoice ? data.invoiceIssueDate : data.contractDate}</p>
                     </div>
-                    <div>
-                         {isInvoice && data.status === 'paid' ? (
-                            <div className="bg-emerald-100 text-emerald-800 px-3 py-1 rounded font-bold text-xs uppercase inline-block">Pago</div>
-                         ) : isInvoice ? (
-                            <div className="bg-amber-100 text-amber-800 px-3 py-1 rounded font-bold text-xs uppercase inline-block">Em Aberto</div>
+                    <div className="flex justify-between">
+                         {isInvoice ? (
+                            <>
+                               <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Status</p>
+                               <p className={`font-bold text-sm uppercase tracking-widest ${data.status === 'paid' ? 'text-emerald-600' : 'text-amber-600'}`}>
+                                  {data.status === 'paid' ? 'Liquidado' : 'Em Aberto'}
+                               </p>
+                            </>
                          ) : (
                              <>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-1">Válido Até</p>
-                                <p className="font-medium text-emerald-600">{data.quoteValidUntil}</p>
+                                <p className="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Validade da Proposta</p>
+                                <p className="font-bold text-sm text-gray-900">{data.quoteValidUntil}</p>
                              </>
                          )}
                     </div>
                 </div>
             </div>
 
-            <table className="w-full mb-8 border-collapse">
-                <thead className="text-white rounded-t-lg" style={{ backgroundColor: data.accentColor }}>
-                    <tr>
-                        <th className="text-left py-3 px-4 font-bold uppercase text-xs tracking-wider rounded-tl-lg">Descrição</th>
-                        <th className="text-center py-3 px-4 font-bold uppercase text-xs tracking-wider w-24">Qtd</th>
-                        <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider w-32">Unitário</th>
-                        <th className="text-right py-3 px-4 font-bold uppercase text-xs tracking-wider w-32 rounded-tr-lg">Total</th>
+            {/* Corporate Table */}
+            <table className="w-full mb-12 border-collapse">
+                <thead>
+                    <tr className="border-y-2 border-gray-900">
+                        <th className="text-left py-3 px-2 font-bold uppercase text-[10px] tracking-widest text-gray-900">Descrição do Escopo</th>
+                        <th className="text-center py-3 px-2 font-bold uppercase text-[10px] tracking-widest text-gray-900 w-24">Qtd</th>
+                        <th className="text-right py-3 px-2 font-bold uppercase text-[10px] tracking-widest text-gray-900 w-32">Valor Unit.</th>
+                        <th className="text-right py-3 px-2 font-bold uppercase text-[10px] tracking-widest text-gray-900 w-32">Subtotal</th>
                     </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-100">
+                <tbody className="divide-y divide-gray-200">
                     {data.quoteItems.map((item) => (
-                        <tr key={item.id} className="hover:bg-gray-50 transition-colors">
-                            <td className="py-4 px-4 text-sm font-medium text-gray-800">{item.description}</td>
-                            <td className="text-center py-4 px-4 text-sm text-gray-600">{item.quantity}</td>
-                            <td className="text-right py-4 px-4 text-sm text-gray-600">{formatCurrency(item.unitPrice)}</td>
-                            <td className="text-right py-4 px-4 text-sm font-bold text-gray-900">{formatCurrency(item.quantity * item.unitPrice)}</td>
+                        <tr key={item.id}>
+                            <td className="py-4 px-2 text-sm text-gray-800">{item.description}</td>
+                            <td className="text-center py-4 px-2 text-sm text-gray-600">{item.quantity}</td>
+                            <td className="text-right py-4 px-2 text-sm text-gray-600">{formatCurrency(item.unitPrice)}</td>
+                            <td className="text-right py-4 px-2 text-sm font-bold text-gray-900">{formatCurrency(item.quantity * item.unitPrice)}</td>
                         </tr>
                     ))}
                 </tbody>
                 <tfoot>
                     <tr>
-                        <td colSpan={3} className="text-right py-6 px-4 font-bold text-xl uppercase tracking-tight text-gray-900">Total</td>
-                        <td className="text-right py-6 px-4 font-extrabold text-xl" style={{ color: data.accentColor }}>{formatCurrency(total)}</td>
+                        <td colSpan={2} className="border-t-2 border-gray-900"></td>
+                        <td className="text-right py-4 px-2 font-bold text-xs uppercase tracking-widest text-gray-900 border-t-2 border-gray-900">Total Devido</td>
+                        <td className="text-right py-4 px-2 font-bold text-lg text-gray-900 border-t-2 border-gray-900">{formatCurrency(total)}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -336,185 +343,224 @@ export const ContractPreview = ({ data }) => {
             )}
 
             {data.pixKey && (
-                <div className="mt-8 p-4 bg-gray-50 rounded-xl border-2 border-dashed flex items-center gap-6 break-inside-avoid" style={{ borderColor: `${data.accentColor}20` }}>
-                    <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+                <div className="mt-12 pt-8 border-t border-gray-200 flex items-start justify-between break-inside-avoid">
+                    <div>
+                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-900 mb-2">Dados Bancários / PIX</p>
+                        <p className="text-sm text-gray-600 max-w-xs leading-relaxed">
+                            O pagamento deve ser realizado através da chave PIX abaixo. Solicitamos o envio do comprovante para o nosso e-mail de contato.
+                        </p>
+                        <div className="mt-4 inline-flex items-center gap-4 border border-gray-300 py-2 px-4">
+                            <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400">CHAVE</span>
+                            <span className="text-sm font-bold text-gray-900">{data.pixKey}</span>
+                        </div>
+                    </div>
+                    <div className="border border-gray-200 p-1">
                         <img 
                             src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(data.pixKey)}`} 
                             alt="QR Code Pix" 
-                            className="w-20 h-20"
+                            className="w-24 h-24"
                         />
-                    </div>
-                    <div>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-1">Pagamento via PIX</p>
-                        <div className="flex items-center gap-3">
-                            <p className="text-sm font-mono font-bold text-gray-900">{data.pixKey}</p>
-                            <button 
-                                onClick={() => navigator.clipboard.writeText(data.pixKey)}
-                                className="p-1 hover:bg-gray-200 rounded transition-colors text-gray-400 hover:text-gray-600"
-                                title="Copiar Chave"
-                            >
-                                <Copy size={14} />
-                            </button>
-                        </div>
-                        <p className="text-[10px] text-gray-500 mt-1">Escaneie o QR Code acima ou copie a chave para pagar.</p>
                     </div>
                 </div>
             )}
             
-            <div className="mt-12 pt-8 border-t border-gray-200 text-center">
-                 <p className="text-sm font-medium text-gray-900 mb-4">{isInvoice ? 'Prestador:' : 'Aprovado por:'}</p>
-                 <div className="w-64 h-12 border-b border-gray-300 mx-auto mb-2">
-                      {isInvoice && data.contractorSignature && <img src={data.contractorSignature} className="h-12 mx-auto object-contain" />}
+            <div className="mt-16 pt-12 border-t border-gray-200 flex justify-between items-end break-inside-avoid">
+                 <div>
+                     <div className="w-64 h-px bg-gray-400 mb-3 relative">
+                         {isInvoice && data.contractorSignature && <img src={data.contractorSignature} className="absolute bottom-0 left-1/2 -translate-x-1/2 h-16 object-contain" />}
+                     </div>
+                     <p className="text-[10px] font-bold text-gray-900 uppercase tracking-widest">{isInvoice ? data.contractorName : 'Assinatura do Responsável'}</p>
+                     <p className="text-[9px] text-gray-500 uppercase tracking-widest mt-1">{isInvoice ? 'Emissor' : 'Aprovador'}</p>
                  </div>
-                 <p className="text-xs text-gray-500 uppercase">{isInvoice ? data.contractorName : 'Assinatura do Cliente'}</p>
+                 
+                 <div className="text-right">
+                    <p className="text-[10px] text-gray-400 uppercase tracking-widest">Documento Gerado Em</p>
+                    <p className="text-[10px] font-bold text-gray-900 uppercase tracking-widest mt-1">{new Date().toLocaleDateString('pt-BR')} - PAPER CONTRACTS V3</p>
+                 </div>
             </div>
         </div>
     );
   };
 
   const renderCV = () => (
-      <div className="font-sans text-gray-900 bg-white">
-
-          {/* === HEADER BAND === */}
-          <div style={{
-              backgroundColor: data.accentColor,
-              margin: '-25mm -20mm 0 -30mm',
-              padding: '12mm 20mm 10mm 30mm',
-              marginBottom: '8mm',
-          }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+      <div className="text-gray-900 bg-white">
+          {/* === HEADER === */}
+          <header className="border-b border-gray-200 pb-10 mb-10">
+              <div className="flex justify-between items-center">
                   <div>
-                      <h1 style={{ color: 'white', fontSize: '22pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.04em', margin: 0, lineHeight: 1.1 }}>
+                      <h1 className="text-4xl font-light tracking-tight leading-none m-0">
                           {data.contractorName}
                       </h1>
-                      <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '10pt', fontWeight: '500', marginTop: '2mm', letterSpacing: '0.06em' }}>
+                      <p className="text-lg font-bold text-gray-500 mt-2 uppercase tracking-widest">
                           {data.contractorRole}
                       </p>
                   </div>
                   {data.contractorLogo && (
-                      <img src={data.contractorLogo} alt="Logo" style={{ height: '20mm', width: '20mm', objectFit: 'cover', borderRadius: '50%', border: '1.5pt solid rgba(255,255,255,0.4)' }} />
+                      <img src={data.contractorLogo} alt="Logo" className="h-20 w-20 object-cover rounded-full border-2 border-gray-100" />
                   )}
               </div>
 
-              {/* Contact row */}
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5mm', marginTop: '5mm', paddingTop: '4mm', borderTop: '0.5pt solid rgba(255,255,255,0.25)' }}>
+              {/* Contact Information */}
+              <div className="flex flex-wrap gap-x-8 gap-y-2 mt-8 text-[10pt] font-medium text-gray-400">
                   {[
-                      data.contractorContact,
-                      data.contractorLocation,
-                      data.contractorDoc,
-                      data.contractorLinkedin,
-                      data.contractorGithub,
-                      data.contractorPortfolio,
-                  ].filter(Boolean).map((item, i) => (
-                      <span key={i} style={{ color: 'rgba(255,255,255,0.85)', fontSize: '7pt', display: 'flex', alignItems: 'center', gap: '1.5mm' }}>
-                          <span style={{ width: '1.5mm', height: '1.5mm', borderRadius: '50%', backgroundColor: 'rgba(255,255,255,0.5)', display: 'inline-block', flexShrink: 0 }}></span>
-                          {item}
+                      { val: data.contractorContact, label: 'Tel' },
+                      { val: data.contractorLocation, label: 'Loc' },
+                      { val: data.contractorDoc, label: 'Doc' },
+                      { val: data.contractorLinkedin, label: 'LinkedIn' },
+                      { val: data.contractorGithub, label: 'GitHub' },
+                      { val: data.contractorPortfolio, label: 'Portfólio' },
+                  ].filter(i => i.val).map((item, i) => (
+                      <span key={i} className="flex items-center gap-2">
+                          <span className="text-gray-900 font-bold uppercase text-[7pt] tracking-widest">{item.label}:</span>
+                          <span className="text-gray-600">{item.val}</span>
                       </span>
                   ))}
               </div>
+          </header>
+
+          {/* === CONTENT STACK (SINGLE COLUMN) === */}
+          <div className="space-y-12">
+              
+              {/* Summary */}
+              {data.cvSummary && (
+                  <section className="break-inside-avoid">
+                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                          Resumo Profissional
+                      </h2>
+                      <p className="text-[11pt] leading-relaxed text-gray-700 font-medium">
+                          {data.cvSummary}
+                      </p>
+                  </section>
+              )}
+
+              {/* Skills - Now full width and prominent */}
+              {data.cvSkills && data.cvSkills.length > 0 && (
+                  <section className="break-inside-avoid">
+                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                          Competências & Tecnologias
+                      </h2>
+                      <p className="text-[10pt] leading-loose text-gray-800 font-bold">
+                          {data.cvSkills.join('  ·  ')}
+                      </p>
+                  </section>
+              )}
+
+              {/* Experience */}
+              {data.cvExperience && (
+                  <section>
+                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-2">
+                          Experiência Profissional
+                      </h2>
+                      <div className="text-[10.5pt] leading-relaxed text-gray-800 whitespace-pre-line">
+                          {data.cvExperience}
+                      </div>
+                  </section>
+              )}
+
+              {/* Education */}
+              {data.cvEducation && (
+                  <section className="break-inside-avoid">
+                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                          Formação Acadêmica
+                      </h2>
+                      <div className="text-[10pt] leading-relaxed text-gray-700 whitespace-pre-line font-medium">
+                          {data.cvEducation}
+                      </div>
+                  </section>
+              )}
+
+              {/* Projects / Additional Info */}
+              {data.cvProjects && (
+                  <section className="break-inside-avoid">
+                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                          Projetos & Informações Adicionais
+                      </h2>
+                      <div className="text-[10pt] leading-relaxed text-gray-800 whitespace-pre-line">
+                          {data.cvProjects}
+                      </div>
+                  </section>
+              )}
+
+          </div>
+      </div>
+  );
+
+  const renderCoverLetter = () => (
+      <div className="text-gray-900 bg-white">
+          {/* === COVER LETTER HEADER === */}
+          <div className="border-b border-gray-200 pb-10 mb-12 flex justify-between items-end">
+              <div>
+                  <h1 className="text-4xl font-light tracking-tight leading-none m-0 text-gray-900">
+                      {data.contractorName}
+                  </h1>
+                  <p className="text-sm font-medium text-gray-500 mt-3 uppercase tracking-widest">
+                      {data.contractorRole}
+                  </p>
+              </div>
+              <div className="text-right">
+                  <p className="text-[10pt] font-bold text-black uppercase tracking-widest">{data.contractorLocation.split('-')[0].trim()}</p>
+                  <p className="text-[9pt] font-bold text-gray-400 uppercase mt-1">{data.contractDate || new Date().toLocaleDateString('pt-BR')}</p>
+              </div>
           </div>
 
-          {/* === SKILLS CHIPS === */}
-          {data.cvSkills && data.cvSkills.length > 0 && (
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2mm', marginBottom: '7mm' }}>
-                  {data.cvSkills.map((skill, i) => (
-                      <span key={i} style={{
-                          fontSize: '6.5pt', fontWeight: '700',
-                          color: data.accentColor,
-                          border: `0.5pt solid ${data.accentColor}`,
-                          padding: '1mm 3mm', borderRadius: '50mm',
-                          letterSpacing: '0.04em',
-                      }}>{skill}</span>
-                  ))}
+          {/* RECIPIENT */}
+          <div className="mb-16">
+              <p className="text-[9pt] font-bold text-gray-300 uppercase tracking-[0.3em] mb-2">Destinatário</p>
+              <p className="text-2xl font-bold tracking-tight">{data.clientName || 'Ao Gestor de Contratação'}</p>
+              <p className="text-sm text-gray-500 mt-1 uppercase font-bold tracking-widest">Processo Seletivo / Proposta Estratégica</p>
+          </div>
+
+          {/* SUBJECT */}
+          <div className="mb-12">
+              <h2 className="text-xl font-bold uppercase tracking-widest text-gray-900">
+                  {data.letterSubject || 'Apresentação Profissional'}
+              </h2>
+          </div>
+
+          {/* BODY */}
+          <div className="text-[11.5pt] leading-loose text-gray-800 whitespace-pre-wrap mb-16 text-justify px-2">
+              {data.letterBody || "Inicie sua apresentação aqui..."}
+          </div>
+
+          {/* HIGHLIGHT OBJECTIVE */}
+          {data.coverLetterObjective && (
+              <div className="my-16 py-8 px-10 bg-white border border-gray-200 break-inside-avoid relative group rounded-sm shadow-sm">
+                   <p className="text-[8pt] font-bold text-gray-400 uppercase tracking-[0.3em] mb-4">Foco Estratégico</p>
+                   <p className="text-xl font-medium italic text-gray-800 leading-relaxed">
+                       "{data.coverLetterObjective}"
+                   </p>
               </div>
           )}
 
-          {/* === SECTIONS === */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '6mm' }}>
+          {/* SIGNATURE AREA */}
+          <div className="mt-20 pt-10 border-t border-gray-100 flex justify-between items-start">
+              <div>
+                  <p className="text-sm text-gray-500 mb-8 font-medium italic">Atenciosamente,</p>
+                  {data.contractorSignature && (
+                      <img src={data.contractorSignature} alt="Signature" className="h-16 mb-4 object-contain -ml-2 opacity-80" />
+                  )}
+                  <div className="text-lg font-bold tracking-tight text-gray-900">{data.contractorName}</div>
+                  <div className="text-xs font-medium text-gray-500 uppercase tracking-widest mt-1">Engenharia & Soluções</div>
+              </div>
 
-              {data.cvSummary && (
-                  <div style={{ breakInside: 'avoid' }}>
-                      <p style={{ fontSize: '6.5pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.15em', color: data.accentColor, marginBottom: '2.5mm' }}>
-                          Resumo Profissional
+              {data.coverLetterCta && (
+                  <div className="max-w-[280px] bg-gray-50 p-6 rounded-sm border border-gray-200">
+                      <p className="text-[7pt] font-bold uppercase tracking-widest text-gray-400 mb-2">Chamada para Ação</p>
+                      <p className="text-xs font-medium leading-relaxed text-gray-700">
+                          {data.coverLetterCta}
                       </p>
-                      <p style={{ fontSize: '8pt', lineHeight: '1.75', color: '#374151', textAlign: 'justify', whiteSpace: 'pre-line' }}>
-                          {data.cvSummary}
-                      </p>
-                  </div>
-              )}
-
-              {data.cvExperience && (
-                  <div>
-                      <p style={{ fontSize: '6.5pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.15em', color: data.accentColor, marginBottom: '2.5mm' }}>
-                          Experiência Profissional
-                      </p>
-                      <div style={{ fontSize: '8pt', lineHeight: '1.75', color: '#374151', whiteSpace: 'pre-line' }}>
-                          {data.cvExperience}
-                      </div>
-                  </div>
-              )}
-
-              {data.cvEducation && (
-                  <div style={{ breakInside: 'avoid' }}>
-                      <p style={{ fontSize: '6.5pt', fontWeight: '900', textTransform: 'uppercase', letterSpacing: '0.15em', color: data.accentColor, marginBottom: '2.5mm' }}>
-                          Formação Acadêmica
-                      </p>
-                      <div style={{ fontSize: '8pt', lineHeight: '1.75', color: '#374151', whiteSpace: 'pre-line' }}>
-                          {data.cvEducation}
-                      </div>
                   </div>
               )}
           </div>
       </div>
   );
 
-  const renderCoverLetter = () => (
-      <>
-        <Header />
-        <div className="mt-12 text-justify font-serif text-[11pt] leading-loose text-gray-900">
-            <div className="flex justify-between items-end mb-12 border-b border-gray-200 pb-4">
-                 <div>
-                    <p className="text-xs font-bold text-gray-400 uppercase tracking-widest">Para:</p>
-                    <p className="font-bold text-lg">{data.clientName || 'Ao Gestor de Contratação'}</p>
-                 </div>
-                 <p className="text-sm text-gray-500">{data.contractorLocation.split('-')[0].trim()}, {data.contractDate}.</p>
-            </div>
-            
-            <p className="mb-8 font-bold text-xl uppercase tracking-widest text-center">{data.letterSubject}</p>
-
-            <div className="whitespace-pre-wrap mb-8">
-                {data.letterBody}
-            </div>
-
-            {data.coverLetterObjective && (
-                <div className="my-8 p-6 bg-gray-50 border-l-4 border-gray-900 break-inside-avoid">
-                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Objetivo Principal</p>
-                     <p className="text-lg font-medium italic text-gray-800">"{data.coverLetterObjective}"</p>
-                </div>
-            )}
-
-            {data.coverLetterCta && (
-                <div className="mt-8 mb-12 font-bold text-center text-gray-900 break-inside-avoid">
-                    <p>{data.coverLetterCta}</p>
-                </div>
-            )}
-
-            <div className="mt-12">
-                <p className="mb-4">Atenciosamente,</p>
-                {data.contractorSignature && <img src={data.contractorSignature} alt="Signature" className="h-16 mb-2 object-contain -ml-2" />}
-                <div className="font-bold uppercase tracking-wide">{data.contractorName}</div>
-                <div className="text-sm text-gray-600">{data.contractorRole}</div>
-            </div>
-        </div>
-      </>
-  );
-
   const renderLetterhead = () => (
       <div className="flex flex-col h-full min-h-[297mm]">
-          <div className="border-b-4 pb-8 mb-12 flex justify-between items-center" style={{ borderColor: data.accentColor }}>
+          <div className="border-b pb-8 mb-12 flex justify-between items-center" style={{ borderColor: `${data.accentColor}30` }}>
               {data.contractorLogo && <img src={data.contractorLogo} alt="Logo" className="h-24 w-auto object-contain" />}
               <div className="text-right">
-                  <h1 className="text-3xl font-black uppercase tracking-tighter text-gray-900 leading-none">{data.contractorName}</h1>
+                  <h1 className="text-2xl font-light tracking-tight text-gray-900 leading-none">{data.contractorName}</h1>
                   <p className="text-sm font-bold uppercase tracking-widest mt-2" style={{ color: data.accentColor }}>{data.contractorRole}</p>
               </div>
           </div>
@@ -565,8 +611,8 @@ export const ContractPreview = ({ data }) => {
   return (
     <div className="flex flex-col h-full bg-midnight">
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 px-6 sm:px-8 py-4 sm:py-5 bg-midnight-lighter/50 backdrop-blur-xl border-b border-white/5 shrink-0 z-20">
-            <div className="flex items-center gap-4 self-start md:self-center">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-6 sm:px-8 py-4 bg-midnight-lighter/50 backdrop-blur-xl border-b border-white/5 shrink-0 z-20">
+            <div className="flex items-center gap-4">
                 <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-azure shadow-[0_0_12px_rgba(59,130,246,0.6)]' : data.status === 'pending' ? 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]' : 'bg-slate-600'}`} />
                 <div className="flex flex-col">
                     <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
@@ -578,23 +624,39 @@ export const ContractPreview = ({ data }) => {
                 </div>
             </div>
             
-            <div className="flex items-center justify-between w-full md:w-auto gap-3 sm:gap-6">
+            <div className="flex flex-wrap items-center w-full md:w-auto gap-3 sm:gap-6">
+                {/* TYPOGRAPHY ENGINE */}
+                <div className="flex items-center gap-1 bg-white/[0.03] p-1 rounded-2xl border border-white/5">
+                    {[
+                        { id: 'modern', label: 'MODERNO SANS' },
+                        { id: 'serif', label: 'EDITORIAL SERIF' },
+                        { id: 'mono', label: 'TÉCNICO MONO' }
+                    ].map(t => (
+                        <button
+                            key={t.id}
+                            onClick={() => onChange({ typographyStyle: t.id })}
+                            className={`px-3 py-1.5 text-[8px] font-black uppercase tracking-widest rounded-xl transition-all ${data.typographyStyle === t.id ? 'bg-white/10 text-white shadow-lg' : 'text-slate-600 hover:text-slate-400'}`}
+                        >
+                            {t.label}
+                        </button>
+                    ))}
+                </div>
+
                 {/* Visual Options */}
-                <div className="flex items-center gap-1 sm:gap-3 bg-white/[0.03] p-1 rounded-xl sm:rounded-2xl border border-white/5">
+                <div className="flex items-center gap-1 sm:gap-3 bg-white/[0.03] p-1 rounded-2xl border border-white/5">
                     <button 
                         onClick={() => setIsPrintMode(!isPrintMode)}
-                        className={`flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg sm:rounded-xl transition-all ${isPrintMode ? 'bg-azure text-white shadow-xl shadow-azure/20' : 'text-slate-500 hover:text-white'}`}
+                        className={`px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${isPrintMode ? 'bg-azure text-white' : 'text-slate-500 hover:text-white'}`}
                     >
-                        {isPrintMode ? <EyeOff size={14} /> : <Eye size={14} />}
-                        <span className="hidden xs:inline">{isPrintMode ? 'Sair' : 'Foco'}</span>
+                        {isPrintMode ? 'SAIR DO FOCO' : 'MODO DE FOCO'}
                     </button>
                     <div className="w-px h-4 bg-white/10"></div>
                     <button 
                         onClick={handleCopy}
-                        className="flex items-center gap-2 px-3 sm:px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-lg sm:rounded-xl text-slate-500 hover:text-white transition-all"
+                        className="px-4 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl text-slate-500 hover:text-white transition-all flex items-center gap-2"
                     >
-                        {copied ? <CheckCircle2 size={14} className="text-emerald-500" /> : <Copy size={14} />}
-                        <span className="hidden xs:inline">{copied ? 'Ok' : 'Copiar'}</span>
+                        {copied ? <CheckCircle2 size={12} className="text-emerald-500" /> : <Copy size={12} />}
+                        {copied ? 'COPIADO' : 'COPIAR TEXTO'}
                     </button>
                 </div>
 
@@ -602,18 +664,17 @@ export const ContractPreview = ({ data }) => {
                 <div className="flex items-center gap-2 sm:gap-3">
                     <button
                         onClick={handlePrint}
-                        className="flex items-center gap-2 px-3 sm:px-5 py-2 sm:py-2.5 rounded-lg sm:rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 text-slate-300 transition-all border border-white/10 active:scale-95"
+                        className="px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest bg-white/5 hover:bg-white/10 text-slate-300 transition-all border border-white/10"
                     >
-                        <Printer size={14} /> <span className="hidden sm:inline">Imprimir</span>
+                        IMPRIMIR
                     </button>
                     <button 
                         onClick={handleDownloadPDF} 
                         disabled={isDownloading} 
-                        className="flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-2.5 rounded-lg sm:rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all text-white disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-azure/20 active:scale-95"
+                        className="px-6 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all text-white shadow-xl shadow-azure/20 active:scale-95 disabled:opacity-50"
                         style={{ backgroundColor: data.accentColor || '#3b82f6' }}
                     >
-                        {isDownloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-                        <span>{isDownloading ? '...' : 'PDF'}</span>
+                        {isDownloading ? 'EXPORTANDO...' : 'EXPORTAR PDF'}
                     </button>
                 </div>
             </div>
@@ -627,7 +688,11 @@ export const ContractPreview = ({ data }) => {
 
             <div 
                 id="printable-content" 
-                className={`bg-white text-black shadow-premium origin-top transition-all duration-700 relative ${isPrintMode ? 'scale-100' : 'scale-[0.9] sm:scale-100 mt-8 mb-20'}`}
+                className={`bg-white text-black shadow-premium origin-top transition-all duration-700 relative ${
+                    data.typographyStyle === 'serif' ? 'font-serif' : 
+                    data.typographyStyle === 'mono' ? 'font-mono' : 
+                    'font-sans'
+                } ${isPrintMode ? 'scale-100' : 'scale-[0.9] sm:scale-100 mt-8 mb-20'}`}
                 style={{
                     width: '210mm',
                     minHeight: '297mm',

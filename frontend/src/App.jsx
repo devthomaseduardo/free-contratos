@@ -168,16 +168,50 @@ const App = () => {
     reader.readAsText(file);
   };
 
+  const calculateScore = () => {
+    let score = 0;
+    const d = contractData;
+    
+    // Identity (20pts)
+    if (d.contractorName) score += 5;
+    if (d.contractorRole) score += 5;
+    if (d.contractorLocation) score += 5;
+    if (d.contractorLogo) score += 5;
+
+    // Contact & Links (20pts)
+    if (d.contractorContact) score += 5;
+    if (d.contractorLinkedin) score += 5;
+    if (d.contractorGithub) score += 5;
+    if (d.contractorPortfolio) score += 5;
+
+    // Content Depth (40pts)
+    if (d.type === 'cv') {
+        if (d.cvExperience?.length > 100) score += 10;
+        if (d.cvProjects?.length > 50) score += 10;
+        if (d.cvSkills?.length > 10) score += 10;
+        if (d.cvEducation?.length > 30) score += 10;
+    } else {
+        if (d.letterBody?.length > 200) score += 20;
+        if (d.letterSubject?.length > 10) score += 10;
+        if (d.coverLetterObjective?.length > 20) score += 10;
+    }
+
+    // Integrity (20pts)
+    if (d.status === 'final' || d.status === 'paid') score += 20;
+
+    return Math.min(score, 100);
+  };
+
   const docTitle = () => {
     const t = contractData.type;
-    if (t === 'contract') return 'Contrato';
-    if (t === 'nda') return 'NDA';
-    if (t === 'quote') return 'Orçamento';
-    if (t === 'invoice') return 'Nota Fiscal';
-    if (t === 'declaration') return 'Declaração';
+    if (t === 'contract') return 'Contrato de Serviço';
+    if (t === 'nda') return 'Acordo de Sigilo';
+    if (t === 'quote') return 'Proposta Comercial';
+    if (t === 'invoice') return 'Fatura de Serviço';
+    if (t === 'declaration') return 'Declaração Oficial';
     if (t === 'letter') return 'Papel Timbrado';
-    if (t === 'coverLetter') return 'Carta de apresentação';
-    return 'Currículo';
+    if (t === 'coverLetter') return 'Carta de Apresentação';
+    return 'Currículo Vitae';
   };
 
   if (!isDemoActive) {
@@ -217,11 +251,28 @@ const App = () => {
                 <h1 className="font-black text-lg md:text-2xl text-white tracking-tighter">
                   {docTitle()}
                 </h1>
-                <div className="hidden md:block px-2 py-0.5 rounded-md bg-azure/10 border border-azure/20">
-                  <span className="text-[10px] font-black text-azure uppercase tracking-widest">Active Draft</span>
+                <div className="hidden md:flex items-center gap-4">
+                  <div className="px-2 py-0.5 rounded-md bg-azure/10 border border-azure/20">
+                    <span className="text-[10px] font-black text-azure uppercase tracking-widest">Rascunho Ativo</span>
+                  </div>
+                  <div className="h-4 w-px bg-white/10" />
+                  <div className="flex items-center gap-3">
+                     <span className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Escaneabilidade</span>
+                     <div className="flex items-center gap-1.5">
+                        <div className="w-20 h-1.5 bg-white/5 rounded-full overflow-hidden">
+                           <div 
+                              className={`h-full transition-all duration-1000 ${calculateScore() > 80 ? 'bg-emerald-500' : calculateScore() > 50 ? 'bg-amber-500' : 'bg-rose-500'}`} 
+                              style={{ width: `${calculateScore()}%` }} 
+                           />
+                        </div>
+                        <span className={`text-[10px] font-black font-mono ${calculateScore() > 80 ? 'text-emerald-500' : calculateScore() > 50 ? 'text-amber-500' : 'text-rose-500'}`}>
+                           {calculateScore()}%
+                        </span>
+                     </div>
+                  </div>
                 </div>
               </div>
-              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-0.5">Workspace &middot; Paper Contracts</p>
+              <p className="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-0.5">Workspace Editorial &middot; Node do Sistema 01</p>
             </div>
           </div>
 
@@ -368,7 +419,10 @@ const App = () => {
           <div className={`flex-1 bg-slate-900 relative ${activeTab === 'preview' ? 'block' : 'hidden md:block'}`}>
             <div className="absolute inset-0 bg-slate-900 z-0" />
             <div className="relative z-10 h-full">
-              <ContractPreview data={contractData} />
+              <ContractPreview 
+                data={contractData} 
+                onChange={(updates) => setContractData(prev => ({ ...prev, ...updates }))} 
+              />
             </div>
           </div>
         </main>

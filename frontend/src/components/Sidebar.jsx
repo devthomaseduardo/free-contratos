@@ -1,58 +1,59 @@
 import React from 'react';
 import {
-  FileText,
-  Lock,
-  Calculator,
-  Receipt,
-  FileBadge,
-  ScrollText,
-  PenTool,
-  Send,
-  UserCircle,
   X,
   ShieldCheck,
+  ChevronRight,
+  Fingerprint,
+  Zap
 } from 'lucide-react';
 
 export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
   const menu = [
-    { id: 'contract', label: 'Contrato Social', icon: FileText, desc: 'Formalização de parcerias' },
-    { id: 'nda', label: 'NDA / Sigilo', icon: Lock, desc: 'Acordo de confidencialidade' },
-    { id: 'quote', label: 'Orçamento', icon: Calculator, desc: 'Proposta comercial detalhada' },
-    { id: 'invoice', label: 'Nota Fiscal', icon: Receipt, desc: 'Comprovante de pagamento' },
-    { id: 'declaration', label: 'Declaração', icon: FileBadge, desc: 'Afirmação de fatos oficiais' },
-    { id: 'letter', label: 'Papel Timbrado', icon: ScrollText, desc: 'Comunicação institucional' },
-    { id: 'letterhead', label: 'Timbrado Pro', icon: PenTool, desc: 'Identidade visual avançada' },
-    { id: 'coverLetter', label: 'Carta de Apresentação', icon: Send, desc: 'Introdução profissional' },
-    { id: 'cv', label: 'Currículo Moderno', icon: UserCircle, desc: 'Apresentação de carreira' },
+    { id: 'cv', label: 'Currículo Vitae', code: '01', desc: 'Recrutamento & Performance' },
+    { id: 'coverLetter', label: 'Carta de Apresentação', code: '02', desc: 'Introdução Estratégica' },
+    { id: 'contract', label: 'Contrato de Serviço', code: '03', desc: 'Estrutura Jurídica' },
+    { id: 'nda', label: 'Acordo de Sigilo', code: '04', desc: 'Confidencialidade' },
+    { id: 'quote', label: 'Proposta Comercial', code: '05', desc: 'Escopo Financeiro' },
+    { id: 'letterhead', label: 'Identidade Visual', code: '06', desc: 'Branding Institucional' },
+    { id: 'invoice', label: 'Fatura de Serviço', code: '07', desc: 'Registro de Pagamento' },
   ];
 
   return (
-    <div className={`fixed inset-y-0 left-0 z-[60] w-full max-w-[300px] bg-midnight-deep border-r border-white/5 flex flex-col transition-transform duration-500 ease-in-out lg:relative lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+    <div className={`fixed inset-y-0 left-0 z-[60] w-full max-w-[320px] bg-[#05070a] border-r border-white/[0.03] flex flex-col transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1) lg:relative lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full shadow-none'}`}>
+      
       {/* Mobile Close Button */}
       <button 
         onClick={onClose}
-        className="absolute right-4 top-6 lg:hidden text-slate-500 hover:text-white transition-colors"
+        className="absolute right-6 top-8 lg:hidden text-slate-500 hover:text-white transition-all bg-white/5 p-2 rounded-xl"
       >
-        <X size={24} />
+        <X size={20} />
       </button>
 
-      {/* Header / Logo */}
-      <div className="h-24 px-8 flex items-center border-b border-white/5">
-        <div className="flex items-center gap-4">
-          <img src="/paper‑contracts.png" alt="Paper Contracts Logo" className="w-10 h-10 object-contain drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]" />
+      {/* Header / Brand Identity */}
+      <div className="h-32 px-10 flex flex-col justify-center border-b border-white/[0.03]">
+        <div className="flex items-center gap-4 group cursor-default">
+          <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-azure/50 transition-all duration-500 shadow-2xl">
+             <Fingerprint size={24} className="text-white group-hover:text-azure transition-colors" />
+          </div>
           <div className="flex flex-col">
-            <span className="text-sm font-black tracking-tighter text-white uppercase">Paper Contracts</span>
-            <span className="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Editorial Suite</span>
+            <span className="text-lg font-black tracking-tighter text-white uppercase leading-none">Paper Contracts</span>
+            <div className="flex items-center gap-2 mt-1.5">
+               <div className="w-1.5 h-1.5 rounded-full bg-azure animate-pulse" />
+               <span className="text-[9px] text-slate-500 font-black tracking-[0.2em] uppercase">Motor Editorial V3.0</span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto p-6 space-y-2 custom-scrollbar">
-        <p className="px-4 text-[10px] font-black text-slate-600 uppercase tracking-[0.2em] mb-4">Document Types</p>
+      {/* Navigation - Editorial Index Style */}
+      <nav className="flex-1 overflow-y-auto p-8 space-y-3 custom-scrollbar">
+        <div className="flex items-center justify-between px-4 mb-8">
+           <p className="text-[10px] font-black text-slate-600 uppercase tracking-[0.4em]">Índice Principal</p>
+           <span className="text-[10px] font-bold text-azure bg-azure/5 px-2 py-0.5 rounded border border-azure/10">PRO</span>
+        </div>
+
         {menu.map((item) => {
           const isActive = currentType === item.id;
-          const Icon = item.icon;
 
           return (
             <button
@@ -61,42 +62,51 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
                 onSelect(item.id);
                 if (window.innerWidth < 1024) onClose();
               }}
-              className={`w-full group flex flex-col gap-1 p-4 rounded-2xl transition-all duration-300 relative ${
+              className={`w-full group flex items-center gap-6 p-4 rounded-[1.5rem] transition-all duration-500 relative border ${
                 isActive 
-                  ? 'bg-white/5 border border-white/10' 
-                  : 'hover:bg-white/[0.02] border border-transparent'
+                  ? 'bg-white/[0.03] border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)] translate-x-2' 
+                  : 'bg-transparent border-transparent hover:bg-white/[0.01] hover:translate-x-1'
               }`}
             >
-              <div className="flex items-center gap-4">
-                <div className={`p-2 rounded-lg transition-colors duration-300 ${isActive ? 'bg-azure text-white' : 'bg-slate-900 text-slate-500 group-hover:text-azure-light'}`}>
-                  <Icon size={18} />
-                </div>
-                <div className="flex flex-col items-start">
-                  <span className={`text-sm font-bold tracking-tight ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-slate-200'}`}>
-                    {item.label}
-                  </span>
-                  <span className="text-[10px] text-slate-600 group-hover:text-slate-500 transition-colors">
-                    {item.desc}
-                  </span>
-                </div>
+              <div className={`text-[11px] font-black font-mono transition-colors duration-500 ${isActive ? 'text-azure' : 'text-slate-700 group-hover:text-slate-400'}`}>
+                {item.code}
               </div>
               
-              {isActive && (
-                <div className="absolute right-4 top-1/2 -translate-y-1/2 w-1.5 h-1.5 rounded-full bg-azure shadow-[0_0_12px_rgba(59,130,246,0.8)]" />
-              )}
+              <div className="flex flex-col items-start flex-1">
+                <span className={`text-[13px] font-black uppercase tracking-widest transition-all duration-500 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                  {item.label}
+                </span>
+                <span className={`text-[9px] font-bold uppercase tracking-widest mt-1 transition-colors duration-500 ${isActive ? 'text-slate-400' : 'text-slate-700 group-hover:text-slate-600'}`}>
+                  {item.desc}
+                </span>
+              </div>
+
+              <ChevronRight size={14} className={`transition-all duration-500 ${isActive ? 'text-azure translate-x-0 opacity-100' : 'text-slate-800 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`} />
             </button>
           );
         })}
       </nav>
 
-      {/* Footer / Status */}
-      <div className="p-8 border-t border-white/5">
-        <div className="bg-white/[0.03] rounded-2xl p-4 border border-white/5">
-          <div className="flex items-center gap-3 mb-1">
-            <ShieldCheck size={14} className="text-azure" />
-            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">Local Security</span>
-          </div>
-          <p className="text-[10px] text-slate-500 leading-relaxed font-medium">Dados armazenados localmente de forma segura.</p>
+      {/* System Integrity Widget */}
+      <div className="p-10 border-t border-white/[0.03]">
+        <div className="bg-white/[0.02] rounded-[2rem] p-6 border border-white/[0.03] relative overflow-hidden group">
+           <div className="absolute top-0 left-0 w-1 h-full bg-azure opacity-20" />
+           <div className="flex items-center gap-3 mb-3">
+              <Zap size={14} className="text-azure" />
+              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Performance</span>
+           </div>
+           <div className="flex items-center justify-between mb-4">
+              <span className="text-[9px] text-slate-500 font-bold uppercase">Motor do Sistema</span>
+              <span className="text-[9px] text-emerald-500 font-black uppercase tracking-widest flex items-center gap-1">
+                 <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" /> Operacional
+              </span>
+           </div>
+           <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+              <div className="h-full bg-azure w-full opacity-30 group-hover:opacity-60 transition-opacity" />
+           </div>
+           <p className="text-[9px] text-slate-700 mt-4 leading-relaxed font-bold uppercase tracking-widest">
+              Pronto para exportação.
+           </p>
         </div>
       </div>
     </div>
