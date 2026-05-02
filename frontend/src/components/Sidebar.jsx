@@ -75,26 +75,26 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
                 onSelect(item.id);
                 if (window.innerWidth < 1024) onClose();
               }}
-              className={`w-full group flex items-center gap-6 p-4 rounded-[1.5rem] transition-all duration-500 relative border ${
+              className={`w-full group flex items-center gap-4 p-3 rounded-2xl transition-all duration-500 relative border ${
                 isActive 
-                  ? 'bg-white/[0.03] border-white/10 shadow-[0_20px_40px_rgba(0,0,0,0.4)] translate-x-2' 
+                  ? 'bg-white/[0.03] border-white/10 shadow-xl translate-x-1' 
                   : 'bg-transparent border-transparent hover:bg-white/[0.01] hover:translate-x-1'
               }`}
             >
-              <div className={`text-[11px] font-black font-mono transition-colors duration-500 ${isActive ? 'text-azure' : 'text-slate-700 group-hover:text-slate-400'}`}>
+              <div className={`text-[10px] font-black font-mono transition-colors duration-500 ${isActive ? 'text-azure' : 'text-slate-700 group-hover:text-slate-400'}`}>
                 {item.code}
               </div>
               
               <div className="flex flex-col items-start flex-1">
-                <span className={`text-[13px] font-black uppercase tracking-widest transition-all duration-500 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
+                <span className={`text-[11px] font-black uppercase tracking-widest transition-all duration-500 ${isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300'}`}>
                   {item.label}
                 </span>
-                <span className={`text-[9px] font-bold uppercase tracking-widest mt-1 transition-colors duration-500 ${isActive ? 'text-slate-400' : 'text-slate-700 group-hover:text-slate-600'}`}>
+                <span className={`text-[8px] font-bold uppercase tracking-widest mt-0.5 transition-colors duration-500 ${isActive ? 'text-slate-400' : 'text-slate-700 group-hover:text-slate-600'}`}>
                   {item.desc}
                 </span>
               </div>
 
-              <ChevronRight size={14} className={`transition-all duration-500 ${isActive ? 'text-azure translate-x-0 opacity-100' : 'text-slate-800 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`} />
+              <ChevronRight size={12} className={`transition-all duration-500 ${isActive ? 'text-azure translate-x-0 opacity-100' : 'text-slate-800 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'}`} />
             </button>
           );
         })}

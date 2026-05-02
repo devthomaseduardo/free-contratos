@@ -85,19 +85,24 @@
         border-color: rgba(255, 255, 255, 0.05);
       }
 
+      /* SCROLLBAR REFINEMENT */
       ::-webkit-scrollbar {
-        width: 4px;
-        height: 4px;
+        width: 8px;
+        height: 8px;
       }
       ::-webkit-scrollbar-track {
-        background: transparent;
+        background: rgba(0,0,0,0.2);
       }
       ::-webkit-scrollbar-thumb {
-        background: #1e293b;
-        border-radius: 10px;
+        background: rgba(255,255,255,0.05);
+        border-radius: 20px;
+        border: 2px solid transparent;
+        background-clip: content-box;
+        transition: all 0.3s;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #334155;
+        background: #1e40af;
+        background-clip: content-box;
       }
 
       .indent-8 {

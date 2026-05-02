@@ -12,9 +12,11 @@ import { auth, logout } from './firebase';
 import { onAuthStateChanged, getRedirectResult } from 'firebase/auth';
 
 import { INITIAL_CONTRACT_DATA } from './types';
-import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle, Target, Fingerprint } from 'lucide-react';
+import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle, Target, Fingerprint, HelpCircle, X } from 'lucide-react';
 
 import { getClients, saveClient as apiSaveClient, deleteClient as apiDeleteClient, getDocuments as apiGetDocs, saveDocument as apiSaveDoc, deleteDocument as apiDeleteDoc } from './services/api';
+
+import { useRef } from 'react';
 
 const STORAGE_KEY = 'papercontracts_current_v1';
 const HISTORY_KEY = 'papercontracts_history_v1';
@@ -60,7 +62,37 @@ const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [toast, setToast] = useState(null);
-  const [showAtsAnalyzer, setShowAtsAnalyzer] = useState(false);
+   const [showAtsAnalyzer, setShowAtsAnalyzer] = useState(false);
+   const [showOnboarding, setShowOnboarding] = useState(false);
+   const [tourStep, setTourStep] = useState(0);
+   const [confirmConfig, setConfirmConfig] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
+
+   const showConfirm = (title, message, onConfirm) => {
+     setConfirmConfig({ isOpen: true, title, message, onConfirm });
+   };
+
+   const tourSteps = [
+     {
+       title: "O Cockpit Forense",
+       desc: "Bem-vindo ao seu centro de comando. Aqui você gerencia protocolos, analisa admissibilidade e exporta documentos de alto padrão.",
+       target: "header"
+     },
+     {
+       title: "Instrumentação de Dados",
+       desc: "Monitore a integridade do seu documento em tempo real através dos indicadores de segurança e densidade semântica.",
+       target: "dashboard"
+     },
+     {
+       title: "Inteligência Gemini 1.5",
+       desc: "Utilize o motor de processamento neural para refinar cláusulas e garantir autoridade técnica em cada linha.",
+       target: "editor"
+     },
+     {
+       title: "Simulador ATS",
+       desc: "Valide se o seu documento passará pelos filtros de triagem automatizada com nossa análise de admissibilidade.",
+       target: "ats"
+     }
+   ];
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -113,11 +145,17 @@ const App = () => {
     return () => clearTimeout(timer);
   }, [contractData]);
 
+
   const handleReset = () => {
-    if (window.confirm('Resetar todos os dados?')) {
-      setContractData({ ...INITIAL_CONTRACT_DATA, type: contractData.type });
-      localStorage.removeItem(STORAGE_KEY);
-    }
+    showConfirm(
+      'Resetar Protocolo', 
+      'Tem certeza que deseja expurgar todos os dados atuais? Esta ação não pode ser desfeita.', 
+      () => {
+        setContractData({ ...INITIAL_CONTRACT_DATA, type: contractData.type });
+        localStorage.removeItem(STORAGE_KEY);
+        showToast('Sistema resetado com sucesso.');
+      }
+    );
   };
 
   const handleTypeChange = (type) => {
@@ -171,7 +209,10 @@ const App = () => {
   };
 
   const deleteClientProfile = async (doc) => {
-    if (confirm('Excluir perfil deste cliente?')) {
+    showConfirm(
+      'Remover Perfil',
+      'Excluir perfil deste cliente permanentemente do banco de dados?',
+      async () => {
         try {
             await apiDeleteClient(doc);
             setClientProfiles(prev => prev.filter(c => c.clientDoc !== doc));
@@ -179,22 +220,33 @@ const App = () => {
         } catch (e) {
             showToast('Erro ao excluir cliente: ' + e.message, 'error');
         }
-    }
+      }
+    );
   }
 
   const loadFromHistory = (doc) => {
-    if (confirm('Carregar este documento? Isso substituirá os dados atuais.')) {
-      setContractData(doc);
-      setShowHistory(false);
-    }
+    showConfirm(
+      'Carregar Dossiê',
+      'Carregar este documento do histórico local? Isso substituirá os dados atuais.',
+      () => {
+        setContractData(doc);
+        setShowHistory(false);
+        showToast('Documento carregado.');
+      }
+    );
   };
 
   const deleteFromHistory = (id) => {
-    if (confirm('Excluir este documento do histórico?')) {
-      const updatedHistory = history.filter(d => d.id !== id);
-      setHistory(updatedHistory);
-      localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
-    }
+    showConfirm(
+      'Purgar Registro',
+      'Excluir este documento permanentemente do histórico local?',
+      () => {
+        const updatedHistory = history.filter(d => d.id !== id);
+        setHistory(updatedHistory);
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(updatedHistory));
+        showToast('Registro purgado.');
+      }
+    );
   };
 
   const exportData = () => {
@@ -315,15 +367,22 @@ const App = () => {
 
 
   const loadFromCloud = (doc) => {
-    if (confirm(`Carregar o dossiê "${doc.title}"? Isso substituirá os dados atuais.`)) {
-      setContractData(doc.content);
-      showToast('Dossiê carregado da nuvem!');
-      if (window.innerWidth < 1024) setSidebarOpen(false);
-    }
+    showConfirm(
+      'Sincronizar Nuvem',
+      `Carregar o dossiê "${doc.title}"? Isso substituirá os dados atuais.`,
+      () => {
+        setContractData(doc.content);
+        showToast('Dossiê carregado da nuvem!');
+        if (window.innerWidth < 1024) setSidebarOpen(false);
+      }
+    );
   };
 
   const deleteFromCloud = async (id) => {
-    if (confirm('Excluir este dossiê permanentemente da nuvem?')) {
+    showConfirm(
+      'Excluir da Nuvem',
+      'Excluir este dossiê permanentemente do servidor central?',
+      async () => {
         try {
             await apiDeleteDoc(id);
             setCloudHistory(prev => prev.filter(d => d.id !== id));
@@ -331,7 +390,8 @@ const App = () => {
         } catch (e) {
             showToast('Erro ao excluir: ' + e.message, 'error');
         }
-    }
+      }
+    );
   };
 
   return (
@@ -359,8 +419,8 @@ const App = () => {
       </div>
 
       <div className="flex-1 flex flex-col h-full min-w-0 pb-20 md:pb-0 relative print:h-auto print:pb-0">
-        <header className="h-28 lg:h-32 px-6 lg:px-12 flex items-center justify-between border-b border-white/[0.03] bg-black/40 backdrop-blur-3xl sticky top-0 z-[60] print:hidden transition-all duration-500">
-          <div className="flex items-center gap-4 lg:gap-10">
+        <header className="h-20 lg:h-24 px-6 lg:px-10 flex items-center justify-between border-b border-white/[0.03] bg-black/40 backdrop-blur-3xl sticky top-0 z-[60] print:hidden transition-all duration-500">
+          <div className="flex items-center gap-4 lg:gap-8">
             <button
               type="button"
               onClick={() => setSidebarOpen(true)}
@@ -429,6 +489,14 @@ const App = () => {
           {/* ACTION CLUSTER */}
           <div className="flex items-center gap-2.5 lg:gap-4">
             <button
+              onClick={() => { setShowOnboarding(true); setTourStep(0); }}
+              title="Iniciar Tour do Sistema"
+              className="p-3.5 bg-white/5 hover:bg-azure/10 text-slate-500 hover:text-azure rounded-2xl border border-white/5 transition-all active:scale-95"
+            >
+              <HelpCircle size={20} />
+            </button>
+
+            <button
               onClick={() => setShowAtsAnalyzer(true)}
               title="Simulador de Admissibilidade"
               className="hidden lg:flex p-3.5 bg-white/5 hover:bg-emerald-500/5 text-slate-500 hover:text-emerald-400 rounded-2xl border border-white/5 hover:border-emerald-500/10 transition-all active:scale-95"
@@ -438,17 +506,17 @@ const App = () => {
 
             <button
               onClick={() => window.print()}
-              className="p-3.5 lg:px-6 lg:py-3.5 bg-white/5 hover:bg-white/10 text-slate-300 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-3 border border-white/10 active:scale-95 shadow-lg"
+              className="p-3 lg:px-5 lg:py-3 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2.5 border border-white/10 active:scale-95 shadow-lg"
             >
-              <FileText size={20} className="text-azure" /> 
+              <FileText size={18} className="text-azure" /> 
               <span className="hidden xl:inline">Exportar PDF</span>
             </button>
 
             <button
               onClick={saveToHistory}
-              className="px-6 py-3.5 lg:px-8 bg-azure hover:bg-azure-dark text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-3 shadow-lg shadow-azure/10 active:scale-95 group border border-azure/50"
+              className="px-5 py-3 lg:px-6 bg-azure hover:bg-azure-dark text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2.5 shadow-lg shadow-azure/10 active:scale-95 group border border-azure/50"
             >
-              <Save size={20} className="group-hover:scale-110 transition-transform" /> 
+              <Save size={18} className="group-hover:scale-110 transition-transform" /> 
               <span>Salvar <span className="hidden sm:inline">Protocolo</span></span>
             </button>
           </div>
@@ -603,7 +671,113 @@ const App = () => {
                 </div>
             </div>
         )}
-      </div>
+        {/* ONBOARDING OVERLAY */}
+        {showOnboarding && (
+          <div className="fixed inset-0 z-[200] flex items-center justify-center p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-500">
+             <div className="premium-glass max-w-lg w-full p-12 rounded-[3rem] border border-white/10 shadow-[0_50px_100px_rgba(0,0,0,0.8)] relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-40 h-40 bg-azure/10 blur-[60px] rounded-full -translate-x-1/2 -translate-y-1/2" />
+                
+                <div className="relative z-10 space-y-8">
+                   <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-black text-azure uppercase tracking-[0.5em]">Passo {tourStep + 1} de {tourSteps.length}</span>
+                      <button onClick={() => setShowOnboarding(false)} className="text-slate-500 hover:text-white transition-colors">
+                        <X size={20} />
+                      </button>
+                   </div>
+
+                   <div className="space-y-4">
+                      <h3 className="text-3xl font-black text-white italic tracking-tighter uppercase">{tourSteps[tourStep].title}</h3>
+                      <p className="text-slate-400 leading-relaxed font-medium uppercase tracking-widest text-xs">{tourSteps[tourStep].desc}</p>
+                   </div>
+
+                   <div className="flex gap-4 pt-6">
+                      {tourStep > 0 && (
+                        <button 
+                          onClick={() => setTourStep(prev => prev - 1)}
+                          className="flex-1 py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all border border-white/5"
+                        >
+                          Anterior
+                        </button>
+                      )}
+                      <button 
+                        onClick={() => {
+                          if (tourStep < tourSteps.length - 1) {
+                            setTourStep(prev => prev + 1);
+                          } else {
+                            setShowOnboarding(false);
+                          }
+                        }}
+                        className="flex-[2] py-4 bg-azure hover:bg-azure-dark text-white rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all shadow-lg shadow-azure/20"
+                      >
+                        {tourStep === tourSteps.length - 1 ? 'Finalizar Tour' : 'Próximo Passo'}
+                      </button>
+                   </div>
+                </div>
+                {/* CUSTOM CONFIRM MODAL - HIGH SECURITY VERSION */}
+        {confirmConfig.isOpen && (
+          <div className="fixed inset-0 z-[250] flex items-center justify-center p-6 bg-black/90 backdrop-blur-xl animate-in fade-in duration-500">
+             <div className="relative max-w-sm w-full animate-in zoom-in-95 duration-300">
+                {/* SCANNING BAR ANIMATION */}
+                <div className="absolute -top-1 left-0 right-0 h-[2px] bg-azure shadow-[0_0_15px_#3b82f6] z-20 animate-scan pointer-events-none" />
+                
+                <div className="premium-glass p-8 rounded-[2rem] border border-white/10 shadow-[0_0_50px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                   {/* TECHNICAL CORNERS */}
+                   <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-azure/30 rounded-tl-2xl" />
+                   <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-azure/30 rounded-tr-2xl" />
+                   <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-azure/30 rounded-bl-2xl" />
+                   <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-azure/30 rounded-br-2xl" />
+
+                   <div className="relative z-10 space-y-6">
+                      <div className="flex items-center justify-between border-b border-white/5 pb-4">
+                         <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-azure/10 rounded-xl flex items-center justify-center border border-azure/20 animate-pulse">
+                               <ShieldCheck size={20} className="text-azure" />
+                            </div>
+                            <div className="flex flex-col">
+                               <span className="text-[8px] font-black text-azure uppercase tracking-[0.4em]">Ação Requerida</span>
+                               <h3 className="text-sm font-black text-white uppercase tracking-widest">{confirmConfig.title}</h3>
+                            </div>
+                         </div>
+                         <div className="text-right">
+                            <span className="block text-[7px] font-mono text-slate-600 uppercase">Node_Auth</span>
+                            <span className="block text-[9px] font-mono text-slate-400 font-bold tracking-tighter">0x7F4A...{Math.floor(Math.random()*9000)+1000}</span>
+                         </div>
+                      </div>
+
+                      <div className="py-2">
+                         <p className="text-[11px] text-slate-400 leading-relaxed font-bold uppercase tracking-widest text-center">
+                            {confirmConfig.message}
+                         </p>
+                      </div>
+
+                      <div className="grid grid-cols-2 gap-3 pt-2">
+                         <button 
+                           onClick={() => setConfirmConfig({ ...confirmConfig, isOpen: false })}
+                           className="py-3.5 bg-white/5 hover:bg-white/10 text-slate-500 hover:text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all border border-white/5 active:scale-95"
+                         >
+                           Abortar
+                         </button>
+                         <button 
+                           onClick={() => {
+                             confirmConfig.onConfirm();
+                             setConfirmConfig({ ...confirmConfig, isOpen: false });
+                           }}
+                           className="py-3.5 bg-azure hover:bg-azure-dark text-white rounded-xl text-[9px] font-black uppercase tracking-widest transition-all shadow-lg shadow-azure/20 active:scale-95 border border-azure/50"
+                         >
+                           Confirmar Protocolo
+                         </button>
+                      </div>
+                   </div>
+                </div>
+                
+                {/* FOOTER METADATA */}
+                <div className="mt-4 flex items-center justify-between px-4 opacity-30">
+                   <span className="text-[7px] font-mono text-white tracking-[0.3em] uppercase">Security_Layer_Active</span>
+                   <span className="text-[7px] font-mono text-white tracking-[0.3em] uppercase">v.3.2.0-STABLE</span>
+                </div>
+             </div>
+          </div>
+        )}
     </div>
   );
 };

@@ -487,14 +487,14 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
 
   return (
     <>
-    <div className="p-8 lg:p-12 pb-40 space-y-12 max-w-5xl mx-auto">
+    <div className="p-4 lg:p-8 pb-32 space-y-8 max-w-5xl mx-auto">
       {/* === DASHBOARD DE INSTRUMENTAÇÃO (COCKPIT) === */}
       <div className="bg-slate-900/40 border border-white/[0.03] rounded-[2.5rem] p-1 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-700">
           <div className="flex flex-col lg:flex-row items-stretch gap-1">
               {/* SEGURANÇA */}
-              <div className="flex-1 bg-white/[0.02] rounded-[2rem] p-6 border border-white/[0.03] flex items-center gap-5 group hover:bg-white/[0.04] transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-azure/10 flex items-center justify-center border border-azure/20 text-azure group-hover:scale-110 transition-transform">
-                      <ShieldCheck size={24} />
+              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-azure/10 flex items-center justify-center border border-azure/20 text-azure group-hover:scale-110 transition-transform">
+                      <ShieldCheck size={20} />
                   </div>
                   <div>
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Status de Segurança</p>
@@ -510,9 +510,9 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
               </div>
 
               {/* IDENTIDADE */}
-              <div className="flex-1 bg-white/[0.02] rounded-[2rem] p-6 border border-white/[0.03] flex items-center gap-5 group hover:bg-white/[0.04] transition-all">
-                  <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-slate-400">
-                      <Fingerprint size={24} />
+              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
+                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 text-slate-400">
+                      <Fingerprint size={20} />
                   </div>
                   <div className="min-w-0">
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Identidade do Protocolo</p>
@@ -521,7 +521,7 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
               </div>
 
               {/* DENSIDADE */}
-              <div className="flex-1 bg-white/[0.02] rounded-[2rem] p-6 border border-white/[0.03] flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
+              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
                   <div className="flex items-center justify-between mb-2">
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Densidade de Dados</p>
                       <span className="text-xs font-mono font-black text-azure">78.4%</span>
@@ -534,14 +534,14 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
               </div>
 
               {/* PURGE ACTION */}
-              <div className="bg-rose-500/5 hover:bg-rose-500/10 rounded-[2rem] p-2 flex items-center border border-rose-500/10 transition-all">
+              <div className="bg-rose-500/5 hover:bg-rose-500/10 rounded-2xl p-1 flex items-center border border-rose-500/10 transition-all">
                   <button 
                       onClick={onReset}
-                      className="w-full h-full lg:w-20 px-6 py-4 lg:p-0 flex flex-col items-center justify-center gap-2 group transition-all active:scale-90"
+                      className="w-full h-full lg:w-16 px-4 py-2 lg:p-0 flex flex-col items-center justify-center gap-1 group transition-all active:scale-90"
                       title="Expurgar Dados do Sistema"
                   >
-                      <Eraser size={20} className="text-rose-500 group-hover:rotate-12 transition-transform" />
-                      <span className="text-[8px] font-black text-rose-500/60 uppercase tracking-widest">Purge</span>
+                      <Eraser size={18} className="text-rose-500 group-hover:rotate-12 transition-transform" />
+                      <span className="text-[7px] font-black text-rose-500/60 uppercase tracking-widest">Purge</span>
                   </button>
               </div>
           </div>
