@@ -14,7 +14,8 @@ export const INITIAL_CONTRACT_DATA = {
   contractorDoc: "00.000.000/0001-00",
   contractorLocation: "Sua Cidade - UF",
   contractorRole: "Seu Cargo / Profissão",
-  contractorContact: "seuemail@exemplo.com | (00) 00000-0000",
+  contractorEmail: "seuemail@exemplo.com",
+  contractorPhone: "(00) 00000-0000",
   contractorLinkedin: "linkedin.com/in/seuperfil",
   contractorGithub: "github.com/seuperfil",
   contractorPortfolio: "seuportfolio.com.br",
@@ -24,6 +25,11 @@ export const INITIAL_CONTRACT_DATA = {
   timeline: [], 
   taxConfig: { iss: 5, irrf: 0, platformFee: 0 },
 
+  
+  cvSummary: "Desenvolvedor(a) de Software Júnior - Full Stack com sólida vivência no ecossistema Java e desenvolvimento Web. Focado(a) na implementação, deploy e manutenção de soluções backend e frontend integradas. Possuo postura proativa na investigação de logs em servidores Linux, forte capacidade analítica em ambientes de produção e interesse direto por inovações tecnológicas envolvendo integração de hardware (RFID e dispositivos físicos).",
+  cvExperience: "• Analista Desenvolvedor Júnior | TechSolutions (2022 - Atual)\n- Desenvolvimento e manutenção evolutiva em aplicações Java (Backend e APIs REST).\n- Criação de interfaces responsivas utilizando JSF, HTML, CSS e JavaScript.\n- Integração contínua e versionamento via Git, com deploys recorrentes em ambiente Linux.\n- Monitoramento de aplicações em produção: análise de logs, investigação de comportamentos anômalos e correção rápida de bugs críticos.\n- Forte atuação com banco de dados relacionais (SQL).\n\n• Estagiário em Desenvolvimento | InovaWeb (2021 - 2022)\n- Apoio à equipe sênior na estruturação de aplicações backend.\n- Contato prático com integrações de hardwares e leitura de especificações técnicas de IoT/RFID.\n- Criação e manutenção de componentes em aplicativos Android (Java).",
+  cvEducation: "• Bacharelado em Ciência da Computação\nUniversidade de São Paulo (USP) | 2018 - 2022",
+  cvSkills: ["Java", "JSF", "HTML / CSS / JavaScript", "APIs REST", "Linux (Linha de Comando & Logs)", "SQL / Bancos Relacionais", "Android (Java)", "EJB / WildFly / GlassFish", "Integração RFID / Hardware", "Git", "Análise de Sistemas em Produção"],
   
   clientName: "",
   clientAddress: "",

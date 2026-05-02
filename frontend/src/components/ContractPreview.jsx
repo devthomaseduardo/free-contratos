@@ -115,7 +115,7 @@ export const ContractPreview = ({ data, onChange }) => {
           {!simple && (
               <div className="text-right text-xs text-gray-500 leading-relaxed">
                   <p>{data.contractorLocation}</p>
-                  <p>{data.contractorContact}</p>
+                  <p>{data.contractorEmail} {data.contractorPhone && `| ${data.contractorPhone}`}</p>
                   <p>{data.contractorDoc}</p>
               </div>
           )}
@@ -131,7 +131,6 @@ export const ContractPreview = ({ data, onChange }) => {
             <h2 className="font-serif font-bold text-xl uppercase tracking-widest text-gray-900">
                 {data.type === 'nda' ? 'Acordo de Confidencialidade (NDA)' : 'Contrato de Prestação de Serviços'}
             </h2>
-            <div className="w-24 h-1 mx-auto mt-2" style={{ backgroundColor: data.accentColor }}></div>
         </div>
         
         {data.type === 'nda' ? (
@@ -265,7 +264,7 @@ export const ContractPreview = ({ data, onChange }) => {
                 <div className="text-right">
                     <h2 className="font-bold text-gray-900 text-sm uppercase tracking-widest">{data.contractorName}</h2>
                     <p className="text-xs text-gray-500 mt-1">{data.contractorDoc}</p>
-                    <p className="text-xs text-gray-500">{data.contractorContact}</p>
+                    <p className="text-xs text-gray-500">{data.contractorEmail} {data.contractorPhone && `| ${data.contractorPhone}`}</p>
                 </div>
             </div>
 
@@ -403,7 +402,8 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Contact Information */}
               <div className="flex flex-wrap gap-x-8 gap-y-2 mt-8 text-[10pt] font-medium text-gray-400">
                   {[
-                      { val: data.contractorContact, label: 'Tel' },
+                      { val: data.contractorEmail, label: 'E-mail' },
+                      { val: data.contractorPhone, label: 'Tel' },
                       { val: data.contractorLocation, label: 'Loc' },
                       { val: data.contractorDoc, label: 'Doc' },
                       { val: data.contractorLinkedin, label: 'LinkedIn' },
@@ -424,7 +424,7 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Summary */}
               {data.cvSummary && (
                   <section className="break-inside-avoid">
-                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                      <h2 className="text-[9pt] font-black uppercase tracking-[0.2em] text-gray-900 mb-4 border-b border-gray-200 pb-2">
                           {data.language === 'en' ? 'Professional Summary' : 'Resumo Profissional'}
                       </h2>
                       <p className="text-[11pt] leading-relaxed text-gray-700 font-medium">
@@ -436,7 +436,7 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Skills - Now full width and prominent */}
               {data.cvSkills && data.cvSkills.length > 0 && (
                   <section className="break-inside-avoid">
-                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                      <h2 className="text-[9pt] font-black uppercase tracking-[0.2em] text-gray-900 mb-4 border-b border-gray-200 pb-2">
                           {data.language === 'en' ? 'Skills & Technologies' : 'Competências & Tecnologias'}
                       </h2>
                       <p className="text-[10pt] leading-loose text-gray-800 font-bold">
@@ -448,7 +448,7 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Experience */}
               {data.cvExperience && (
                   <section>
-                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-6 border-b border-gray-100 pb-2">
+                      <h2 className="text-[9pt] font-black uppercase tracking-[0.2em] text-gray-900 mb-6 border-b border-gray-200 pb-2">
                           {data.language === 'en' ? 'Work History' : 'Experiência Profissional'}
                       </h2>
                       <div className="text-[10.5pt] leading-relaxed text-gray-800 whitespace-pre-line">
@@ -460,7 +460,7 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Education */}
               {data.cvEducation && (
                   <section className="break-inside-avoid">
-                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                      <h2 className="text-[9pt] font-black uppercase tracking-[0.2em] text-gray-900 mb-4 border-b border-gray-200 pb-2">
                           {data.language === 'en' ? 'Education' : 'Educação'}
                       </h2>
                       <div className="text-[10pt] leading-relaxed text-gray-700 whitespace-pre-line font-medium">
@@ -472,7 +472,7 @@ export const ContractPreview = ({ data, onChange }) => {
               {/* Projects / Additional Info */}
               {data.cvProjects && (
                   <section className="break-inside-avoid">
-                      <h2 className="text-[9pt] font-bold uppercase tracking-[0.2em] text-gray-400 mb-4 border-b border-gray-100 pb-2">
+                      <h2 className="text-[9pt] font-black uppercase tracking-[0.2em] text-gray-900 mb-4 border-b border-gray-200 pb-2">
                           {data.language === 'en' ? 'Projects & Additional Information' : 'Projetos & Informações Adicionais'}
                       </h2>
                       <div className="text-[10pt] leading-relaxed text-gray-800 whitespace-pre-line">
@@ -572,7 +572,8 @@ export const ContractPreview = ({ data, onChange }) => {
           <div className="mt-auto pt-12 border-t flex justify-between items-end text-[10px] text-gray-400 uppercase tracking-widest" style={{ borderColor: `${data.accentColor}20` }}>
               <div>
                   <p className="font-bold text-gray-600 mb-1">Contato</p>
-                  <p>{data.contractorContact}</p>
+                  <p>{data.contractorEmail}</p>
+                  {data.contractorPhone && <p>{data.contractorPhone}</p>}
                   <p>{data.contractorLocation}</p>
               </div>
               <div>
@@ -608,20 +609,54 @@ export const ContractPreview = ({ data, onChange }) => {
       </>
   );
 
+  const renderPetition = () => (
+      <div className="mt-8 text-justify font-serif text-[12pt] leading-loose text-black break-inside-avoid">
+          {data.letterSubject && (
+            <p className="mb-24 font-black text-lg uppercase tracking-widest text-center">{data.letterSubject}</p>
+          )}
+          
+          <div className="whitespace-pre-wrap min-h-[400px]">
+              {data.letterBody}
+          </div>
+
+          <div className="mt-24 text-center break-inside-avoid">
+              <p className="mb-12">{data.contractorLocation.split('-')[0].trim()}, {data.contractDate}.</p>
+              {data.contractorSignature && <img src={data.contractorSignature} alt="Signature" className="h-20 mx-auto mb-4 object-contain" />}
+              <div className="font-bold uppercase tracking-wide border-t border-black inline-block px-16 pt-2">{data.contractorName}</div>
+              {data.contractorDoc && <div className="text-sm mt-1">{data.contractorDoc}</div>}
+          </div>
+      </div>
+  );
+
+  const hasWorkflow = ['contract', 'nda', 'quote', 'invoice'].includes(data.type);
+
   return (
     <div className="flex flex-col h-full bg-midnight print:bg-white">
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 px-6 sm:px-8 py-4 bg-midnight-lighter/50 backdrop-blur-xl border-b border-white/5 shrink-0 z-20 print:hidden">
             <div className="flex items-center gap-4">
-                <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-azure shadow-[0_0_12px_rgba(59,130,246,0.6)]' : data.status === 'pending' ? 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]' : 'bg-slate-600'}`} />
-                <div className="flex flex-col">
-                    <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
-                        {data.type}
-                    </span>
-                    <span className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mt-0.5">
-                        {data.status === 'final' ? 'Documento Pronto' : data.status === 'pending' ? 'Sob Revisão' : 'Rascunho Local'}
-                    </span>
-                </div>
+                {hasWorkflow ? (
+                    <>
+                        <div className={`w-2 h-2 rounded-full ${data.status === 'final' ? 'bg-azure shadow-[0_0_12px_rgba(59,130,246,0.6)]' : data.status === 'pending' ? 'bg-amber-500 shadow-[0_0_12px_rgba(245,158,11,0.6)]' : 'bg-slate-600'}`} />
+                        <div className="flex flex-col">
+                            <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+                                {data.type}
+                            </span>
+                            <span className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mt-0.5">
+                                {data.status === 'final' ? 'Documento Pronto' : data.status === 'pending' ? 'Sob Revisão' : 'Rascunho Local'}
+                            </span>
+                        </div>
+                    </>
+                ) : (
+                    <div className="flex flex-col">
+                        <span className="text-white text-[10px] font-black uppercase tracking-[0.2em]">
+                            {data.type}
+                        </span>
+                        <span className="text-slate-500 text-[9px] font-bold uppercase tracking-widest mt-0.5">
+                            Edição Livre
+                        </span>
+                    </div>
+                )}
             </div>
             
             <div className="flex flex-wrap items-center w-full md:w-auto gap-3 sm:gap-6">
@@ -742,7 +777,7 @@ export const ContractPreview = ({ data, onChange }) => {
                 >
                     <div className="absolute inset-0 pointer-events-none z-0 flex items-center justify-center overflow-hidden">
                         {/* RASCUNHO — faint diagonal watermark */}
-                        {data.status === 'draft' && (
+                        {hasWorkflow && data.status === 'draft' && (
                             <p style={{
                                 fontSize: '100pt', fontWeight: 900, textTransform: 'uppercase',
                                 transform: 'rotate(-40deg)', color: 'rgba(156,163,175,0.08)',
@@ -750,7 +785,7 @@ export const ContractPreview = ({ data, onChange }) => {
                             }}>RASCUNHO</p>
                         )}
                         {/* EM REVISÃO — amber dashed circle stamp */}
-                        {data.status === 'pending' && (
+                        {hasWorkflow && data.status === 'pending' && (
                             <div style={{
                                 transform: 'rotate(-15deg)',
                                 border: '4pt double rgba(245,158,11,0.2)',
@@ -771,9 +806,9 @@ export const ContractPreview = ({ data, onChange }) => {
                             </div>
                         )}
                         {/* FINALIZADO — Documento limpo e oficial (no watermark) */}
-                        {data.status === 'final' && null}
+                        {hasWorkflow && data.status === 'final' && null}
                         {/* PAGO — bold emerald rectangle stamp */}
-                        {data.status === 'paid' && (
+                        {hasWorkflow && data.status === 'paid' && (
                             <div style={{
                                 transform: 'rotate(-10deg)',
                                 border: '6pt double rgba(16,185,129,0.25)',
@@ -796,6 +831,7 @@ export const ContractPreview = ({ data, onChange }) => {
                         {(data.type === 'letter' || data.type === 'declaration') && renderLetterOrDeclaration()}
                         {data.type === 'letterhead' && renderLetterhead()}
                         {data.type === 'coverLetter' && renderCoverLetter()}
+                        {data.type === 'petition' && renderPetition()}
                     </div>
                     
                     <div className="mt-12 pt-4 border-t border-gray-100 flex justify-between items-center opacity-30 text-[7pt] font-bold uppercase tracking-widest text-gray-400 break-inside-avoid">

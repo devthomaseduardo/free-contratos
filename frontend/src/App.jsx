@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { ContractForm } from './components/ContractForm';
 import { ContractPreview } from './components/ContractPreview';
 import { Sidebar } from './components/Sidebar';
+import { ATSAnalyzer } from './components/ATSAnalyzer';
 import { HomePage } from './components/HomePage';
+import { auth, logout } from './firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+
 import { INITIAL_CONTRACT_DATA } from './types';
-import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle } from 'lucide-react';
+import { Menu, Save, Trash2, FileText, Eye, History, ShieldCheck, AlertTriangle, Target } from 'lucide-react';
 
 import { getClients, saveClient as apiSaveClient, deleteClient as apiDeleteClient } from './services/api';
 
@@ -13,7 +17,22 @@ const HISTORY_KEY = 'papercontracts_history_v1';
 
 const App = () => {
   const [isDemoActive, setIsDemoActive] = useState(false);
+  const [user, setUser] = useState(null);
   const [contractData, setContractData] = useState(INITIAL_CONTRACT_DATA);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      if (currentUser) setIsDemoActive(true);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await logout();
+    setIsDemoActive(false);
+  };
+
   const [history, setHistory] = useState([]);
   const [clientProfiles, setClientProfiles] = useState([]);
   const [activeTab, setActiveTab] = useState('form');
@@ -21,6 +40,7 @@ const App = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [toast, setToast] = useState(null);
+  const [showAtsAnalyzer, setShowAtsAnalyzer] = useState(false);
 
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -214,9 +234,10 @@ const App = () => {
     return 'Currículo Vitae';
   };
 
-  if (!isDemoActive) {
+  if (!isDemoActive && !user) {
     return <HomePage onAccessDemo={() => setIsDemoActive(true)} />;
   }
+
 
   return (
     <div className="h-screen bg-midnight text-slate-100 font-sans flex overflow-hidden selection:bg-azure/30 print:h-auto print:overflow-visible print:bg-white">
@@ -234,6 +255,8 @@ const App = () => {
           onSelect={handleTypeChange} 
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          user={user}
+          onLogout={handleLogout}
         />
       </div>
 
@@ -279,6 +302,12 @@ const App = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <button
+              onClick={() => setShowAtsAnalyzer(true)}
+              className="group hidden lg:flex bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-500 px-5 py-2.5 rounded-2xl text-xs font-black uppercase tracking-widest transition-all items-center gap-2.5 border border-emerald-500/20 active:scale-95"
+            >
+              <Target size={16} /> Analisador ATS
+            </button>
             {lastSaved && (
               <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/[0.03] border border-white/5">
                 <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
@@ -336,7 +365,9 @@ const App = () => {
           <div
             className={`flex-1 overflow-y-auto border-r border-slate-800 bg-slate-950 print:hidden ${activeTab === 'form' ? 'block' : 'hidden md:block'}`}
           >
-            {showHistory ? (
+            {showAtsAnalyzer ? (
+              <ATSAnalyzer cvData={contractData} onClose={() => setShowAtsAnalyzer(false)} />
+            ) : showHistory ? (
               <div className="p-8 lg:p-12 animate-in-scale">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
                   <div>
@@ -418,14 +449,18 @@ const App = () => {
             )}
           </div>
 
-          <div className={`flex-1 bg-slate-900 relative print:bg-white print:overflow-visible print:block ${activeTab === 'preview' ? 'block' : 'hidden md:block'}`}>
-            <div className="absolute inset-0 bg-slate-900 z-0 print:hidden" />
-            <div className="relative z-10 h-full print:h-auto print:overflow-visible">
-              <ContractPreview 
-                data={contractData} 
-                onChange={(updates) => setContractData(prev => ({ ...prev, ...updates }))} 
-              />
-            </div>
+          <div className={`flex-1 bg-slate-900 relative print:bg-white print:overflow-visible print:block ${activeTab === 'preview' ? 'block' : 'hidden md:block'} ${showAtsAnalyzer ? '!hidden' : ''}`}>
+            {!showAtsAnalyzer && (
+                <>
+                    <div className="absolute inset-0 bg-slate-900 z-0 print:hidden" />
+                    <div className="relative z-10 h-full print:h-auto print:overflow-visible">
+                      <ContractPreview 
+                        data={contractData} 
+                        onChange={(updates) => setContractData(prev => ({ ...prev, ...updates }))} 
+                      />
+                    </div>
+                </>
+            )}
           </div>
         </main>
 

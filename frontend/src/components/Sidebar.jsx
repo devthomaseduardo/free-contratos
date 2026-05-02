@@ -1,13 +1,14 @@
-import React from 'react';
 import {
   X,
   ShieldCheck,
   ChevronRight,
   Fingerprint,
-  Zap
+  Zap,
+  LogOut
 } from 'lucide-react';
 
-export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
+export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout }) => {
+
   const menu = [
     { id: 'cv', label: 'Currículo Vitae', code: '01', desc: 'Recrutamento & Performance' },
     { id: 'coverLetter', label: 'Carta de Apresentação', code: '02', desc: 'Introdução Estratégica' },
@@ -16,6 +17,7 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
     { id: 'quote', label: 'Proposta Comercial', code: '05', desc: 'Escopo Financeiro' },
     { id: 'letterhead', label: 'Identidade Visual', code: '06', desc: 'Branding Institucional' },
     { id: 'invoice', label: 'Fatura de Serviço', code: '07', desc: 'Registro de Pagamento' },
+    { id: 'petition', label: 'Petição Jurídica', code: '08', desc: 'Processos & Ofícios' },
   ];
 
   return (
@@ -87,14 +89,29 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
         })}
       </nav>
 
-      {/* System Integrity Widget */}
-      <div className="p-10 border-t border-white/[0.03]">
+      {/* User Identity & Integrity Widget */}
+      <div className="p-8 border-t border-white/[0.03] space-y-6">
+        {user && (
+          <div className="flex items-center gap-4 px-4 mb-4">
+             <div className="w-12 h-12 rounded-2xl border border-white/10 overflow-hidden shadow-2xl relative group">
+                <img src={user.photoURL || `https://i.pravatar.cc/100?u=${user.email}`} alt={user.displayName} className="w-full h-full object-cover" />
+                <button 
+                  onClick={onLogout}
+                  className="absolute inset-0 bg-rose-500/80 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                  title="Sair"
+                >
+                  <LogOut size={18} className="text-white" />
+                </button>
+             </div>
+             <div className="flex flex-col flex-1 overflow-hidden">
+                <span className="text-[11px] font-black text-white truncate uppercase tracking-tighter">{user.displayName || 'Usuário'}</span>
+                <span className="text-[9px] text-slate-500 font-bold truncate tracking-widest uppercase">{user.email}</span>
+             </div>
+          </div>
+        )}
+
         <div className="bg-white/[0.02] rounded-[2rem] p-6 border border-white/[0.03] relative overflow-hidden group">
            <div className="absolute top-0 left-0 w-1 h-full bg-azure opacity-20" />
-           <div className="flex items-center gap-3 mb-3">
-              <Zap size={14} className="text-azure" />
-              <span className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Performance</span>
-           </div>
            <div className="flex items-center justify-between mb-4">
               <span className="text-[9px] text-slate-500 font-bold uppercase">Motor do Sistema</span>
               <span className="text-[9px] text-emerald-500 font-black uppercase tracking-widest flex items-center gap-1">
@@ -104,11 +121,9 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose }) => {
            <div className="h-1 bg-white/5 rounded-full overflow-hidden">
               <div className="h-full bg-azure w-full opacity-30 group-hover:opacity-60 transition-opacity" />
            </div>
-           <p className="text-[9px] text-slate-700 mt-4 leading-relaxed font-bold uppercase tracking-widest">
-              Pronto para exportação.
-           </p>
         </div>
       </div>
+
     </div>
   );
 };

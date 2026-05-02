@@ -631,7 +631,8 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                       contractorDoc: "60.882.678/0001-77",
                       contractorLocation: "São Paulo - SP",
                       contractorRole: "Desenvolvedor Fullstack Sênior",
-                      contractorContact: "devthomaseduardo@gmail.com | (11) 97497-5062",
+                      contractorEmail: "devthomaseduardo@gmail.com",
+                      contractorPhone: "(11) 97497-5062",
                       contractorLinkedin: "linkedin.com/in/devthomaseduardo",
                       contractorGithub: "github.com/devthomaseduardo",
                       contractorPortfolio: "thomaseduardo.online"
@@ -648,7 +649,8 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                 <Input label="Função / Cargo" value={data.contractorRole} onChange={(e) => handleChange('contractorRole', e.target.value)} placeholder="Ex: Desenvolvedor Fullstack Sênior" />
                 <Input label="CPF / CNPJ" value={data.contractorDoc} onChange={(e) => handleChange('contractorDoc', e.target.value)} placeholder="00.000.000/0001-00" />
                 <Input label="Cidade — estado" value={data.contractorLocation} onChange={(e) => handleChange('contractorLocation', e.target.value)} placeholder="São Paulo - SP" />
-                <Input label="Contato" value={data.contractorContact} onChange={(e) => handleChange('contractorContact', e.target.value)} placeholder="email@exemplo.com | (11) 99999-9999" />
+                <Input label="E-mail" value={data.contractorEmail} onChange={(e) => handleChange('contractorEmail', e.target.value)} placeholder="seuemail@exemplo.com" />
+                <Input label="Telefone" value={data.contractorPhone} onChange={(e) => handleChange('contractorPhone', e.target.value)} placeholder="(11) 99999-9999" />
                 <Input label="LinkedIn" value={data.contractorLinkedin} onChange={(e) => handleChange('contractorLinkedin', e.target.value)} placeholder="linkedin.com/in/perfil" />
                 <Input label="GitHub" value={data.contractorGithub} onChange={(e) => handleChange('contractorGithub', e.target.value)} placeholder="github.com/usuario" />
                 <Input label="Portfólio URL" value={data.contractorPortfolio} onChange={(e) => handleChange('contractorPortfolio', e.target.value)} placeholder="meuportfolio.com.br" />
@@ -949,8 +951,8 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
                     </div>
                 )}
 
-                {/* TIMBRADO / CARTA / DECLARAÇÃO */}
-                {(data.type === 'letterhead' || data.type === 'letter' || data.type === 'declaration') && (
+                {/* TIMBRADO / CARTA / DECLARAÇÃO / PETIÇÃO */}
+                {(data.type === 'letterhead' || data.type === 'letter' || data.type === 'declaration' || data.type === 'petition') && (
                     <div className="space-y-4">
                         {data.type === 'declaration' && (
                             <div className="flex gap-2 mb-4 flex-wrap">

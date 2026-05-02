@@ -65,6 +65,19 @@ export async function generateTimeline(services) {
   return await res.json();
 }
 
+export async function analyzeATSWithAI(cvData, jobDescription) {
+  const res = await fetch(`${apiBase()}/api/v1/ai/analyze-ats`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ cvData, jobDescription }),
+  });
+  if (!res.ok) {
+    throw new Error(await parseError(res));
+  }
+  return await res.json();
+}
+
+
 export async function getClients() {
   const res = await fetch(`${apiBase()}/api/v1/clients`);
   if (!res.ok) throw new Error(await parseError(res));
