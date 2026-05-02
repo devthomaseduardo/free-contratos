@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Printer, Copy, CheckCircle2, Download, Loader2, Eye, EyeOff, Trash2 } from 'lucide-react';
+import { Printer, Copy, CheckCircle2, Download, Loader2, Eye, EyeOff, Trash2, Fingerprint, Shield } from 'lucide-react';
 
 export const ContractPreview = ({ data, onChange }) => {
   const [copied, setCopied] = useState(false);
@@ -80,53 +80,60 @@ export const ContractPreview = ({ data, onChange }) => {
 
   // --- SUB-COMPONENTES DE RENDERIZAÇÃO ---
 
-  const OfficialHeader = () => (
-    <div className="relative mb-12 flex justify-between items-start">
-        <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-black flex items-center justify-center rounded-lg">
-                    <Fingerprint size={24} className="text-white" />
-                </div>
-                <div>
-                    <h1 className="text-xl font-black tracking-tighter uppercase leading-none">Paper Contracts.</h1>
-                    <p className="text-[8px] font-bold tracking-[0.3em] uppercase text-gray-500 mt-1">Forensic Document Engine</p>
+  const OfficialHeader = () => {
+    if (!data.showHeader) return null;
+    return (
+        <div className="relative mb-12 flex justify-between items-start animate-in fade-in slide-in-from-top-4">
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-3">
+                    {data.contractorLogo ? (
+                        <img src={data.contractorLogo} alt="Logo" className="h-12 w-auto object-contain" />
+                    ) : (
+                        <div className="w-12 h-12 bg-black flex items-center justify-center rounded-lg">
+                            <Fingerprint size={24} className="text-white" />
+                        </div>
+                    )}
+                    <div>
+                        <h1 className="text-xl font-black tracking-tighter uppercase leading-none">{data.contractorName || ''}</h1>
+                        <p className="text-[8px] font-bold tracking-[0.3em] uppercase text-gray-500 mt-1">{data.contractorRole || ''}</p>
+                    </div>
                 </div>
             </div>
+            <div className="text-right flex flex-col items-end">
+                <div className="h-1 w-24 mb-4" style={{ backgroundColor: data.accentColor || '#3b82f6' }} />
+                {data.showStamps && (
+                    <>
+                        <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">DOC #{data.id?.slice(-8).toUpperCase()}</p>
+                        <p className="text-[8px] font-bold text-gray-300 mt-1 uppercase tracking-widest">REGISTRO: {new Date().toLocaleDateString('pt-BR')}</p>
+                    </>
+                )}
+            </div>
+            {/* Geometric Accent Line */}
+            <div className="absolute -top-[25mm] -right-[20mm] w-[80mm] h-[80mm] bg-gray-50 rounded-full -z-10 opacity-50" />
         </div>
-        <div className="text-right flex flex-col items-end">
-            <div className="h-1 w-24 mb-4" style={{ backgroundColor: data.accentColor || '#3b82f6' }} />
-            <p className="text-[9px] font-black uppercase tracking-widest text-gray-400">Certificado Digital: #{data.id?.slice(-8).toUpperCase()}</p>
-            <p className="text-[8px] font-bold text-gray-300 mt-1 uppercase tracking-widest">Emitido em {new Date().toLocaleDateString('pt-BR')}</p>
-        </div>
-        {/* Geometric Accent Line */}
-        <div className="absolute -top-[25mm] -right-[20mm] w-[80mm] h-[80mm] bg-gray-50 rounded-full -z-10 opacity-50" />
-    </div>
-  );
+    );
+  };
 
-  const OfficialFooter = () => (
-    <div className="mt-auto pt-10 border-t-4 border-black relative">
-        <div className="absolute top-0 right-0 h-4 w-32" style={{ backgroundColor: data.accentColor || '#3b82f6' }} />
-        <div className="grid grid-cols-3 gap-8 items-end">
-            <div>
-                <p className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">Contato Oficial</p>
-                <p className="text-[9px] font-bold text-black">{data.contractorEmail || 'contato@empresa.com'}</p>
-                <p className="text-[9px] font-medium text-gray-600">{data.contractorPhone || '+55 11 99999-9999'}</p>
-            </div>
-            <div className="text-center">
-                <div className="flex justify-center mb-2">
-                    <Shield size={16} className="text-gray-200" />
+  const OfficialFooter = () => {
+    if (!data.showFooter) return null;
+    return (
+        <div className="mt-auto pt-10 border-t border-black relative animate-in fade-in slide-in-from-bottom-4">
+            <div className="absolute top-0 right-0 h-1 w-32" style={{ backgroundColor: data.accentColor || '#3b82f6' }} />
+            <div className="grid grid-cols-3 gap-8 items-end">
+                <div>
+                    <p className="text-[9px] font-bold text-black">{data.contractorEmail || ''}</p>
+                    <p className="text-[9px] font-medium text-gray-600">{data.contractorPhone || ''}</p>
                 </div>
-                <p className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-400">Verificação de Integridade</p>
-                <p className="text-[8px] font-bold text-gray-500 mt-1">ISO 27001 &middot; 256-bit AES</p>
-            </div>
-            <div className="text-right">
-                <p className="text-[7px] font-black uppercase tracking-[0.2em] text-gray-400 mb-2">Localização / Registro</p>
-                <p className="text-[9px] font-bold text-black">SÃO PAULO / BRASIL</p>
-                <p className="text-[8px] font-medium text-gray-600 uppercase tracking-widest">Global Operations Center</p>
+                <div className="text-center">
+                    {/* Empty center */}
+                </div>
+                <div className="text-right">
+                    <p className="text-[9px] font-bold text-black">{data.contractorCity || ''}</p>
+                </div>
             </div>
         </div>
-    </div>
-  );
+    );
+  };
 
   const SignatureBlock = () => (
       <div className="mt-16 pt-8 border-t border-black flex justify-between gap-8 break-inside-avoid">
@@ -872,6 +879,13 @@ export const ContractPreview = ({ data, onChange }) => {
                         )}
                     </div>
 
+                    {/* Watermark */}
+                    {data.showWatermark && (
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.03] rotate-12 -z-10">
+                            <Fingerprint size={400} />
+                        </div>
+                    )}
+
                     <div className="relative z-10 flex-1">
                         <OfficialHeader />
                         <div className="py-8">
@@ -886,10 +900,6 @@ export const ContractPreview = ({ data, onChange }) => {
                         <OfficialFooter />
                     </div>
                     
-                    <div className="mt-12 pt-4 border-t border-gray-100 flex justify-between items-center opacity-30 text-[7pt] font-bold uppercase tracking-widest text-gray-400 break-inside-avoid">
-                        <p>Documento Gerado via paper-contracts &middot; ISO 216</p>
-                        <p>Thomas Eduardo <span style={{ color: data.accentColor }}>@devthomas</span></p>
-                    </div>
                 </div>
             </div>
         </div>

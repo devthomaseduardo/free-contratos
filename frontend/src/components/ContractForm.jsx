@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Sparkles, Plus, Trash2, Bot, Eraser, Save, ChevronDown, ChevronUp, Briefcase, User, Wallet, Scale, PenTool, Image as ImageIcon, Globe, Smartphone, Wrench, Zap, Infinity, Palette, AlertTriangle, Lightbulb, Info, UserPlus, Users, ShieldCheck, MapPin, Phone, Linkedin, Github, Link, Calendar, CheckCircle2 } from 'lucide-react';
+import { Sparkles, Plus, Trash2, Bot, Eraser, Save, ChevronDown, ChevronUp, Briefcase, User, Wallet, Scale, PenTool, Image as ImageIcon, Globe, Smartphone, Wrench, Zap, Infinity, Palette, AlertTriangle, Lightbulb, Info, UserPlus, Users, ShieldCheck, MapPin, Phone, Linkedin, Github, Link, Calendar, CheckCircle2, Layout, Shield, Fingerprint, FileText } from 'lucide-react';
 import { refineServiceDescription, generateLegalClause, analyzeRisks, generateTimeline } from '../services/api';
 
 const sectionHeaderClasses = {
@@ -1109,31 +1109,85 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
          </div>
       )}
 
-      {/* 5. ESTILO & CORES */}
+      {/* 5. ESTILO DO PAPEL */}
       <div className="space-y-2">
-          <SectionHeader id="style" title="Cores & Identidade" icon={Palette} />
+          <SectionHeader id="style" title="Estilo do Papel" icon={Layout} />
           {activeSection === 'style' && (
-              <div className="p-6 bg-midnight-lighter/20 border-l-2 border-azure rounded-r-[2rem] space-y-6 animate-in fade-in slide-in-from-top-4 duration-500">
-                  <div className="grid grid-cols-5 md:grid-cols-10 gap-3">
-                      {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#06b6d4', '#ec4899', '#8b5cf6', '#05070a', '#c5a059', '#475569'].map(c => (
-                          <button
-                            key={c}
-                            onClick={() => handleChange('accentColor', c)}
-                            className={`w-full aspect-square rounded-full border-2 transition-all hover:scale-110 shadow-lg ${data.accentColor === c ? 'border-white scale-110' : 'border-white/5'}`}
-                            style={{ backgroundColor: c }}
-                          />
-                      ))}
+              <div className="p-8 bg-slate-900/30 border border-white/5 rounded-[2rem] space-y-8 animate-in fade-in zoom-in-95 duration-500">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <button 
+                        onClick={() => handleChange('showHeader', !data.showHeader)}
+                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${data.showHeader ? 'bg-azure/10 border-azure/30 text-azure' : 'bg-white/[0.02] border-white/5 text-slate-500'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <Layout size={18} />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Cabeçalho Oficial</span>
+                        </div>
+                        <div className={`w-8 h-4 rounded-full relative transition-all ${data.showHeader ? 'bg-azure' : 'bg-slate-700'}`}>
+                          <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${data.showHeader ? 'right-1' : 'left-1'}`} />
+                        </div>
+                      </button>
+
+                      <button 
+                        onClick={() => handleChange('showFooter', !data.showFooter)}
+                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${data.showFooter ? 'bg-azure/10 border-azure/30 text-azure' : 'bg-white/[0.02] border-white/5 text-slate-500'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <Layout size={18} className="rotate-180" />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Rodapé Estruturado</span>
+                        </div>
+                        <div className={`w-8 h-4 rounded-full relative transition-all ${data.showFooter ? 'bg-azure' : 'bg-slate-700'}`}>
+                          <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${data.showFooter ? 'right-1' : 'left-1'}`} />
+                        </div>
+                      </button>
+
+                      <button 
+                        onClick={() => handleChange('showStamps', !data.showStamps)}
+                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${data.showStamps ? 'bg-amber-500/10 border-amber-500/30 text-amber-500' : 'bg-white/[0.02] border-white/5 text-slate-500'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <Shield size={18} />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Selos de Status</span>
+                        </div>
+                        <div className={`w-8 h-4 rounded-full relative transition-all ${data.showStamps ? 'bg-amber-500' : 'bg-slate-700'}`}>
+                          <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${data.showStamps ? 'right-1' : 'left-1'}`} />
+                        </div>
+                      </button>
+
+                      <button 
+                        onClick={() => handleChange('showWatermark', !data.showWatermark)}
+                        className={`flex items-center justify-between p-5 rounded-2xl border transition-all ${data.showWatermark ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-500' : 'bg-white/[0.02] border-white/5 text-slate-500'}`}
+                      >
+                        <div className="flex items-center gap-4">
+                          <Fingerprint size={18} />
+                          <span className="text-[10px] font-black uppercase tracking-widest">Marca d'água</span>
+                        </div>
+                        <div className={`w-8 h-4 rounded-full relative transition-all ${data.showWatermark ? 'bg-emerald-500' : 'bg-slate-700'}`}>
+                          <div className={`absolute top-1 w-2 h-2 bg-white rounded-full transition-all ${data.showWatermark ? 'right-1' : 'left-1'}`} />
+                        </div>
+                      </button>
                   </div>
-                  <div className="flex items-center gap-4 bg-midnight p-4 rounded-2xl border border-white/5 w-fit">
-                      <div className="relative w-10 h-10 overflow-hidden rounded-full border border-white/10">
-                        <input 
-                            type="color" 
-                            value={data.accentColor} 
-                            onChange={(e) => handleChange('accentColor', e.target.value)}
-                            className="absolute -inset-2 w-14 h-14 cursor-pointer bg-transparent"
-                        />
+
+                  <div className="pt-6 border-t border-white/5">
+                      <p className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4">Cor de Destaque Global</p>
+                      <div className="flex flex-wrap gap-3">
+                          {['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#c5a059', '#05070a'].map(c => (
+                              <button
+                                key={c}
+                                onClick={() => handleChange('accentColor', c)}
+                                className={`w-8 h-8 rounded-full border-2 transition-all ${data.accentColor === c ? 'border-white scale-110' : 'border-white/5'}`}
+                                style={{ backgroundColor: c }}
+                              />
+                          ))}
+                          <div className="relative w-8 h-8 overflow-hidden rounded-full border border-white/10 ml-2">
+                            <input 
+                                type="color" 
+                                value={data.accentColor} 
+                                onChange={(e) => handleChange('accentColor', e.target.value)}
+                                className="absolute -inset-2 w-12 h-12 cursor-pointer bg-transparent"
+                            />
+                          </div>
                       </div>
-                      <span className="text-[10px] text-slate-500 font-black uppercase tracking-widest">{data.accentColor.toUpperCase()}</span>
                   </div>
               </div>
           )}

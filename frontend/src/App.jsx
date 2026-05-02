@@ -84,7 +84,10 @@ const App = () => {
         const data = await getClients();
         setClientProfiles(data);
       } catch (e) {
-        console.error('Error loading clients:', e);
+        // Only log if it's not an authorization error (expected when guest)
+        if (!e.message.includes('Unauthorized')) {
+          console.error('Error loading clients:', e);
+        }
       }
     };
     loadClients();

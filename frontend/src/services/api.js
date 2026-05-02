@@ -18,14 +18,20 @@ async function parseError(res) {
   }
 }
 
-export async function refineServiceDescription(rawInput) {
+async function getAuthHeaders(extraHeaders = {}) {
   const idToken = await auth.currentUser?.getIdToken();
+  const headers = { ...extraHeaders };
+  if (idToken) {
+    headers['Authorization'] = `Bearer ${idToken}`;
+  }
+  return headers;
+}
+
+export async function refineServiceDescription(rawInput) {
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/ai/refine-services`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify({ rawInput }),
   });
   if (!res.ok) {
@@ -36,13 +42,10 @@ export async function refineServiceDescription(rawInput) {
 }
 
 export async function generateLegalClause(request) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/ai/generate-clause`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify({ request }),
   });
   if (!res.ok) {
@@ -53,13 +56,10 @@ export async function generateLegalClause(request) {
 }
 
 export async function analyzeRisks(documentData) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/ai/analyze-risks`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify(documentData),
   });
   if (!res.ok) {
@@ -67,14 +67,12 @@ export async function analyzeRisks(documentData) {
   }
   return await res.json();
 }
+
 export async function generateTimeline(services) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/ai/generate-timeline`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify({ services }),
   });
   if (!res.ok) {
@@ -84,13 +82,10 @@ export async function generateTimeline(services) {
 }
 
 export async function analyzeATSWithAI(cvData, jobDescription) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/ai/analyze-ats`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify({ cvData, jobDescription }),
   });
   if (!res.ok) {
@@ -99,24 +94,18 @@ export async function analyzeATSWithAI(cvData, jobDescription) {
   return await res.json();
 }
 
-
 export async function getClients() {
-  const idToken = await auth.currentUser?.getIdToken();
-  const res = await fetch(`${apiBase()}/api/v1/clients`, {
-    headers: { 'Authorization': `Bearer ${idToken}` }
-  });
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
+  const res = await fetch(`${apiBase()}/api/v1/clients`, { headers });
   if (!res.ok) throw new Error(await parseError(res));
   return await res.json();
 }
 
 export async function saveClient(client) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders({ 'Content-Type': 'application/json' });
   const res = await fetch(`${apiBase()}/api/v1/clients`, {
     method: 'POST',
-    headers: { 
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${idToken}`
-    },
+    headers,
     body: JSON.stringify(client),
   });
   if (!res.ok) throw new Error(await parseError(res));
@@ -124,10 +113,10 @@ export async function saveClient(client) {
 }
 
 export async function deleteClient(doc) {
-  const idToken = await auth.currentUser?.getIdToken();
+  const headers = await getAuthHeaders();
   const res = await fetch(`${apiBase()}/api/v1/clients/${doc}`, { 
     method: 'DELETE',
-    headers: { 'Authorization': `Bearer ${idToken}` }
+    headers
   });
   if (!res.ok) throw new Error(await parseError(res));
 }
