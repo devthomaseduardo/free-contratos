@@ -489,81 +489,8 @@ export const ContractForm = ({ data, onChange, onReset, clientProfiles = [], onS
   return (
     <>
     <div className="p-4 sm:p-6 pb-32 space-y-4 max-w-4xl mx-auto">
-      {/* === TOP WORKFLOW & STATUS === */}
+      {/* === TOP WORKFLOW & STATUS REMOVED === */}
       <div className="mb-10 bg-slate-900/40 border border-white/5 rounded-[2.5rem] p-8 shadow-2xl backdrop-blur-xl">
-          <div className="flex flex-col gap-8">
-             <div className="flex items-center justify-between">
-                <div>
-                   <h3 className="text-[11px] font-black uppercase tracking-[0.4em] text-azure">Fluxo do Documento</h3>
-                   <p className="text-[10px] text-slate-500 font-bold mt-1 uppercase tracking-widest">Controle de ciclo de vida do contrato</p>
-                </div>
-                <div className="flex items-center gap-3 bg-emerald-500/5 px-4 py-2 rounded-full border border-emerald-500/10">
-                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_10px_rgba(16,185,129,0.5)]" />
-                   <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.2em]">Visualização em Tempo Real</span>
-                </div>
-             </div>
-
-             <div className="relative pt-6 pb-2">
-                {/* Background Connecting Line */}
-                <div className="absolute top-1/2 left-0 w-full h-1 bg-white/5 rounded-full -translate-y-1/2" />
-                
-                {/* Active Progress Line */}
-                <div 
-                   className="absolute top-1/2 left-0 h-1 bg-gradient-to-r from-azure to-emerald-500 rounded-full -translate-y-1/2 transition-all duration-700 ease-out" 
-                   style={{ 
-                       width: data.status === 'draft' ? '0%' : 
-                              data.status === 'pending' ? '33.33%' : 
-                              data.status === 'final' ? '66.66%' : '100%' 
-                   }} 
-                />
-
-                <div className="relative flex justify-between">
-                   {[
-                     { id: 'draft', label: 'Rascunho', color: 'bg-slate-400', desc: 'Fase Inicial' },
-                     { id: 'pending', label: 'Revisão', color: 'bg-amber-500', desc: 'Aguardando' },
-                     { id: 'final', label: 'Finalizado', color: 'bg-azure', desc: 'Pronto p/ Envio' },
-                     { id: 'paid', label: 'Pago', color: 'bg-emerald-500', desc: 'Concluído' }
-                   ].map((s, idx) => {
-                     const statusOrder = ['draft', 'pending', 'final', 'paid'];
-                     const currentIndex = statusOrder.indexOf(data.status);
-                     const isPassed = idx <= currentIndex;
-                     const isActive = data.status === s.id;
-                     
-                     return (
-                       <button
-                         type="button"
-                         key={s.id}
-                         onClick={() => handleChange('status', s.id)}
-                         className="group relative flex flex-col items-center gap-3 w-1/4"
-                       >
-                           {/* Indicator Node */}
-                           <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-500 border-2 z-10 ${
-                               isActive ? `bg-[#05070a] border-white shadow-[0_0_20px_rgba(255,255,255,0.2)] scale-110` : 
-                               isPassed ? `bg-[#05070a] ${s.color.replace('bg-', 'border-')} shadow-[0_0_15px_currentColor]` : 
-                               'bg-[#05070a] border-white/10 group-hover:border-white/30'
-                           }`} style={{ color: isPassed && !isActive ? s.color.replace('bg-', '') : '' }}>
-                               <div className={`w-2.5 h-2.5 rounded-full transition-all duration-500 ${
-                                   isActive ? s.color : 
-                                   isPassed ? s.color : 
-                                   'bg-white/10 group-hover:bg-white/30'
-                               }`} />
-                           </div>
-
-                           {/* Labels */}
-                           <div className="text-center absolute top-10 w-32 -ml-16 left-1/2">
-                               <span className={`block text-[10px] font-black uppercase tracking-widest transition-colors duration-500 ${isActive ? 'text-white' : isPassed ? 'text-slate-300' : 'text-slate-500'}`}>
-                                   {s.label}
-                               </span>
-                               <span className={`block text-[8px] font-bold uppercase tracking-widest mt-0.5 transition-colors duration-500 ${isActive ? s.color.replace('bg-', 'text-') : 'text-slate-600 opacity-0 group-hover:opacity-100'}`}>
-                                   {s.desc}
-                               </span>
-                           </div>
-                       </button>
-                     );
-                   })}
-                </div>
-             </div>
-          </div>
 
           <div className="h-px bg-white/5 w-full my-8" />
           

@@ -741,11 +741,11 @@ export const ContractPreview = ({ data, onChange }) => {
 
             <div 
                 id="printable-content" 
-                className={`bg-white text-black shadow-premium origin-top transition-all duration-700 relative w-[210mm] min-h-[297mm] print:w-full print:min-h-0 print:m-0 print:shadow-none print:scale-100 ${
+                className={`bg-white text-black shadow-premium origin-top transition-all duration-700 relative w-full max-w-[210mm] min-h-[297mm] print:w-full print:min-h-0 print:m-0 print:shadow-none print:scale-100 ${
                     data.typographyStyle === 'serif' ? 'font-serif' : 
                     data.typographyStyle === 'mono' ? 'font-mono' : 
                     'font-sans'
-                } ${isPrintMode ? 'scale-100' : 'scale-[0.9] sm:scale-100 mt-8 mb-20'}`}
+                } ${isPrintMode ? 'scale-100' : 'scale-[0.6] sm:scale-[0.8] md:scale-100 mt-0 sm:mt-8 mb-20'}`}
                 style={{
                     display: 'block',
                     boxSizing: 'border-box'
@@ -768,10 +768,10 @@ export const ContractPreview = ({ data, onChange }) => {
                 <div 
                     className="min-h-[297mm] flex flex-col print:min-h-0 print:!p-0"
                     style={{
-                        paddingTop: '25mm',
-                        paddingBottom: '20mm',
-                        paddingLeft: '30mm',
-                        paddingRight: '20mm',
+                        paddingTop: window.innerWidth < 768 ? '10mm' : '25mm',
+                        paddingBottom: window.innerWidth < 768 ? '10mm' : '20mm',
+                        paddingLeft: window.innerWidth < 768 ? '10mm' : '30mm',
+                        paddingRight: window.innerWidth < 768 ? '10mm' : '20mm',
                         boxSizing: 'border-box'
                     }}
                 >
