@@ -1,8 +1,37 @@
-import React from 'react';
-import { ArrowRight, Fingerprint, Globe, Shield, Zap, Layout, ArrowUpRight } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowRight, Fingerprint, Globe, Shield, Zap, Layout, ArrowUpRight, Database, Coffee, X, Copy, CheckCircle2 } from 'lucide-react';
 import { signInWithGoogle } from '../firebase';
+import { createPixPayment } from '../services/api';
 
 export const HomePage = ({ onAccessDemo, onNavigate }) => {
+  const [isSupportModalOpen, setIsSupportModalOpen] = useState(false);
+  const [pixData, setPixData] = useState(null);
+  const [isLoadingPix, setIsLoadingPix] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handlePixGeneration = async () => {
+    setIsLoadingPix(true);
+    try {
+        const data = await createPixPayment({
+            amount: 15.0,
+            description: 'Apoio Paper Contracts - Sustente a Inovação',
+            email: 'test_user_504671374@testuser.com'
+        });
+        setPixData(data);
+    } catch (error) {
+        console.error('Erro ao gerar Pix:', error);
+    } finally {
+        setIsLoadingPix(false);
+    }
+  };
+
+  const copyPixKey = () => {
+    if (pixData?.qr_code) {
+        navigator.clipboard.writeText(pixData.qr_code);
+        setIsCopied(true);
+        setTimeout(() => setIsCopied(false), 2000);
+    }
+  };
   const handleLogin = async () => {
     try {
       await signInWithGoogle();
@@ -23,21 +52,107 @@ export const HomePage = ({ onAccessDemo, onNavigate }) => {
           <span className="font-black text-lg md:text-2xl tracking-tighter text-white uppercase italic">Paper Contracts.</span>
         </div>
         
-        <div className="hidden lg:flex items-center gap-12">
-          <button onClick={() => onNavigate('tech')} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 hover:text-white transition-colors">Tecnologia</button>
-          <button onClick={() => onNavigate('sec')} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 hover:text-white transition-colors">Segurança</button>
-          <button onClick={() => onNavigate('ent')} className="text-[10px] font-bold uppercase tracking-[0.3em] text-white/60 hover:text-white transition-colors">Empresas</button>
-        </div>
+        {/* Navigation links removed for a cleaner minimalist aesthetic */}
+        <div className="flex items-center gap-4">
+          <button
+            onClick={() => setIsSupportModalOpen(true)}
+            className="w-10 h-10 md:w-12 md:h-12 rounded-full border border-white/10 flex items-center justify-center text-white/40 hover:text-azure hover:border-azure/30 hover:bg-azure/5 transition-all active:scale-90"
+            title="Apoiar Desenvolvedor"
+          >
+            <Coffee size={20} />
+          </button>
 
-        <button
-          onClick={() => onNavigate('login')}
-          className="group flex items-center gap-3 bg-white text-black px-4 md:px-8 py-2 md:py-4 rounded-full transition-all active:scale-95"
-        >
-          <span className="text-[10px] font-black uppercase tracking-widest italic hidden sm:inline">Acessar Sistema</span>
-          <span className="text-[10px] font-black uppercase tracking-widest italic sm:hidden">Entrar</span>
-          <ArrowRight size={16} />
-        </button>
+          <button
+            onClick={() => onNavigate('login')}
+            className="group flex items-center gap-3 bg-white text-black px-4 md:px-8 py-2 md:py-4 rounded-full transition-all active:scale-95"
+          >
+            <span className="text-[10px] font-black uppercase tracking-widest italic hidden sm:inline">Acessar Sistema</span>
+            <span className="text-[10px] font-black uppercase tracking-widest italic sm:hidden">Entrar</span>
+            <ArrowRight size={16} />
+          </button>
+        </div>
       </nav>
+
+      {/* Support Modal */}
+      {isSupportModalOpen && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center px-6">
+          <div 
+            className="absolute inset-0 bg-[#080a0c]/90 backdrop-blur-md"
+            onClick={() => setIsSupportModalOpen(false)}
+          />
+          <div className="relative premium-glass p-8 md:p-12 rounded-[3rem] border border-azure/30 bg-azure/5 max-w-md w-full animate-in zoom-in-95 duration-300">
+            <button 
+              onClick={() => setIsSupportModalOpen(false)}
+              className="absolute top-8 right-8 text-white/20 hover:text-white transition-colors"
+            >
+              <X size={24} />
+            </button>
+            
+            <div className="space-y-8 text-center">
+              <div className="flex justify-center">
+                <div className="w-20 h-20 rounded-3xl bg-azure/20 border border-azure/30 flex items-center justify-center text-azure animate-pulse">
+                  <Coffee size={40} />
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <span className="text-[10px] font-black uppercase tracking-[0.5em] text-azure">Protocolo de Combustão</span>
+                <h3 className="text-3xl font-black text-white italic tracking-tighter uppercase">Sustente a Inovação.</h3>
+                <p className="text-sm text-white/30 leading-relaxed font-bold uppercase tracking-widest">
+                  Contribua com o café que alimenta o código. Simples, direto e essencial.
+                </p>
+                <p className="text-[10px] text-white/20 leading-relaxed font-medium uppercase tracking-[0.2em] mt-4 italic">
+                  Colabore com qualquer valor. Seu incentivo ajuda o desenvolvedor a adicionar mais funcionalidades.
+                </p>
+              </div>
+
+              {!pixData ? (
+                <>
+                  <div className="pt-6 border-t border-white/5 flex items-end justify-center gap-2">
+                    <span className="text-4xl font-black text-white tracking-tighter italic">R$ 15</span>
+                    <span className="text-[10px] text-white/20 font-bold uppercase tracking-widest mb-2">/ único</span>
+                  </div>
+
+                  <button 
+                    onClick={handlePixGeneration}
+                    disabled={isLoadingPix}
+                    className="w-full py-5 rounded-2xl text-[10px] font-black uppercase tracking-[0.3em] transition-all bg-azure text-white shadow-lg shadow-azure/20 hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-wait"
+                  >
+                    {isLoadingPix ? 'Gerando Chave Pix...' : 'Iniciar Apoio via Pix'}
+                  </button>
+                </>
+              ) : (
+                <div className="space-y-6 animate-in fade-in zoom-in-95 duration-500">
+                    <div className="flex justify-center">
+                        <div className="p-4 bg-white rounded-[2rem] shadow-2xl border-4 border-azure/20">
+                            <img src={`data:image/jpeg;base64,${pixData.qr_code_base64}`} alt="QR Code Pix" className="w-48 h-48" />
+                        </div>
+                    </div>
+                    
+                    <button 
+                        onClick={copyPixKey}
+                        className="w-full py-4 px-6 rounded-xl bg-white/5 border border-white/10 flex items-center justify-between group hover:bg-white/10 transition-all"
+                    >
+                        <span className="text-[9px] font-black text-white/40 uppercase tracking-widest truncate max-w-[200px]">
+                            {pixData.qr_code}
+                        </span>
+                        <div className="flex items-center gap-2 text-azure">
+                            {isCopied ? <CheckCircle2 size={16} /> : <Copy size={16} />}
+                            <span className="text-[9px] font-black uppercase tracking-widest">
+                                {isCopied ? 'Copiado' : 'Copiar'}
+                            </span>
+                        </div>
+                    </button>
+
+                    <p className="text-[9px] text-white/20 uppercase font-black tracking-[0.2em]">Escaneie o código ou copie a chave acima</p>
+                </div>
+              )}
+              
+              <p className="text-[9px] text-white/10 uppercase font-black tracking-widest">Integridade Forense Garantida</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Hero Section - Editorial Layout */}
       <section className="relative min-h-screen flex items-center pt-24 md:pt-32 px-6 md:px-8 lg:px-24">
@@ -88,7 +203,7 @@ export const HomePage = ({ onAccessDemo, onNavigate }) => {
                   <span className="text-[11px] font-black uppercase tracking-widest text-white leading-tight">Processamento Semântico</span>
                </div>
                <p className="text-[10px] text-white/40 leading-relaxed uppercase tracking-widest font-bold">
-                 Análise em tempo real de cláusulas jurídicas e requisitos técnicos via Gemini 1.5 Pro Engine.
+                 Análise em tempo real de cláusulas jurídicas e requisitos técnicos via Motor Gemini 1.5 Pro.
                </p>
             </div>
           </div>
@@ -101,7 +216,7 @@ export const HomePage = ({ onAccessDemo, onNavigate }) => {
             <div className="flex flex-col lg:flex-row gap-20 items-start">
                <div className="lg:w-1/3 space-y-8 sticky top-40">
                   <span className="text-[10px] font-black uppercase tracking-[0.6em] text-azure">Protocolo de Operação</span>
-                  <h2 className="text-6xl font-black text-white italic tracking-tighter leading-none">O Workflow da Vitória.</h2>
+                  <h2 className="text-6xl font-black text-white italic tracking-tighter leading-none">Fluxo Operacional.</h2>
                   <p className="text-white/40 text-lg font-light leading-relaxed">
                      Cada documento passa por um processo rigoroso de refinamento técnico e validação semântica antes de ser selado para exportação.
                   </p>
@@ -128,52 +243,6 @@ export const HomePage = ({ onAccessDemo, onNavigate }) => {
          </div>
       </section>
 
-      {/* 2. Technological Pillars */}
-      <section className="py-40 px-8 lg:px-24 bg-[#05070a] relative overflow-hidden">
-         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-azure/5 blur-[120px] rounded-full translate-x-1/2 -translate-y-1/2" />
-         
-         <div className="max-w-[1600px] mx-auto relative z-10">
-            <div className="text-center max-w-4xl mx-auto mb-32 space-y-8">
-               <span className="text-[10px] font-black uppercase tracking-[0.8em] text-white/30">Infraestrutura Crítica</span>
-               <h2 className="text-6xl md:text-8xl font-black text-white italic tracking-tighter">Engenharia de Elite.</h2>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-1px bg-white/5 border border-white/5 rounded-[3rem] overflow-hidden">
-               {[
-                 { title: 'IA Semântica', value: 'Gemini 1.5 Pro', desc: 'Processamento de linguagem natural focado em autoridade e tom editorial.', color: 'text-azure' },
-                 { title: 'Uptime', value: '99.9%', desc: 'Infraestrutura Firebase para garantir que seus documentos estejam sempre disponíveis.', color: 'text-white' },
-                 { title: 'Segurança', value: 'SHA-256', desc: 'Integridade de dados garantida por protocolos de criptografia de nível militar.', color: 'text-emerald-500' }
-               ].map((pillar, idx) => (
-                 <div key={idx} className="bg-[#05070a] p-16 space-y-8 hover:bg-white/[0.02] transition-all">
-                    <h4 className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">{pillar.title}</h4>
-                    <div className={`text-6xl font-black tracking-tighter italic ${pillar.color}`}>{pillar.value}</div>
-                    <p className="text-sm text-slate-600 font-bold uppercase tracking-widest leading-loose">{pillar.desc}</p>
-                 </div>
-               ))}
-            </div>
-         </div>
-      </section>
-
-      {/* Aesthetic Image Row - Refined */}
-      <section className="px-8 lg:px-24 py-20 bg-[#05070a]">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 h-[600px]">
-           <div className="rounded-[3rem] overflow-hidden border border-white/5 relative group">
-              <img src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-60 transition-all duration-1000" alt="Tech" />
-              <div className="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
-                 <h3 className="text-2xl font-black text-white italic uppercase tracking-tighter mb-2">Protocolo Alpha</h3>
-                 <p className="text-[10px] text-white/40 font-bold uppercase tracking-[0.3em]">Diagramação Suíça // 2024</p>
-              </div>
-           </div>
-           <div className="lg:col-span-2 rounded-[3rem] overflow-hidden border border-white/5 relative group">
-              <img src="https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop" className="w-full h-full object-cover grayscale opacity-30 group-hover:opacity-60 transition-all duration-1000" alt="Security" />
-              <div className="absolute inset-0 p-12 flex flex-col justify-end bg-gradient-to-t from-black to-transparent">
-                 <h3 className="text-3xl font-black text-white italic uppercase tracking-tighter mb-4">Vault Forense</h3>
-                 <p className="text-sm text-white/40 font-medium uppercase tracking-widest">Sua propriedade intelectual, blindada por camadas de abstração técnica.</p>
-              </div>
-           </div>
-        </div>
-      </section>
-
       {/* Footer Editorial */}
       <footer className="py-32 px-8 lg:px-24 bg-[#05070a] border-t border-white/5">
          <div className="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-20">
@@ -184,12 +253,11 @@ export const HomePage = ({ onAccessDemo, onNavigate }) => {
                </p>
             </div>
             <div className="space-y-6">
-               <h4 className="text-[10px] font-black text-white uppercase tracking-[0.5em]">Navegação</h4>
-               <ul className="space-y-4">
-                  <li><button onClick={() => onNavigate('tech')} className="text-xs text-white/40 hover:text-azure transition-colors uppercase font-bold tracking-widest">Tecnologia</button></li>
-                  <li><button onClick={() => onNavigate('sec')} className="text-xs text-white/40 hover:text-azure transition-colors uppercase font-bold tracking-widest">Segurança</button></li>
-                  <li><button onClick={() => onNavigate('ent')} className="text-xs text-white/40 hover:text-azure transition-colors uppercase font-bold tracking-widest">Empresas</button></li>
-               </ul>
+               <h4 className="text-[10px] font-black text-white uppercase tracking-[0.5em]">Identidade</h4>
+               <p className="text-xs text-white/40 uppercase font-bold tracking-widest leading-relaxed">
+                 Soberania Digital <br/>
+                 Padrão Editorial 2024
+               </p>
             </div>
             <div className="space-y-6">
                <h4 className="text-[10px] font-black text-white uppercase tracking-[0.5em]">Contato</h4>

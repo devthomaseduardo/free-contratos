@@ -250,7 +250,7 @@ const TextArea = ({ label, value, onChange, placeholder, className = "", maxLeng
 
 
 
-export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteClient, clientProfiles = [], onNotify }) => {
+export const ContractForm = ({ data, onChange, onReset, onLoadDemo, onSaveClient, onDeleteClient, clientProfiles = [], onNotify }) => {
   const [activeSection, setActiveSection] = useState(null);
   const [isAiLoading, setIsAiLoading] = useState(false);
   const [isClauseLoading, setIsClauseLoading] = useState(false);
@@ -517,6 +517,20 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
                   <div className="min-w-0">
                       <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Identidade do Protocolo</p>
                       <p className="text-sm font-black text-white uppercase tracking-tighter truncate">{data.contractorName || 'SISTEMA_ANÔNIMO'}</p>
+                  </div>
+              </div>
+
+              {/* SIMULADOR */}
+              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-azure/10 transition-all cursor-pointer" onClick={onLoadDemo}>
+                  <div className="w-10 h-10 rounded-xl bg-azure/20 flex items-center justify-center border border-azure/30 text-azure animate-pulse group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.3)]">
+                      <Sparkles size={20} />
+                  </div>
+                  <div>
+                      <p className="text-[9px] font-black text-azure uppercase tracking-[0.2em] mb-1">Simulador Forense</p>
+                      <div className="flex items-center gap-2">
+                          <span className="text-xs font-black text-white tracking-tighter uppercase group-hover:text-azure transition-colors italic">Gerar Exemplo</span>
+                          <span className="text-[8px] font-mono text-slate-600 font-bold tracking-tighter">SIM-7B</span>
+                      </div>
                   </div>
               </div>
 
@@ -1281,7 +1295,7 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
                  </div>
                  {data.contractorSignature && (
                      <div className="mt-4 p-6 bg-white rounded-[2rem] inline-block shadow-2xl border border-white/10 group relative">
-                         <img src={data.contractorSignature} alt="Signature Preview" className="h-16 object-contain mix-blend-multiply" />
+                         <img src={data.contractorSignature} alt="Pré-visualização da Assinatura" className="h-16 object-contain mix-blend-multiply" />
                          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors rounded-[2rem]" />
                      </div>
                  )}
@@ -1292,7 +1306,7 @@ export const ContractForm = ({ data, onChange, onReset, onSaveClient, onDeleteCl
     </div>
     
     <footer className="mt-12 pt-12 pb-24 border-t border-white/5 flex flex-col items-center gap-4">
-        <p className="text-[10px] text-slate-600 uppercase tracking-[0.4em] font-black">Powered by</p>
+        <p className="text-[10px] text-slate-600 uppercase tracking-[0.4em] font-black">Desenvolvido por</p>
         <div className="flex items-center gap-3 bg-midnight px-6 py-3 rounded-2xl border border-white/5 shadow-2xl">
             <ShieldCheck size={16} className="text-azure" />
             <span className="text-[10px] font-black uppercase tracking-widest text-white">Thomas Eduardo <span className="text-azure opacity-50 ml-1">@devthomas</span></span>

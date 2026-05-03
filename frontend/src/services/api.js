@@ -148,3 +148,14 @@ export async function deleteDocument(id) {
   });
   if (!res.ok) throw new Error(await parseError(res));
 }
+
+// Pagamentos
+export async function createPixPayment(paymentData) {
+  const res = await fetch(`${apiBase()}/api/v1/payments/pix`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(paymentData),
+  });
+  if (!res.ok) throw new Error(await parseError(res));
+  return await res.json();
+}

@@ -8,10 +8,11 @@ import {
   History,
   Cloud,
   Trash2,
-  FileText
+  FileText,
+  Activity
 } from 'lucide-react';
 
-export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout, cloudHistory = [], onLoadCloud, onDeleteCloud }) => {
+export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout, onViewAnalytics, cloudHistory = [], onLoadCloud, onDeleteCloud }) => {
 
   const menu = [
     { id: 'cv', label: 'Currículo Vitae', code: '01', desc: 'Recrutamento & Performance' },
@@ -133,43 +134,55 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
       </nav>
 
       {/* User Identity & Integrity Widget */}
-      <div className="p-8 border-t border-white/[0.03] space-y-8 bg-black/20">
+      <div className="p-6 md:p-8 border-t border-white/[0.03] space-y-8 bg-black/20 backdrop-blur-md">
         {user && (
-          <div className="flex items-center gap-4 px-2">
-             <div className="w-12 h-12 rounded-xl border border-white/10 overflow-hidden shadow-2xl relative group shrink-0">
-                <img src={user.photoURL || `https://i.pravatar.cc/100?u=${user.email}`} alt={user.displayName} className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-azure/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-             </div>
-             <div className="flex flex-col flex-1 overflow-hidden">
-                <span className="text-[11px] font-black text-white truncate uppercase tracking-tighter">{user.displayName || 'Usuário'}</span>
-                <div className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[8px] text-slate-500 font-mono font-bold tracking-widest uppercase truncate">CONECTADO_NODE_01</span>
+          <div className="flex items-center gap-4 group">
+             <div className="relative">
+                <div className="w-12 h-12 rounded-full border-2 border-azure/30 p-0.5 group-hover:border-azure transition-all duration-500">
+                   <img src={user.photoURL || `https://i.pravatar.cc/100?u=${user.email}`} alt={user.displayName} className="w-full h-full object-cover rounded-full" />
                 </div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#05070a] rounded-full flex items-center justify-center border border-white/10">
+                   <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.5)]" />
+                </div>
+             </div>
+             <div className="flex flex-col min-w-0">
+                <span className="text-[11px] font-black text-white truncate uppercase tracking-tighter group-hover:text-azure transition-colors">{user.displayName || 'Thomas Eduardo'}</span>
+                <span className="text-[8px] text-slate-500 font-mono font-bold tracking-widest uppercase truncate opacity-60">NÓDULO_ID: CONECTADO_01</span>
              </div>
           </div>
         )}
 
         <div className="space-y-6">
-            <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-[1.5rem] space-y-4">
+            <div className="bg-white/[0.02] border border-white/[0.05] p-5 rounded-2xl space-y-4 group hover:bg-white/[0.04] transition-all">
                 <div className="flex items-center justify-between">
-                  <span className="text-[9px] font-black text-slate-600 uppercase tracking-[0.2em]">Integridade Estratégica</span>
-                  <span className="text-[10px] font-mono font-black text-azure">94%</span>
+                  <div className="flex items-center gap-2">
+                     <ShieldCheck size={12} className="text-azure opacity-50" />
+                     <span className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Integridade Estratégica</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-black text-white italic tracking-tighter">94.8%</span>
                 </div>
-                <div className="flex gap-0.5">
-                    {Array.from({length: 20}).map((_, i) => (
-                        <div key={i} className={`h-1 flex-1 rounded-full ${i < 18 ? 'bg-azure' : 'bg-white/5'}`} />
-                    ))}
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden flex gap-0.5 p-[1px]">
+                    <div className="h-full bg-azure rounded-full shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: '94%' }} />
                 </div>
             </div>
 
-            <button 
-                onClick={onLogout}
-                className="w-full py-4 flex items-center justify-center gap-3 bg-rose-500/5 hover:bg-rose-500 text-rose-500 hover:text-white rounded-2xl border border-rose-500/10 transition-all duration-300 text-[10px] font-black uppercase tracking-[0.3em] active:scale-95 group"
-            >
-                <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" /> 
-                Encerrar Protocolo
-            </button>
+            <div className="grid grid-cols-1 gap-3">
+                <button 
+                    onClick={onViewAnalytics}
+                    className="w-full py-4 flex items-center justify-center gap-3 bg-azure/10 hover:bg-azure text-azure hover:text-white rounded-2xl border border-azure/20 transition-all duration-500 text-[9px] font-black uppercase tracking-[0.3em] active:scale-95 group shadow-lg shadow-azure/5"
+                >
+                    <Activity size={16} className="group-hover:scale-110 transition-transform" /> 
+                    Telemetria de Rede
+                </button>
+
+                <button 
+                    onClick={onLogout}
+                    className="w-full py-4 flex items-center justify-center gap-3 bg-rose-500/5 hover:bg-rose-500 text-rose-500 hover:text-white rounded-2xl border border-rose-500/10 transition-all duration-500 text-[9px] font-black uppercase tracking-[0.3em] active:scale-95 group"
+                >
+                    <LogOut size={16} className="group-hover:-translate-x-1 transition-transform" /> 
+                    Encerrar Protocolo
+                </button>
+            </div>
         </div>
       </div>
     </div>
