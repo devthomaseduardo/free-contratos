@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
 import { config } from '../config.js';
-import { generateLegalClause, refineServiceDescription, analyzeDocumentRisks, generateProjectTimeline } from '../services/geminiService.js';
+import { generateLegalClause, refineServiceDescription, analyzeDocumentRisks, generateProjectTimeline, analyzeATS } from '../services/geminiService.js';
 
 const refineBody = z.object({
   rawInput: z.string().min(1).max(8000),
@@ -9,6 +9,11 @@ const refineBody = z.object({
 
 const clauseBody = z.object({
   request: z.string().min(1).max(8000),
+});
+
+const atsBody = z.object({
+  cvData: z.any(),
+  jobDescription: z.string().min(1).max(20000),
 });
 
 export const aiRouter = Router();
@@ -47,6 +52,16 @@ aiRouter.post('/generate-timeline', async (req, res, next) => {
     const { services } = req.body;
     const timeline = await generateProjectTimeline(config.geminiApiKey, services);
     res.json(JSON.parse(timeline));
+  } catch (e) {
+    next(e);
+  }
+});
+
+aiRouter.post('/analyze-ats', async (req, res, next) => {
+  try {
+    const { cvData, jobDescription } = atsBody.parse(req.body);
+    const analysis = await analyzeATS(config.geminiApiKey, cvData, jobDescription);
+    res.json(analysis);
   } catch (e) {
     next(e);
   }

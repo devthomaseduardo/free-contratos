@@ -139,3 +139,38 @@ export async function generateProjectTimeline(apiKey, services) {
     return '[]';
   }
 }
+
+export async function analyzeATS(apiKey, cvData, jobDescription) {
+  const ai = getClient(apiKey);
+  if (!ai) return { score: 0, found: [], missing: [], interview_tips: [] };
+
+  try {
+    const prompt = `
+      Atue como um Especialista em Recrutamento e Seleção Tech (Tech Recruiter).
+      
+      Tarefa: Analise a aderência entre o Currículo (JSON) e a Descrição da Vaga (Texto).
+      
+      Currículo: ${JSON.stringify(cvData)}
+      Vaga: "${jobDescription.replace(/"/g, '\\"')}"
+      
+      Retorne um JSON com:
+      - score: (número de 0 a 100)
+      - found: (array de strings com skills encontradas)
+      - missing: (array de strings com skills ausentes mas importantes para a vaga)
+      - interview_tips: (array de strings com perguntas técnicas e comportamentais específicas para essa vaga e empresa)
+    `;
+
+    const model = ai.getGenerativeModel({ model: MODEL });
+
+    const result = await model.generateContent({
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { responseMimeType: 'application/json' },
+    });
+
+    const text = result.response.text();
+    return text ? JSON.parse(text) : { score: 0, found: [], missing: [], interview_tips: [] };
+  } catch (error) {
+    console.error('analyzeATS:', error);
+    return { score: 0, error: 'Erro na análise de IA' };
+  }
+}
