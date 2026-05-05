@@ -406,20 +406,20 @@ const App = () => {
       </div>
 
       <div className="flex-1 flex flex-col h-full min-w-0 pb-20 md:pb-0 relative print:h-auto print:pb-0">
-        <header className="h-20 lg:h-24 px-6 lg:px-10 flex items-center justify-between border-b border-white/[0.03] bg-black/40 backdrop-blur-3xl sticky top-0 z-[60] print:hidden transition-all duration-500">
-          <div className="flex items-center gap-4 lg:gap-8">
-            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-white p-3 bg-white/5 hover:bg-white/10 rounded-2xl transition-colors border border-white/5"><Menu size={20} /></button>
-            <div className="hidden sm:flex flex-col items-end border-r border-white/5 pr-6 lg:pr-10 py-1">
+        <header className="h-16 sm:h-20 lg:h-24 px-3 sm:px-6 lg:px-10 flex items-center justify-between border-b border-white/[0.03] bg-black/40 backdrop-blur-3xl sticky top-0 z-[60] print:hidden transition-all duration-500">
+          <div className="flex items-center gap-2 sm:gap-4 lg:gap-8 min-w-0">
+            <button onClick={() => setSidebarOpen(true)} className="lg:hidden text-white p-2.5 sm:p-3 bg-white/5 hover:bg-white/10 rounded-xl sm:rounded-2xl transition-colors border border-white/5 shrink-0"><Menu size={18} className="sm:hidden" /><Menu size={20} className="hidden sm:block" /></button>
+            <div className="hidden md:flex flex-col items-end border-r border-white/5 pr-6 lg:pr-10 py-1">
                 <span className="text-[9px] font-black text-slate-700 uppercase tracking-[0.4em] mb-1">Node ID</span>
                 <span className="text-[11px] font-mono text-azure/80 font-bold tracking-tighter">PHNX-0128-TX</span>
             </div>
-            <div className="flex flex-col">
-              <div className="flex items-center gap-3 mb-1">
-                 <h2 className="text-xl lg:text-2xl font-black text-white uppercase tracking-tighter leading-none">{showAtsAnalyzer ? 'Simulador ATS' : docTitle()}</h2>
-                 {showAtsAnalyzer && <button onClick={() => setShowAtsAnalyzer(false)} className="ml-2 text-[9px] bg-rose-500/10 text-rose-500 px-3 py-1 rounded-lg border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all uppercase font-black tracking-widest">Sair</button>}
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-2 sm:gap-3 mb-0.5 sm:mb-1">
+                 <h2 className="text-sm sm:text-xl lg:text-2xl font-black text-white uppercase tracking-tighter leading-none truncate">{showAtsAnalyzer ? 'Simulador ATS' : docTitle()}</h2>
+                 {showAtsAnalyzer && <button onClick={() => setShowAtsAnalyzer(false)} className="ml-1 sm:ml-2 text-[8px] sm:text-[9px] bg-rose-500/10 text-rose-500 px-2 sm:px-3 py-0.5 sm:py-1 rounded-lg border border-rose-500/20 hover:bg-rose-500 hover:text-white transition-all uppercase font-black tracking-widest shrink-0">Sair</button>}
               </div>
-              <div className="flex items-center gap-3">
-                 <div className="flex items-center gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-azure animate-pulse" /><span className="text-[9px] text-slate-500 font-black uppercase tracking-[0.3em] whitespace-nowrap">Criptografia Camada 02 Ativa</span></div>
+              <div className="flex items-center gap-2 sm:gap-3">
+                 <div className="flex items-center gap-1 sm:gap-1.5"><div className="w-1.5 h-1.5 rounded-full bg-azure animate-pulse" /><span className="text-[7px] sm:text-[9px] text-slate-500 font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] whitespace-nowrap">Camada 02 Ativa</span></div>
                  <span className="hidden lg:inline text-[9px] text-slate-700 font-bold uppercase tracking-widest border-l border-white/10 pl-3">v.3.2.0-STABLE</span>
               </div>
             </div>
@@ -435,22 +435,22 @@ const App = () => {
              )}
           </div>
 
-          <div className="flex items-center gap-2.5 lg:gap-4">
-            <button onClick={() => { setShowOnboarding(true); setTourStep(0); }} className="p-3.5 bg-white/5 hover:bg-azure/10 text-slate-500 hover:text-azure rounded-2xl border border-white/5 transition-all active:scale-95"><HelpCircle size={20} /></button>
+          <div className="flex items-center gap-1.5 sm:gap-2.5 lg:gap-4 shrink-0">
+            <button onClick={() => { setShowOnboarding(true); setTourStep(0); }} className="hidden sm:flex p-3 sm:p-3.5 bg-white/5 hover:bg-azure/10 text-slate-500 hover:text-azure rounded-xl sm:rounded-2xl border border-white/5 transition-all active:scale-95"><HelpCircle size={18} className="sm:hidden" /><HelpCircle size={20} className="hidden sm:block" /></button>
             <button onClick={() => setShowAtsAnalyzer(true)} className="hidden lg:flex p-3.5 bg-white/5 hover:bg-emerald-500/5 text-slate-500 hover:text-emerald-400 rounded-2xl border border-white/5 hover:border-emerald-500/10 transition-all active:scale-95"><Target size={20} /></button>
-            <button onClick={() => window.print()} className="p-3 lg:px-5 lg:py-3 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2.5 border border-white/10 active:scale-95 shadow-lg"><FileText size={18} className="text-azure" /><span className="hidden xl:inline">Exportar PDF</span></button>
-            <button onClick={saveToHistory} className="px-5 py-3 lg:px-6 bg-azure hover:bg-azure-dark text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2.5 shadow-lg shadow-azure/10 active:scale-95 group border border-azure/50"><Save size={18} className="group-hover:scale-110 transition-transform" /><span>Salvar Protocolo</span></button>
+            <button onClick={() => window.print()} className="p-2.5 sm:p-3 lg:px-5 lg:py-3 bg-white/5 hover:bg-white/10 text-slate-300 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2.5 border border-white/10 active:scale-95 shadow-lg"><FileText size={16} className="sm:hidden text-azure" /><FileText size={18} className="hidden sm:block text-azure" /><span className="hidden xl:inline">Exportar PDF</span></button>
+            <button onClick={saveToHistory} className="px-3 py-2.5 sm:px-5 sm:py-3 lg:px-6 bg-azure hover:bg-azure-dark text-white rounded-xl text-[9px] sm:text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-1.5 sm:gap-2.5 shadow-lg shadow-azure/10 active:scale-95 group border border-azure/50"><Save size={16} className="sm:hidden group-hover:scale-110 transition-transform" /><Save size={18} className="hidden sm:block group-hover:scale-110 transition-transform" /><span className="hidden sm:inline">Salvar Protocolo</span><span className="sm:hidden">Salvar</span></button>
           </div>
         </header>
 
-        <div className="fixed bottom-0 left-0 right-0 h-20 bg-midnight-lighter/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-8 z-50 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.4)] print:hidden">
-            <button onClick={() => { setActiveTab('form'); setShowHistory(false); }} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'form' && !showHistory ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2.5 rounded-xl transition-colors ${activeTab === 'form' && !showHistory ? 'bg-azure/10' : ''}`}><FileText size={22} /></div><span className="text-[10px] font-black uppercase tracking-widest">Editor</span></button>
-            <button onClick={() => { setActiveTab('preview'); setShowHistory(false); }} className={`flex flex-col items-center gap-1.5 transition-all ${activeTab === 'preview' ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2.5 rounded-xl transition-colors ${activeTab === 'preview' ? 'bg-azure/10' : ''}`}><Eye size={22} /></div><span className="text-[10px] font-black uppercase tracking-widest">Visualizar</span></button>
-            <button onClick={() => setShowHistory(true)} className={`flex flex-col items-center gap-1.5 transition-all ${showHistory ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2.5 rounded-xl transition-colors ${showHistory ? 'bg-azure/10' : ''}`}><History size={22} /></div><span className="text-[10px] font-black uppercase tracking-widest">Arquivo</span></button>
+        <div className="fixed bottom-0 left-0 right-0 h-16 sm:h-20 bg-midnight-lighter/80 backdrop-blur-2xl border-t border-white/5 flex items-center justify-around px-4 sm:px-8 z-50 md:hidden shadow-[0_-10px_40px_rgba(0,0,0,0.4)] print:hidden safe-area-pb">
+            <button onClick={() => { setActiveTab('form'); setShowHistory(false); }} className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all ${activeTab === 'form' && !showHistory ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2 sm:p-2.5 rounded-xl transition-colors ${activeTab === 'form' && !showHistory ? 'bg-azure/10' : ''}`}><FileText size={20} /></div><span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest">Editor</span></button>
+            <button onClick={() => { setActiveTab('preview'); setShowHistory(false); }} className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all ${activeTab === 'preview' ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2 sm:p-2.5 rounded-xl transition-colors ${activeTab === 'preview' ? 'bg-azure/10' : ''}`}><Eye size={20} /></div><span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest">Preview</span></button>
+            <button onClick={() => setShowHistory(true)} className={`flex flex-col items-center gap-1 sm:gap-1.5 transition-all ${showHistory ? 'text-azure scale-105' : 'text-slate-500'}`}><div className={`p-2 sm:p-2.5 rounded-xl transition-colors ${showHistory ? 'bg-azure/10' : ''}`}><History size={20} /></div><span className="text-[8px] sm:text-[10px] font-black uppercase tracking-widest">Arquivo</span></button>
         </div>
 
-        <main className="flex-1 flex gap-4 lg:gap-8 p-4 lg:p-10 overflow-hidden print:overflow-visible print:block bg-[#020408]">
-          <div className={`flex-1 overflow-y-auto border border-white/5 bg-slate-950/50 backdrop-blur-3xl rounded-[3rem] transition-all custom-scrollbar print:hidden shadow-2xl ${activeTab === 'form' ? 'block' : 'hidden md:block'}`}>
+        <main className="flex-1 flex gap-2 sm:gap-4 lg:gap-8 p-2 sm:p-4 lg:p-10 overflow-hidden print:overflow-visible print:block bg-[#020408]">
+          <div className={`flex-1 overflow-y-auto border border-white/5 bg-slate-950/50 backdrop-blur-3xl rounded-2xl sm:rounded-[2rem] lg:rounded-[3rem] transition-all custom-scrollbar print:hidden shadow-2xl ${activeTab === 'form' ? 'block' : 'hidden md:block'}`}>
             {showAtsAnalyzer ? <ATSAnalyzer cvData={contractData} onClose={() => setShowAtsAnalyzer(false)} /> : showHistory ? (
               <div className="p-8 lg:p-12 animate-in-scale">
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
@@ -462,7 +462,7 @@ const App = () => {
             ) : <ContractForm data={contractData} onChange={setContractData} onReset={handleReset} onLoadDemo={loadDemoData} clientProfiles={clientProfiles} onSaveClient={saveClientProfile} onDeleteClient={deleteClientProfile} onNotify={showToast} />}
           </div>
 
-          <div className={`flex-1 bg-white/[0.02] border border-white/5 rounded-[3rem] relative transition-all custom-scrollbar overflow-y-auto print:bg-white print:overflow-visible print:block shadow-2xl ${activeTab === 'preview' ? 'block' : 'hidden md:block'} ${showAtsAnalyzer ? '!hidden' : ''}`}>
+          <div className={`flex-1 bg-white/[0.02] border border-white/5 rounded-2xl sm:rounded-[2rem] lg:rounded-[3rem] relative transition-all custom-scrollbar overflow-y-auto print:bg-white print:overflow-visible print:block shadow-2xl ${activeTab === 'preview' ? 'block' : 'hidden md:block'} ${showAtsAnalyzer ? '!hidden' : ''}`}>
             {!showAtsAnalyzer && <><div className="absolute inset-0 bg-slate-900 z-0 print:hidden" /><div className="relative z-10 h-full print:h-auto"><ContractPreview data={contractData} onChange={(updates) => setContractData(prev => ({ ...prev, ...updates }))} /></div></>}
           </div>
         </main>
