@@ -30,7 +30,7 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
       tabIndex="-1"
       role="navigation"
       aria-label="Menu Lateral"
-      className={`fixed inset-y-0 left-0 z-[60] w-full max-w-[320px] bg-[#05070a] border-r border-white/[0.03] flex flex-col transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1) lg:relative lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full shadow-none'}`}
+      className={`fixed inset-y-0 left-0 z-[60] w-[85vw] max-w-[320px] bg-[#05070a] border-r border-white/[0.03] flex flex-col transition-transform duration-700 cubic-bezier(0.4, 0, 0.2, 1) lg:relative lg:w-full lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full shadow-none'}`}
     >
       
       {/* Mobile Close Button */}
@@ -42,16 +42,17 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
       </button>
 
       {/* Header / Brand Identity */}
-      <div className="h-32 px-10 flex flex-col justify-center border-b border-white/[0.03]">
-        <div className="flex items-center gap-4 group cursor-default">
-          <div className="w-12 h-12 bg-white/5 rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-azure/50 transition-all duration-500 shadow-2xl">
-             <Fingerprint size={24} className="text-white group-hover:text-azure transition-colors" />
+      <div className="h-20 sm:h-24 lg:h-32 px-5 sm:px-8 lg:px-10 flex flex-col justify-center border-b border-white/[0.03]">
+        <div className="flex items-center gap-3 sm:gap-4 group cursor-default">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-white/5 rounded-xl sm:rounded-2xl flex items-center justify-center border border-white/10 group-hover:border-azure/50 transition-all duration-500 shadow-2xl shrink-0">
+             <Fingerprint size={20} className="sm:hidden text-white group-hover:text-azure transition-colors" />
+             <Fingerprint size={24} className="hidden sm:block text-white group-hover:text-azure transition-colors" />
           </div>
-          <div className="flex flex-col">
-            <span className="text-lg font-black tracking-tighter text-white uppercase leading-none">Paper Contracts</span>
-            <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex flex-col min-w-0">
+            <span className="text-base sm:text-lg font-black tracking-tighter text-white uppercase leading-none">Paper Contracts</span>
+            <div className="flex items-center gap-1.5 sm:gap-2 mt-1 sm:mt-1.5">
                <div className="w-1.5 h-1.5 rounded-full bg-azure animate-pulse" />
-               <span className="text-[9px] text-slate-500 font-black tracking-[0.2em] uppercase">Motor Editorial V3.0</span>
+               <span className="text-[8px] sm:text-[9px] text-slate-500 font-black tracking-[0.15em] sm:tracking-[0.2em] uppercase">Motor Editorial V3.0</span>
             </div>
           </div>
         </div>
@@ -60,10 +61,10 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
       {/* Navigation - Editorial Index Style */}
       <nav 
         tabIndex="0"
-        className="flex-1 overflow-y-auto p-8 space-y-3 custom-scrollbar focus:outline-none focus-visible:bg-white/[0.02]"
+        className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-2 sm:space-y-3 custom-scrollbar focus:outline-none focus-visible:bg-white/[0.02]"
       >
-        <div className="flex items-center justify-between px-6 mb-12">
-           <p className="text-[10px] font-black text-slate-700 uppercase tracking-[0.4em]">Protocolos Ativos</p>
+        <div className="flex items-center justify-between px-3 sm:px-6 mb-6 sm:mb-12">
+           <p className="text-[9px] sm:text-[10px] font-black text-slate-700 uppercase tracking-[0.3em] sm:tracking-[0.4em]">Protocolos Ativos</p>
         </div>
 
         {menu.map((item) => {
@@ -134,7 +135,7 @@ export const Sidebar = ({ currentType, onSelect, isOpen, onClose, user, onLogout
       </nav>
 
       {/* User Identity & Integrity Widget */}
-      <div className="p-6 md:p-8 border-t border-white/[0.03] space-y-8 bg-black/20 backdrop-blur-md">
+      <div className="p-4 sm:p-6 lg:p-8 border-t border-white/[0.03] space-y-4 sm:space-y-6 lg:space-y-8 bg-black/20 backdrop-blur-md">
         {user && (
           <div className="flex items-center gap-4 group">
              <div className="relative">

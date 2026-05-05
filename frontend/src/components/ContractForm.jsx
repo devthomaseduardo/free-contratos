@@ -489,20 +489,21 @@ export const ContractForm = ({ data, onChange, onReset, onLoadDemo, onSaveClient
     <>
     <div className="p-4 lg:p-8 pb-32 space-y-8 max-w-5xl mx-auto">
       {/* === DASHBOARD DE INSTRUMENTAÇÃO (COCKPIT) === */}
-      <div className="bg-slate-900/40 border border-white/[0.03] rounded-[2.5rem] p-1 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="flex flex-col lg:flex-row items-stretch gap-1">
+      <div className="bg-slate-900/40 border border-white/[0.03] rounded-2xl sm:rounded-[2.5rem] p-1 shadow-2xl backdrop-blur-2xl animate-in fade-in slide-in-from-top-4 duration-700">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:flex lg:flex-row items-stretch gap-1">
               {/* SEGURANÇA */}
-              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-azure/10 flex items-center justify-center border border-azure/20 text-azure group-hover:scale-110 transition-transform">
-                      <ShieldCheck size={20} />
+              <div className="bg-white/[0.02] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/[0.03] flex items-center gap-3 sm:gap-4 group hover:bg-white/[0.04] transition-all lg:flex-1">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-azure/10 flex items-center justify-center border border-azure/20 text-azure group-hover:scale-110 transition-transform shrink-0">
+                      <ShieldCheck size={16} className="sm:hidden" />
+                      <ShieldCheck size={20} className="hidden sm:block" />
                   </div>
-                  <div>
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Status de Segurança</p>
-                      <div className="flex items-center gap-2">
-                          <span className="text-xs font-mono font-black text-white tracking-tighter">CAMADA_02</span>
+                  <div className="min-w-0">
+                      <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-0.5 sm:mb-1">Status de Segurança</p>
+                      <div className="flex items-center gap-1.5 sm:gap-2">
+                          <span className="text-[10px] sm:text-xs font-mono font-black text-white tracking-tighter">CAMADA_02</span>
                           <div className="flex gap-0.5">
                               {[1,2,3,4,5].map(i => (
-                                  <div key={i} className={`w-1 h-3 rounded-full ${i <= 3 ? 'bg-emerald-500/80' : 'bg-white/10'}`} />
+                                  <div key={i} className={`w-1 h-2.5 sm:h-3 rounded-full ${i <= 3 ? 'bg-emerald-500/80' : 'bg-white/10'}`} />
                               ))}
                           </div>
                       </div>
@@ -510,52 +511,55 @@ export const ContractForm = ({ data, onChange, onReset, onLoadDemo, onSaveClient
               </div>
 
               {/* IDENTIDADE */}
-              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-white/[0.04] transition-all">
-                  <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 text-slate-400">
-                      <Fingerprint size={20} />
+              <div className="bg-white/[0.02] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/[0.03] flex items-center gap-3 sm:gap-4 group hover:bg-white/[0.04] transition-all lg:flex-1">
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-white/5 flex items-center justify-center border border-white/10 text-slate-400 shrink-0">
+                      <Fingerprint size={16} className="sm:hidden" />
+                      <Fingerprint size={20} className="hidden sm:block" />
                   </div>
                   <div className="min-w-0">
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-1">Identidade do Protocolo</p>
-                      <p className="text-sm font-black text-white uppercase tracking-tighter truncate">{data.contractorName || 'SISTEMA_ANÔNIMO'}</p>
+                      <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-[0.2em] mb-0.5 sm:mb-1">Identidade do Protocolo</p>
+                      <p className="text-[10px] sm:text-sm font-black text-white uppercase tracking-tighter truncate">{data.contractorName || 'SISTEMA_ANÔNIMO'}</p>
                   </div>
               </div>
 
               {/* SIMULADOR */}
-              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex items-center gap-4 group hover:bg-azure/10 transition-all cursor-pointer" onClick={onLoadDemo}>
-                  <div className="w-10 h-10 rounded-xl bg-azure/20 flex items-center justify-center border border-azure/30 text-azure animate-pulse group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.3)]">
-                      <Sparkles size={20} />
+              <div className="bg-white/[0.02] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/[0.03] flex items-center gap-3 sm:gap-4 group hover:bg-azure/10 transition-all cursor-pointer lg:flex-1" onClick={onLoadDemo}>
+                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-azure/20 flex items-center justify-center border border-azure/30 text-azure animate-pulse group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(59,130,246,0.3)] shrink-0">
+                      <Sparkles size={16} className="sm:hidden" />
+                      <Sparkles size={20} className="hidden sm:block" />
                   </div>
-                  <div>
-                      <p className="text-[9px] font-black text-azure uppercase tracking-[0.2em] mb-1">Simulador Forense</p>
-                      <div className="flex items-center gap-2">
-                          <span className="text-xs font-black text-white tracking-tighter uppercase group-hover:text-azure transition-colors italic">Gerar Exemplo</span>
-                          <span className="text-[8px] font-mono text-slate-600 font-bold tracking-tighter">SIM-7B</span>
+                  <div className="min-w-0">
+                      <p className="text-[8px] sm:text-[9px] font-black text-azure uppercase tracking-[0.2em] mb-0.5 sm:mb-1">Simulador Forense</p>
+                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                          <span className="text-[10px] sm:text-xs font-black text-white tracking-tighter uppercase group-hover:text-azure transition-colors italic">Gerar Exemplo</span>
+                          <span className="text-[7px] sm:text-[8px] font-mono text-slate-600 font-bold tracking-tighter">SIM-7B</span>
                       </div>
                   </div>
               </div>
 
               {/* DENSIDADE */}
-              <div className="flex-1 bg-white/[0.02] rounded-2xl p-4 border border-white/[0.03] flex flex-col justify-center group hover:bg-white/[0.04] transition-all">
-                  <div className="flex items-center justify-between mb-2">
-                      <p className="text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Densidade de Dados</p>
-                      <span className="text-xs font-mono font-black text-azure">78.4%</span>
+              <div className="bg-white/[0.02] rounded-xl sm:rounded-2xl p-3 sm:p-4 border border-white/[0.03] flex flex-col justify-center group hover:bg-white/[0.04] transition-all lg:flex-1">
+                  <div className="flex items-center justify-between mb-1.5 sm:mb-2">
+                      <p className="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-[0.2em]">Densidade de Dados</p>
+                      <span className="text-[10px] sm:text-xs font-mono font-black text-azure">78.4%</span>
                   </div>
-                  <div className="flex gap-1">
+                  <div className="flex gap-0.5 sm:gap-1">
                       {Array.from({length: 12}).map((_, i) => (
-                          <div key={i} className={`h-1.5 flex-1 rounded-full ${i < 9 ? 'bg-azure/80' : 'bg-white/5'}`} />
+                          <div key={i} className={`h-1 sm:h-1.5 flex-1 rounded-full ${i < 9 ? 'bg-azure/80' : 'bg-white/5'}`} />
                       ))}
                   </div>
               </div>
 
               {/* PURGE ACTION */}
-              <div className="bg-rose-500/5 hover:bg-rose-500/10 rounded-2xl p-1 flex items-center border border-rose-500/10 transition-all">
+              <div className="col-span-2 sm:col-span-1 bg-rose-500/5 hover:bg-rose-500/10 rounded-xl sm:rounded-2xl p-1 flex items-center border border-rose-500/10 transition-all">
                   <button 
                       onClick={onReset}
-                      className="w-full h-full lg:w-16 px-4 py-2 lg:p-0 flex flex-col items-center justify-center gap-1 group transition-all active:scale-90"
+                      className="w-full h-full lg:w-16 px-4 py-2 lg:p-0 flex sm:flex-col items-center justify-center gap-2 sm:gap-1 group transition-all active:scale-90"
                       title="Expurgar Dados do Sistema"
                   >
-                      <Eraser size={18} className="text-rose-500 group-hover:rotate-12 transition-transform" />
-                      <span className="text-[7px] font-black text-rose-500/60 uppercase tracking-widest">Purge</span>
+                      <Eraser size={16} className="sm:hidden text-rose-500 group-hover:rotate-12 transition-transform" />
+                      <Eraser size={18} className="hidden sm:block text-rose-500 group-hover:rotate-12 transition-transform" />
+                      <span className="text-[8px] sm:text-[7px] font-black text-rose-500/60 uppercase tracking-widest">Purge</span>
                   </button>
               </div>
           </div>
